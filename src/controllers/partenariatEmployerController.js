@@ -1,4 +1,4 @@
-const Employer = require("../models/Employer");
+const Employer = require("../models/employer");
 const initCloudinary = require("../config/cloudinary");
 
 exports.list = async (req, res) => {

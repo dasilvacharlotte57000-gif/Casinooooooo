@@ -1,11 +1,11 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/User");
+const User = require("../models/user");
 
 async function ensureDefaultAdmin() {
   const email = process.env.ADMIN_EMAIL;
   const pass = process.env.ADMIN_PASSWORD;
 
-  if (!email || !pass) return; // si tu veux gérer toi-même
+  if (!email || !pass) return; // admin géré manuellement
   const existing = await User.findOne({ email });
   if (existing) return;
 
@@ -23,10 +23,14 @@ exports.postLogin = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email: String(email).toLowerCase().trim() });
-  if (!user) return res.status(401).render("login", { error: "Identifiants invalides" });
+  if (!user) {
+    return res.status(401).render("login", { error: "Identifiants invalides" });
+  }
 
   const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return res.status(401).render("login", { error: "Identifiants invalides" });
+  if (!ok) {
+    return res.status(401).render("login", { error: "Identifiants invalides" });
+  }
 
   req.session.userId = user._id.toString();
   req.session.email = user.email;

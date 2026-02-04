@@ -1,4 +1,4 @@
-const Entreprise = require("../models/Entreprise");
+const Entreprise = require("../models/entreprise");
 
 exports.list = async (req, res) => {
   const items = await Entreprise.find().sort({ createdAt: -1 }).lean();

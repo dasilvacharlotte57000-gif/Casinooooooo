@@ -1,4 +1,4 @@
-const Blacklist = require("../models/Blacklist");
+const Blacklist = require("../models/blacklist");
 
 exports.list = async (req, res) => {
   const items = await Blacklist.find().sort({ createdAt: -1 }).lean();

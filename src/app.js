@@ -5,27 +5,21 @@ const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
-// app.js est dans /src → on remonte à la racine
-const rootDir = path.join(__dirname, "..");
-
-// ✅ config est maintenant dans src/config
 const connectDB = require("./config/database");
 const createSessionMiddleware = require("./config/session");
+const protectRoutes = require("./middlewares/protectRoutes");
 
-// ✅ middlewares/routes sont encore à la racine (pour l’instant)
-const protectRoutes = require("../middlewares/protectRoutes");
-
-const authRoutes = require("../routes/authRoutes");
-const blacklistRoutes = require("../routes/blacklistRoutes");
-const partenariatEmployerRoutes = require("../routes/partenariatEmployerRoutes");
-const partenariatEntrepriseRoutes = require("../routes/partenariatEntrepriseRoutes");
+const authRoutes = require("./routes/authRoutes");
+const blacklistRoutes = require("./routes/blacklistRoutes");
+const partenariatEmployerRoutes = require("./routes/partenariatEmployerRoutes");
+const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoutes");
 
 const app = express();
 
-// Views + static (toujours à la racine)
+// Views + static (tout est dans src/)
 app.set("view engine", "ejs");
-app.set("views", path.join(rootDir, "views"));
-app.use(express.static(path.join(rootDir, "public")));
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

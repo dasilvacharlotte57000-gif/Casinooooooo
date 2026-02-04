@@ -8,8 +8,11 @@ dotenv.config();
 // app.js est dans /src → on remonte à la racine
 const rootDir = path.join(__dirname, "..");
 
-const connectDB = require("../config/database");
-const createSessionMiddleware = require("../config/session");
+// ✅ config est maintenant dans src/config
+const connectDB = require("./config/database");
+const createSessionMiddleware = require("./config/session");
+
+// ✅ middlewares/routes sont encore à la racine (pour l’instant)
 const protectRoutes = require("../middlewares/protectRoutes");
 
 const authRoutes = require("../routes/authRoutes");
@@ -19,7 +22,7 @@ const partenariatEntrepriseRoutes = require("../routes/partenariatEntrepriseRout
 
 const app = express();
 
-// Views + static
+// Views + static (toujours à la racine)
 app.set("view engine", "ejs");
 app.set("views", path.join(rootDir, "views"));
 app.use(express.static(path.join(rootDir, "public")));

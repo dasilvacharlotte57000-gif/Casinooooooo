@@ -1,0 +1,14 @@
+<nav class="topbar">
+  <div class="brand">Casino</div>
+
+  <div class="links">
+    <a class="<%= currentPath.startsWith('/dashboard') ? 'active':'' %>" href="/dashboard">Dashboard</a>
+    <a class="<%= currentPath.startsWith('/blacklist') ? 'active':'' %>" href="/blacklist">BlackList</a>
+    <a class="<%= currentPath.startsWith('/employes') ? 'active':'' %>" href="/employes">Employés</a>
+    <a class="<%= currentPath.startsWith('/entreprises') ? 'active':'' %>" href="/entreprises">Entreprises</a>
+
+    <form method="post" action="/logout" class="inline">
+      <button class="btn small" type="submit">Déconnexion</button>
+    </form>
+  </div>
+</nav>

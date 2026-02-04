@@ -8,14 +8,14 @@ dotenv.config();
 // app.js est dans /src → on remonte à la racine
 const rootDir = path.join(__dirname, "..");
 
-const connectDB = require("../../config/database");
-const createSessionMiddleware = require("../../config/session");
-const protectRoutes = require("../../middlewares/protectRoutes");
+const connectDB = require("../config/database");
+const createSessionMiddleware = require("../config/session");
+const protectRoutes = require("../middlewares/protectRoutes");
 
-const authRoutes = require("../../routes/authRoutes");
-const blacklistRoutes = require("../../routes/blacklistRoutes");
-const partenariatEmployerRoutes = require("../../routes/partenariatEmployerRoutes");
-const partenariatEntrepriseRoutes = require("../../routes/partenariatEntrepriseRoutes");
+const authRoutes = require("../routes/authRoutes");
+const blacklistRoutes = require("../routes/blacklistRoutes");
+const partenariatEmployerRoutes = require("../routes/partenariatEmployerRoutes");
+const partenariatEntrepriseRoutes = require("../routes/partenariatEntrepriseRoutes");
 
 const app = express();
 

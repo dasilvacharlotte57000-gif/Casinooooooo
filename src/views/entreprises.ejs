@@ -3,7 +3,7 @@
 
 <div class="container">
   <div class="page-header">
-    <h1>🏢 Partenaires Entreprises</h1>
+    <h1>🏢 Partenariat Entreprise</h1>
     <p>Gestion des partenaires et entreprises associées</p>
   </div>
 
@@ -26,7 +26,7 @@
   <!-- Liste des entreprises -->
   <div class="list-section">
     <div class="list-header">
-      <h3>Partenaires Entreprises (<span class="badge"><%= items.length %></span>)</h3>
+      <h3>Partenariat Entreprise (<span class="badge"><%= items.length %></span>)</h3>
     </div>
     <div class="list company-grid">
       <% if (items.length === 0) { %>
@@ -70,7 +70,7 @@
   <!-- Message pour utilisateurs déconnectés -->
   <% if (!user) { %>
     <div class="login-cta">
-      <p>✨ Connectez-vous pour gérer les partenaires entreprises</p>
+      <p>✨ Connectez-vous pour gérer les partenariats Entreprise</p>
       <a href="/login" class="btn btn-primary">Se connecter</a>
     </div>
   <% } %>
@@ -205,7 +205,17 @@
 }
 
 .delete-btn-container {
+.delete-btn-container {
   margin-top: auto;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.25s ease;
+}
+
+.company-card.show-actions .delete-btn-container {
+  max-height: 80px;
+  opacity: 1;
 }
 
 .btn-delete {
@@ -216,7 +226,7 @@
   padding: 8px;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, border-color 0.2s;
   margin-top: 10px;
   font-size: 14px;
 }
@@ -261,3 +271,14 @@
 </style>
 
 </body></html>
+
+<script>
+// Toggle actions (supprimer) when clicking on a company card
+document.addEventListener('click', function (e) {
+  const card = e.target.closest('.company-card');
+  if (!card) return;
+  if (e.target.closest('form') || e.target.closest('button') || e.target.tagName === 'A' || e.target.tagName === 'INPUT') return;
+  card.classList.toggle('show-actions');
+});
+</script>
+

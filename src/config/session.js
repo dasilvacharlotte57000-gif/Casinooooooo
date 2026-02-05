@@ -13,14 +13,17 @@ module.exports = async function createSessionMiddleware() {
     secret,
     resave: false,
     saveUninitialized: false,
+    // Garder la session persistante côté client (cookie) pendant 30 jours
     cookie: {
       httpOnly: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production"
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 30 // 30 jours en ms
     },
+    // TTL du store doit correspondre à la durée du cookie (en secondes)
     store: MongoStore.create({
       mongoUrl,
-      ttl: 60 * 60 * 24 * 7 // 7 jours
+      ttl: 60 * 60 * 24 * 30 // 30 jours
     })
   });
 };

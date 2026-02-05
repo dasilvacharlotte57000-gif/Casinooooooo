@@ -4,8 +4,8 @@
   <div class="links">
     <a class="<%= currentPath === '/' ? 'active':'' %>" href="/">Accueil</a>
     <a class="<%= currentPath.startsWith('/blacklist') ? 'active':'' %>" href="/blacklist">BlackList</a>
-    <a class="<%= currentPath.startsWith('/employes') ? 'active':'' %>" href="/employes">Employés</a>
-    <a class="<%= currentPath.startsWith('/entreprises') ? 'active':'' %>" href="/entreprises">Entreprises</a>
+    <a class="<%= currentPath.startsWith('/employes') ? 'active':'' %>" href="/employes">Partenariat Employés</a>
+    <a class="<%= currentPath.startsWith('/entreprises') ? 'active':'' %>" href="/entreprises">Partenariat Entreprise</a>
 
     <% if (user) { %>
       <a class="<%= currentPath.startsWith('/dashboard') ? 'active':'' %>" href="/dashboard">Dashboard</a>

@@ -25,25 +25,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// currentPath + user pour navbar
-app.use((req, res, next) => {
-  res.locals.currentPath = req.path;
-  res.locals.user = req.session?.userId
-    ? { id: req.session.userId, email: req.session.email }
-    : null;
-  next();
-});
-
 (async () => {
   // DB
   await connectDB();
 
-  // Session
+  // Session (⚠️ doit être AVANT d'utiliser req.session)
   const sessionMiddleware = await createSessionMiddleware();
   app.use(sessionMiddleware);
 
-  // session dans EJS
+  // Locals pour EJS
   app.use((req, res, next) => {
+    res.locals.currentPath = req.path;
     res.locals.session = req.session;
     res.locals.user = req.session?.userId
       ? { id: req.session.userId, email: req.session.email }
@@ -57,20 +49,18 @@ app.use((req, res, next) => {
   // ✅ AUTH PUBLIC (login/logout)
   app.use("/", authRoutes);
 
-  // ✅ ROUTES ACCESSIBLES SANS LOGIN (lecture)
-  // (les actions POST/DELETE doivent être protégées dans les routes)
+  // ✅ ROUTES "LECTURE PUBLIC"
+  // Les POST sont bloqués via protectRoutes (voir middleware)
   app.use("/blacklist", blacklistRoutes);
   app.use("/employes", partenariatEmployerRoutes);
   app.use("/entreprises", partenariatEntrepriseRoutes);
 
-  // ✅ TOUT LE RESTE PROTÉGÉ
+  // ✅ PROTECTION GLOBALE (bloque écritures + dashboard)
   app.use(protectRoutes);
 
   // Dashboard privé
   app.get("/dashboard", (req, res) => res.render("dashboard"));
 
   const PORT = process.env.PORT || 8080;
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log("Serveur lancé sur", PORT);
-  });
+  app.listen(PORT, "0.0.0.0", () => console.log("Serveur lancé sur", PORT));
 })();

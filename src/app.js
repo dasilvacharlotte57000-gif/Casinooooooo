@@ -28,40 +28,49 @@ app.use(cookieParser());
 // currentPath + user pour navbar
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
-  res.locals.user = req.session?.userId || null;
+  res.locals.user = req.session?.userId
+    ? { id: req.session.userId, email: req.session.email }
+    : null;
   next();
 });
 
 (async () => {
+  // DB
   await connectDB();
+
+  // Session
   const sessionMiddleware = await createSessionMiddleware();
   app.use(sessionMiddleware);
 
-  /* =========================
-     ROUTES PUBLIQUES
-  ========================== */
-
-  // HOME PUBLIC
-  app.get("/", (req, res) => {
-    res.render("home");
+  // session dans EJS
+  app.use((req, res, next) => {
+    res.locals.session = req.session;
+    res.locals.user = req.session?.userId
+      ? { id: req.session.userId, email: req.session.email }
+      : null;
+    next();
   });
 
-  // LOGIN / LOGOUT
+  // ✅ HOME PUBLIC
+  app.get("/", (req, res) => res.render("home"));
+
+  // ✅ AUTH PUBLIC (login/logout)
   app.use("/", authRoutes);
 
-  /* =========================
-     ROUTES PROTÉGÉES
-  ========================== */
-  app.use(protectRoutes);
-
-  app.get("/dashboard", (req, res) => {
-    res.render("dashboard");
-  });
-
+  // ✅ ROUTES ACCESSIBLES SANS LOGIN (lecture)
+  // (les actions POST/DELETE doivent être protégées dans les routes)
   app.use("/blacklist", blacklistRoutes);
   app.use("/employes", partenariatEmployerRoutes);
   app.use("/entreprises", partenariatEntrepriseRoutes);
 
-  const PORT = process.env.PORT || 10000;
-  app.listen(PORT, () => console.log("Serveur lancé sur", PORT));
+  // ✅ TOUT LE RESTE PROTÉGÉ
+  app.use(protectRoutes);
+
+  // Dashboard privé
+  app.get("/dashboard", (req, res) => res.render("dashboard"));
+
+  const PORT = process.env.PORT || 8080;
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log("Serveur lancé sur", PORT);
+  });
 })();

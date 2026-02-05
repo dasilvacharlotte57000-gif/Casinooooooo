@@ -2,13 +2,39 @@
   <div class="brand">Casino</div>
 
   <div class="links">
-    <a class="<%= currentPath.startsWith('/dashboard') ? 'active':'' %>" href="/dashboard">Dashboard</a>
-    <a class="<%= currentPath.startsWith('/blacklist') ? 'active':'' %>" href="/blacklist">BlackList</a>
-    <a class="<%= currentPath.startsWith('/employes') ? 'active':'' %>" href="/employes">Employés</a>
-    <a class="<%= currentPath.startsWith('/entreprises') ? 'active':'' %>" href="/entreprises">Entreprises</a>
 
-    <form method="post" action="/logout" class="inline">
-      <button class="btn small" type="submit">Déconnexion</button>
-    </form>
+    <!-- Liens PUBLICS -->
+    <a class="<%= currentPath === '/' ? 'active' : '' %>" href="/">
+      Accueil
+    </a>
+
+    <a class="<%= currentPath.startsWith('/blacklist') ? 'active' : '' %>" href="/blacklist">
+      BlackList
+    </a>
+
+    <a class="<%= currentPath.startsWith('/employes') ? 'active' : '' %>" href="/employes">
+      Employés
+    </a>
+
+    <a class="<%= currentPath.startsWith('/entreprises') ? 'active' : '' %>" href="/entreprises">
+      Entreprises
+    </a>
+
+    <% if (user) { %>
+      <!-- CONNECTÉ -->
+      <a class="<%= currentPath.startsWith('/dashboard') ? 'active' : '' %>" href="/dashboard">
+        Dashboard
+      </a>
+
+      <form method="post" action="/logout" class="inline">
+        <button class="btn small" type="submit">Déconnexion</button>
+      </form>
+    <% } else { %>
+      <!-- NON CONNECTÉ -->
+      <a class="<%= currentPath.startsWith('/login') ? 'active' : '' %>" href="/login">
+        Connexion
+      </a>
+    <% } %>
+
   </div>
 </nav>

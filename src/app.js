@@ -16,7 +16,7 @@ const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoute
 
 const app = express();
 
-// VIEWS + STATIC
+// Views + static (tout est dans src/)
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -29,36 +29,32 @@ app.use(cookieParser());
   // DB
   await connectDB();
 
-  // Session (⚠️ doit être AVANT d'utiliser req.session)
+  // Session (DOIT être avant les routes)
   const sessionMiddleware = await createSessionMiddleware();
   app.use(sessionMiddleware);
 
-  // Locals pour EJS
+  // Locals EJS
   app.use((req, res, next) => {
     res.locals.currentPath = req.path;
-    res.locals.session = req.session;
     res.locals.user = req.session?.userId
       ? { id: req.session.userId, email: req.session.email }
       : null;
     next();
   });
 
-  // ✅ HOME PUBLIC
+  // HOME public
   app.get("/", (req, res) => res.render("home"));
 
-  // ✅ AUTH PUBLIC (login/logout)
+  // AUTH public
   app.use("/", authRoutes);
 
-  // ✅ ROUTES "LECTURE PUBLIC"
-  // Les POST sont bloqués via protectRoutes (voir middleware)
+  // ✅ Pages publiques en lecture
   app.use("/blacklist", blacklistRoutes);
   app.use("/employes", partenariatEmployerRoutes);
   app.use("/entreprises", partenariatEntrepriseRoutes);
 
-  // ✅ PROTECTION GLOBALE (bloque écritures + dashboard)
+  // ✅ Tout le reste protégé
   app.use(protectRoutes);
-
-  // Dashboard privé
   app.get("/dashboard", (req, res) => res.render("dashboard"));
 
   const PORT = process.env.PORT || 8080;

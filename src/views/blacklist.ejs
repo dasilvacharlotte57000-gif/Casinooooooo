@@ -1,36 +1,91 @@
-<%- include('header') %>
-<%- include('nav') %>
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
 
 <div class="container">
   <h2>BlackList</h2>
 
+  <!-- Barre de recherche -->
   <div class="card wide">
-    <h3>Ajouter</h3>
-    <form method="post" action="/blacklist">
-      <div class="row">
-        <input name="prenom" placeholder="Prénom" required />
-        <input name="nom" placeholder="Nom" required />
-      </div>
-      <input name="raison" placeholder="Raison (optionnel)" />
-      <input name="expireAt" type="date" placeholder="Expiration (optionnel)" />
-      <button class="btn" type="submit">Ajouter</button>
-    </form>
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="🔍 Rechercher par nom ou prénom..." 
+      style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 4px;"
+    />
   </div>
 
-  <div class="list">
-    <% items.forEach(item => { %>
-      <div class="item">
-        <div>
-          <b><%= item.prenom %> <%= item.nom %></b>
-          <div class="muted"><%= item.raison || '—' %></div>
+  <!-- Formulaire d'ajout (uniquement connecté) -->
+  <% if (user) { %>
+    <div class="card wide">
+      <h3>Ajouter une personne</h3>
+      <form method="post" action="/blacklist">
+        <div class="row">
+          <input name="prenom" placeholder="Prénom" required />
+          <input name="nom" placeholder="Nom" required />
         </div>
+        <input name="raison" placeholder="Raison (optionnel)" />
+        <input name="expireAt" type="date" placeholder="Expiration (optionnel)" />
+        <button class="btn" type="submit">Ajouter</button>
+      </form>
+    </div>
+  <% } %>
 
-        <form method="post" action="/blacklist/<%= item._id %>/delete">
-          <button class="btn danger small">X</button>
-        </form>
-      </div>
-    <% }) %>
+  <!-- Liste des blacklistés -->
+  <div style="margin-top: 20px;">
+    <h3>Personnes blacklistées (<span id="count"><%= items.length %></span>)</h3>
+    <div class="list" id="blacklistContainer">
+      <% if (items.length === 0) { %>
+        <p style="text-align: center; color: #666;">Aucune personne dans la blacklist</p>
+      <% } else { %>
+        <% items.forEach(item => { %>
+          <div class="item" data-nom="<%= item.nom.toLowerCase() %>" data-prenom="<%= item.prenom.toLowerCase() %>">
+            <div>
+              <b><%= item.prenom %> <%= item.nom %></b>
+              <div class="muted"><%= item.raison || '—' %></div>
+              <% if (item.expireAt) { %>
+                <div class="muted">Expire le : <%= item.expireAt.toLocaleDateString('fr-FR') %></div>
+              <% } %>
+            </div>
+            <% if (user) { %>
+              <form method="post" action="/blacklist/<%= item._id %>/delete">
+                <button class="btn danger small" type="submit">Supprimer</button>
+              </form>
+            <% } %>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
   </div>
+
+  <!-- Message pour utilisateurs déconnectés -->
+  <% if (!user) { %>
+    <div style="background-color: #f0f0f0; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: center; color: #666;">
+      <p>Connectez-vous pour ajouter ou supprimer des personnes de la blacklist</p>
+      <a href="/login" class="btn">Se connecter</a>
+    </div>
+  <% } %>
 </div>
+
+<script>
+document.getElementById('searchInput').addEventListener('input', function() {
+  const searchTerm = this.value.toLowerCase();
+  const items = document.querySelectorAll('#blacklistContainer .item');
+  let visibleCount = 0;
+
+  items.forEach(item => {
+    const nom = item.getAttribute('data-nom');
+    const prenom = item.getAttribute('data-prenom');
+    
+    if (nom.includes(searchTerm) || prenom.includes(searchTerm)) {
+      item.style.display = '';
+      visibleCount++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  document.getElementById('count').textContent = visibleCount;
+});
+</script>
 
 </body></html>

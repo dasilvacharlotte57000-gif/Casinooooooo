@@ -1,45 +1,69 @@
-<%- include('header') %>
-<%- include('nav') %>
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
 
 <div class="container">
   <h2>Employés</h2>
 
-  <div class="card wide">
-    <h3>Ajouter un employé</h3>
-    <form method="post" action="/employes" enctype="multipart/form-data">
-      <div class="row">
-        <input name="prenom" placeholder="Prénom" required />
-        <input name="nom" placeholder="Nom" required />
-      </div>
-      <input name="grade" placeholder="Grade (ex: Manager...)" />
-      <input name="dateEmbauche" type="date" />
-      <input name="photo" type="file" accept="image/*" />
-      <button class="btn" type="submit">Ajouter</button>
-    </form>
+  <!-- Formulaire d'ajout (uniquement connecté) -->
+  <% if (user) { %>
+    <div class="card wide">
+      <h3>Ajouter un employé</h3>
+      <form method="post" action="/employes" enctype="multipart/form-data">
+        <div class="row">
+          <input name="prenom" placeholder="Prénom" required />
+          <input name="nom" placeholder="Nom" required />
+        </div>
+        <input name="grade" placeholder="Grade (ex: Manager...)" />
+        <input name="dateEmbauche" type="date" />
+        <input name="photo" type="file" accept="image/*" />
+        <button class="btn" type="submit">Ajouter</button>
+      </form>
+    </div>
+  <% } %>
+
+  <!-- Liste des employés -->
+  <div style="margin-top: 20px;">
+    <h3>Employés (<span id="count"><%= items.length %></span>)</h3>
+    <div class="list" id="employeeContainer">
+      <% if (items.length === 0) { %>
+        <p style="text-align: center; color: #666;">Aucun employé enregistré</p>
+      <% } else { %>
+        <% items.forEach(item => { %>
+          <div class="item">
+            <div class="avatar">
+              <% if (item.photoUrl) { %>
+                <img src="<%= item.photoUrl %>" alt="photo"/>
+              <% } else { %>
+                <div class="ph">👤</div>
+              <% } %>
+            </div>
+
+            <div style="flex:1">
+              <b><%= item.prenom %> <%= item.nom %></b>
+              <div class="muted"><%= item.grade || '—' %></div>
+              <% if (item.dateEmbauche) { %>
+                <div class="muted">Embauché le : <%= new Date(item.dateEmbauche).toLocaleDateString('fr-FR') %></div>
+              <% } %>
+            </div>
+
+            <% if (user) { %>
+              <form method="post" action="/employes/<%= item._id %>/delete">
+                <button class="btn danger small" type="submit">Supprimer</button>
+              </form>
+            <% } %>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
   </div>
 
-  <div class="list">
-    <% items.forEach(item => { %>
-      <div class="item">
-        <div class="avatar">
-          <% if (item.photoUrl) { %>
-            <img src="<%= item.photoUrl %>" alt="photo"/>
-          <% } else { %>
-            <div class="ph">👤</div>
-          <% } %>
-        </div>
-
-        <div style="flex:1">
-          <b><%= item.prenom %> <%= item.nom %></b>
-          <div class="muted"><%= item.grade || '—' %></div>
-        </div>
-
-        <form method="post" action="/employes/<%= item._id %>/delete">
-          <button class="btn danger small">X</button>
-        </form>
-      </div>
-    <% }) %>
-  </div>
+  <!-- Message pour utilisateurs déconnectés -->
+  <% if (!user) { %>
+    <div style="background-color: #f0f0f0; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: center; color: #666;">
+      <p>Connectez-vous pour ajouter ou supprimer des employés</p>
+      <a href="/login" class="btn">Se connecter</a>
+    </div>
+  <% } %>
 </div>
 
 </body></html>

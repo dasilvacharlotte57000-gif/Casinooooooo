@@ -1,9 +1,9 @@
-<%- include('header') %>
-<%- include('nav') %>
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
 
 <div class="container">
   <h1>Diamond Casino</h1>
-  <p class="muted">Connecté: <b><%= session.email %></b></p>
+  <p class="muted">Connecté: <b><%= user.email %></b></p>
 
   <div class="grid">
     <a class="tile" href="/blacklist">Gérer BlackList</a>

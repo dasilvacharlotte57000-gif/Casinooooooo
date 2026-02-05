@@ -21,7 +21,11 @@ app.set("trust proxy", 1);
 
 // 🔥 VIEWS & STATIC (FIX DEFINITIF)
 app.set("view engine", "ejs");
-app.set("views", path.join(process.cwd(), "views"));
+app.set("views", [
+  path.join(process.cwd(), "views"),
+  path.join(process.cwd(), "views", "partials")
+]);
+
 app.use(express.static(path.join(process.cwd(), "public")));
 
 app.use(express.json());

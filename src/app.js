@@ -18,7 +18,7 @@ const app = express();
 
 // Views + static (tout est dans src/)
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "views", "partials"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());

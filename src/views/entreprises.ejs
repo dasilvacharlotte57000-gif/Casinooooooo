@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container">
+  <h2>Entreprises</h2>
+
+  <div class="card wide">
+    <h3>Ajouter une entreprise</h3>
+    <form method="post" action="/entreprises">
+      <input name="nomEntreprise" placeholder="Nom entreprise" required />
+      <div class="row">
+        <input name="contactNom" placeholder="Contact nom (optionnel)" />
+        <input name="contactEmail" placeholder="Contact email (optionnel)" />
+      </div>
+      <input name="notes" placeholder="Notes (optionnel)" />
+      <button class="btn" type="submit">Ajouter</button>
+    </form>
+  </div>
+
+  <div class="list">
+    <% items.forEach(item => { %>
+      <div class="item">
+        <div style="flex:1">
+          <b><%= item.nomEntreprise %></b>
+          <div class="muted"><%= item.contactNom || '—' %> · <%= item.contactEmail || '—' %></div>
+          <div class="muted"><%= item.notes || '' %></div>
+        </div>
+
+        <form method="post" action="/entreprises/<%= item._id %>/delete">
+          <button class="btn danger small">X</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+</body></html>

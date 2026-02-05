@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+
+<div class="center">
+  <div class="card">
+    <h1 class="title">casino</h1>
+
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
+    <form method="post" action="/login">
+      <label>Email</label>
+      <input name="email" type="email" required />
+
+      <label>Mot de passe</label>
+      <input name="password" type="password" required />
+
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+  </div>
+</div>
+
+</body></html>

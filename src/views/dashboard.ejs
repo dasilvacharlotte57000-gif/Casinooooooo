@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container">
+  <h1>Diamond Casino</h1>
+  <p class="muted">Connecté: <b><%= session.email %></b></p>
+
+  <div class="grid">
+    <a class="tile" href="/blacklist">Gérer BlackList</a>
+    <a class="tile" href="/employes">Gérer Employés</a>
+    <a class="tile" href="/entreprises">Gérer Entreprises</a>
+  </div>
+</div>
+
+</body></html>

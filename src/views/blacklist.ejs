@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container">
+  <h2>BlackList</h2>
+
+  <div class="card wide">
+    <h3>Ajouter</h3>
+    <form method="post" action="/blacklist">
+      <div class="row">
+        <input name="prenom" placeholder="Prénom" required />
+        <input name="nom" placeholder="Nom" required />
+      </div>
+      <input name="raison" placeholder="Raison (optionnel)" />
+      <input name="expireAt" type="date" placeholder="Expiration (optionnel)" />
+      <button class="btn" type="submit">Ajouter</button>
+    </form>
+  </div>
+
+  <div class="list">
+    <% items.forEach(item => { %>
+      <div class="item">
+        <div>
+          <b><%= item.prenom %> <%= item.nom %></b>
+          <div class="muted"><%= item.raison || '—' %></div>
+        </div>
+
+        <form method="post" action="/blacklist/<%= item._id %>/delete">
+          <button class="btn danger small">X</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+</body></html>

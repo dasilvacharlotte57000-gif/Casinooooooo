@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container">
+  <h2>Employés</h2>
+
+  <div class="card wide">
+    <h3>Ajouter un employé</h3>
+    <form method="post" action="/employes" enctype="multipart/form-data">
+      <div class="row">
+        <input name="prenom" placeholder="Prénom" required />
+        <input name="nom" placeholder="Nom" required />
+      </div>
+      <input name="grade" placeholder="Grade (ex: Manager...)" />
+      <input name="dateEmbauche" type="date" />
+      <input name="photo" type="file" accept="image/*" />
+      <button class="btn" type="submit">Ajouter</button>
+    </form>
+  </div>
+
+  <div class="list">
+    <% items.forEach(item => { %>
+      <div class="item">
+        <div class="avatar">
+          <% if (item.photoUrl) { %>
+            <img src="<%= item.photoUrl %>" alt="photo"/>
+          <% } else { %>
+            <div class="ph">👤</div>
+          <% } %>
+        </div>
+
+        <div style="flex:1">
+          <b><%= item.prenom %> <%= item.nom %></b>
+          <div class="muted"><%= item.grade || '—' %></div>
+        </div>
+
+        <form method="post" action="/employes/<%= item._id %>/delete">
+          <button class="btn danger small">X</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+</body></html>

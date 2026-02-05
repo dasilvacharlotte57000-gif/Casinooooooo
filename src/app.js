@@ -16,47 +16,48 @@ const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoute
 
 const app = express();
 
-app.set("trust proxy", 1);
-
-// Views + static (Render safe)
+// VIEWS + STATIC
 app.set("view engine", "ejs");
-app.set("views", [path.join(process.cwd(), "views"), path.join(process.cwd(), "views", "partials")]);
-app.use(express.static(path.join(process.cwd(), "public")));
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// currentPath + user pour navbar
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
+  res.locals.user = req.session?.userId || null;
   next();
 });
 
 (async () => {
   await connectDB();
-
   const sessionMiddleware = await createSessionMiddleware();
   app.use(sessionMiddleware);
 
-  app.use((req, res, next) => {
-    res.locals.session = req.session;
-    next();
+  /* =========================
+     ROUTES PUBLIQUES
+  ========================== */
+
+  // HOME PUBLIC
+  app.get("/", (req, res) => {
+    res.render("home");
   });
 
-  // ✅ HOME PUBLIQUE (quand tu ouvres le site)
-  app.get("/", (req, res) => res.render("home"));
-
-  // ✅ AUTH (login/logout) public
+  // LOGIN / LOGOUT
   app.use("/", authRoutes);
 
-  // ✅ PROTECTION UNIQUEMENT SUR LE PANEL
-  app.use("/dashboard", protectRoutes);
-  app.use("/blacklist", protectRoutes);
-  app.use("/employes", protectRoutes);
-  app.use("/entreprises", protectRoutes);
+  /* =========================
+     ROUTES PROTÉGÉES
+  ========================== */
+  app.use(protectRoutes);
 
-  // Panel routes
-  app.get("/dashboard", (req, res) => res.render("dashboard"));
+  app.get("/dashboard", (req, res) => {
+    res.render("dashboard");
+  });
+
   app.use("/blacklist", blacklistRoutes);
   app.use("/employes", partenariatEmployerRoutes);
   app.use("/entreprises", partenariatEntrepriseRoutes);

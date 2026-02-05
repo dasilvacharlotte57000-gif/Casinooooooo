@@ -16,35 +16,42 @@ const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoute
 
 const app = express();
 
-// Views + static (tout est dans src/)
+// 🔥 IMPORTANT POUR RENDER (HTTPS + sessions)
+app.set("trust proxy", 1);
+
+// 🔥 VIEWS & STATIC (FIX DEFINITIF)
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views", "partials"));
-app.use(express.static(path.join(__dirname, "public")));
+app.set("views", path.join(process.cwd(), "views"));
+app.use(express.static(path.join(process.cwd(), "public")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Pour la navbar / active link
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
   next();
 });
 
 (async () => {
+  // DB
   await connectDB();
 
+  // Sessions
   const sessionMiddleware = await createSessionMiddleware();
   app.use(sessionMiddleware);
 
+  // Session dispo dans EJS
   app.use((req, res, next) => {
     res.locals.session = req.session;
     next();
   });
 
-  // Public
+  // 🔓 Routes publiques
   app.use("/", authRoutes);
 
-  // Private
+  // 🔒 Routes privées
   app.use(protectRoutes);
 
   app.get("/dashboard", (req, res) => res.render("dashboard"));
@@ -52,8 +59,14 @@ app.use((req, res, next) => {
   app.use("/employes", partenariatEmployerRoutes);
   app.use("/entreprises", partenariatEntrepriseRoutes);
 
-  app.get("/", (req, res) => res.redirect("/dashboard"));
+  // Home
+  app.get("/", (req, res) => {
+    if (req.session && req.session.userId) return res.redirect("/dashboard");
+    return res.redirect("/login");
+  });
 
-  const PORT = process.env.PORT || 8080;
-  app.listen(PORT, () => console.log("Serveur lancé sur", PORT));
+  const PORT = process.env.PORT || 10000;
+  app.listen(PORT, () => {
+    console.log("Serveur lancé sur", PORT);
+  });
 })();

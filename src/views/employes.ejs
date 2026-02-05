@@ -2,68 +2,257 @@
 <%- include('partials/nav') %>
 
 <div class="container">
-  <h2>Employés</h2>
+  <div class="page-header">
+    <h1>👥 Partenaires Employeurs</h1>
+    <p>Gestion des employés et partenaires du casino</p>
+  </div>
 
   <!-- Formulaire d'ajout (uniquement connecté) -->
   <% if (user) { %>
-    <div class="card wide">
-      <h3>Ajouter un employé</h3>
+    <div class="card wide add-form">
+      <h3>➕ Ajouter un employé/partenaire</h3>
       <form method="post" action="/employes" enctype="multipart/form-data">
         <div class="row">
           <input name="prenom" placeholder="Prénom" required />
           <input name="nom" placeholder="Nom" required />
         </div>
-        <input name="grade" placeholder="Grade (ex: Manager...)" />
-        <input name="dateEmbauche" type="date" />
-        <input name="photo" type="file" accept="image/*" />
-        <button class="btn" type="submit">Ajouter</button>
+        <input name="grade" placeholder="Grade/Poste (ex: Manager, Partenaire...)" />
+        <input name="dateEmbauche" type="date" placeholder="Date d'embauche/partenariat" />
+        <input name="photo" type="file" accept="image/*" placeholder="Photo (optionnel)" />
+        <button class="btn btn-add" type="submit">Ajouter</button>
       </form>
     </div>
   <% } %>
 
-  <!-- Liste des employés -->
-  <div style="margin-top: 20px;">
-    <h3>Employés (<span id="count"><%= items.length %></span>)</h3>
-    <div class="list" id="employeeContainer">
+  <!-- Liste des employés/partenaires -->
+  <div class="list-section">
+    <div class="list-header">
+      <h3>Employés & Partenaires (<span class="badge"><%= items.length %></span>)</h3>
+    </div>
+    <div class="list employee-grid">
       <% if (items.length === 0) { %>
-        <p style="text-align: center; color: #666;">Aucun employé enregistré</p>
+        <p class="empty-state">📭 Aucun employé/partenaire enregistré</p>
       <% } else { %>
         <% items.forEach(item => { %>
-          <div class="item">
-            <div class="avatar">
+          <div class="employee-card">
+            <div class="employee-photo-container">
               <% if (item.photoUrl) { %>
-                <img src="<%= item.photoUrl %>" alt="photo"/>
+                <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" class="employee-photo" />
               <% } else { %>
-                <div class="ph">👤</div>
+                <div class="employee-placeholder">👤</div>
               <% } %>
             </div>
-
-            <div style="flex:1">
-              <b><%= item.prenom %> <%= item.nom %></b>
-              <div class="muted"><%= item.grade || '—' %></div>
-              <% if (item.dateEmbauche) { %>
-                <div class="muted">Embauché le : <%= new Date(item.dateEmbauche).toLocaleDateString('fr-FR') %></div>
+            <div class="card-content">
+              <h4><%= item.prenom %> <%= item.nom %></h4>
+              <% if (item.grade) { %><p class="info-item">💼 <%= item.grade %></p><% } %>
+              <% if (item.dateEmbauche) { %><p class="info-item">📅 <%= new Date(item.dateEmbauche).toLocaleDateString('fr-FR') %></p><% } %>
+              <% if (user) { %>
+                <form method="post" action="/employes/<%= item._id %>/delete" class="delete-btn-container">
+                  <button class="btn-delete" type="submit">🗑️ Supprimer</button>
+                </form>
               <% } %>
             </div>
-
-            <% if (user) { %>
-              <form method="post" action="/employes/<%= item._id %>/delete">
-                <button class="btn danger small" type="submit">Supprimer</button>
-              </form>
-            <% } %>
           </div>
-        <% }) %>
+        <% }); %>
       <% } %>
     </div>
   </div>
 
   <!-- Message pour utilisateurs déconnectés -->
   <% if (!user) { %>
-    <div style="background-color: #f0f0f0; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: center; color: #666;">
-      <p>Connectez-vous pour ajouter ou supprimer des employés</p>
-      <a href="/login" class="btn">Se connecter</a>
+    <div class="login-cta">
+      <p>✨ Connectez-vous pour gérer les employés et partenaires</p>
+      <a href="/login" class="btn btn-primary">Se connecter</a>
     </div>
   <% } %>
 </div>
+
+<style>
+.page-header {
+  margin-bottom: 30px;
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+  padding-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0 0 10px 0;
+  color: #ffd700;
+  font-size: 36px;
+}
+
+.page-header p {
+  color: #bdbdbd;
+  margin: 0;
+}
+
+.add-form {
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  margin-bottom: 30px;
+}
+
+.add-form h3 {
+  color: #ffd700;
+  margin-top: 0;
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  font-weight: bold;
+  padding: 12px 20px;
+}
+
+.btn-add:hover {
+  transform: scale(1.02);
+}
+
+.list-section {
+  margin-top: 30px;
+}
+
+.list-header {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.list-header h3 {
+  margin: 0;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.employee-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  flex-direction: initial !important;
+}
+
+.employee-card {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-card:hover {
+  background: rgba(255, 215, 0, 0.08);
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-5px);
+}
+
+.employee-photo-container {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.employee-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.employee-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.card-content {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content h4 {
+  margin: 0 0 12px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.info-item {
+  margin: 4px 0;
+  color: #bdbdbd;
+  font-size: 13px;
+}
+
+.delete-btn-container {
+  margin-top: auto;
+}
+
+.btn-delete {
+  width: 100%;
+  background: rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.btn-delete:hover {
+  background: rgba(255, 107, 107, 0.3);
+  border-color: #ff6b6b;
+}
+
+.empty-state {
+  text-align: center;
+  color: #bdbdbd;
+  padding: 40px;
+  grid-column: 1 / -1;
+}
+
+.login-cta {
+  background: rgba(255, 215, 0, 0.08);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.login-cta p {
+  color: #bdbdbd;
+  margin: 0 0 15px 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  padding: 10px 25px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+}
+</style>
 
 </body></html>

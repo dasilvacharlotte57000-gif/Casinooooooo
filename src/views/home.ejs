@@ -3,22 +3,205 @@
 
 <section class="hero">
   <div class="hero-inner">
-    <h1 class="hero-title">Diamond Casino</h1>
-    <p class="hero-subtitle">Un lieu d’élégance, de jeux et d’émotions fortes.</p>
+    <h1 class="hero-title">🎰 Diamond Casino</h1>
+    <p class="hero-subtitle">Gestion complète de votre établissement de jeux</p>
   </div>
 </section>
 
-<section class="welcome">
-  <div class="welcome-card">
-    <h2>Bienvenue au Diamond Casino</h2>
-    <p>
-      Plongez dans une ambiance digne des plus grands casinos du monde. Que vous soyez amateur
-      de sensations fortes ou simple curieux, notre établissement vous accueille dans un cadre
-      élégant et chaleureux.
-    </p>
-
-    <div class="welcome-actions">
-      <a class="btn" href="/login">Accéder au panel</a>
+<section class="container">
+  <!-- Section Bienvenue -->
+  <div class="welcome">
+    <div class="welcome-card">
+      <h2>Bienvenue</h2>
+      <p>
+        Accédez à un système de gestion complet pour votre casino. Gérez vos employés, 
+        partenaires entreprises et liste noire de manière centralisée et sécurisée.
+      </p>
     </div>
   </div>
+
+  <!-- Section Fonctionnalités publiques -->
+  <section style="margin: 50px 0;">
+    <h2 style="text-align: center; color: #ffd700; margin-bottom: 30px;">📊 Accès Public</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🚫</div>
+        <h3>BlackList</h3>
+        <p>Consultez la liste des personnes interdites d'accès sans authentification</p>
+        <a href="/blacklist" class="btn-small">Voir la liste</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Employés</h3>
+        <p>Découvrez l'équipe de Diamond Casino et ses membres</p>
+        <a href="/employes" class="btn-small">Voir les employés</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏢</div>
+        <h3>Entreprises</h3>
+        <p>Consultez nos partenaires et entreprises associées</p>
+        <a href="/entreprises" class="btn-small">Voir les partenaires</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Call-to-Action -->
+  <section style="margin: 50px 0;">
+    <div class="cta-card">
+      <h2>Gestion Administrative</h2>
+      <p style="margin-bottom: 20px;">
+        <% if (user) { %>
+          Vous êtes connecté. Accédez à votre dashboard pour gérer l'établissement.
+        <% } else { %>
+          Connectez-vous pour accéder aux fonctionnalités de gestion complètes :
+          <br>
+          ✓ Ajouter/modifier/supprimer des employés<br>
+          ✓ Gérer la blacklist<br>
+          ✓ Gérer les partenaires entreprises
+        <% } %>
+      </p>
+      <% if (user) { %>
+        <a href="/dashboard" class="btn btn-primary">Aller au Dashboard</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-primary">Se Connecter</a>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Section Info -->
+  <section style="margin: 50px 0; text-align: center; color: #bdbdbd;">
+    <p>Diamond Casino © 2025 - Tous droits réservés</p>
+  </section>
 </section>
+
+<style>
+.hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+  color: #ffd700;
+  padding: 80px 20px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in;
+}
+
+.hero-title {
+  font-size: 48px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  margin: 10px 0 0 0;
+  opacity: 0.8;
+}
+
+.welcome {
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+}
+
+.welcome-card h2 {
+  color: #ffd700;
+  margin-top: 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.feature-card {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  color: #ffd700;
+  margin: 0 0 10px 0;
+}
+
+.feature-card p {
+  color: #bdbdbd;
+  font-size: 14px;
+  margin: 0 0 15px 0;
+}
+
+.btn-small {
+  display: inline-block;
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background: rgba(255, 215, 0, 0.3);
+}
+
+.cta-card {
+  background: rgba(255, 215, 0, 0.08);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+}
+
+.cta-card h2 {
+  color: #ffd700;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+  color: #000 !important;
+  padding: 12px 30px;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+</body></html>

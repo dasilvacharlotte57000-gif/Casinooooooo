@@ -17,6 +17,11 @@ const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoute
 
 const app = express();
 
+// Render/Proxy HTTPS : nécessaire pour que les cookies secure soient acceptés
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 // Views + static (tout est dans src/)
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

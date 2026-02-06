@@ -26,39 +26,44 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 (async () => {
-  // DB
-  await connectDB();
+  try {
+    // DB
+    await connectDB();
 
-  // Session (DOIT être avant les routes)
-  const sessionMiddleware = await createSessionMiddleware();
-  app.use(sessionMiddleware);
+    // Session (DOIT être avant les routes)
+    const sessionMiddleware = await createSessionMiddleware();
+    app.use(sessionMiddleware);
 
-  // Locals EJS
-  app.use((req, res, next) => {
-    res.locals.currentPath = req.path;
-    res.locals.user = req.session?.userId
-      ? { id: req.session.userId, email: req.session.email }
-      : null;
-    next();
-  });
+    // Locals EJS
+    app.use((req, res, next) => {
+      res.locals.currentPath = req.path;
+      res.locals.user = req.session?.userId
+        ? { id: req.session.userId, email: req.session.email }
+        : null;
+      next();
+    });
 
-  // HOME public
-  app.get("/", (req, res) => res.render("home"));
+    // HOME public
+    app.get("/", (req, res) => res.render("home"));
 
-  // AUTH public
-  app.use("/", authRoutes);
+    // AUTH public
+    app.use("/", authRoutes);
 
-  // ✅ Pages publiques en lecture (AVANT la protection globale)
-  app.use("/blacklist", blacklistRoutes);
-  app.use("/employes", partenariatEmployerRoutes);
-  app.use("/entreprises", partenariatEntrepriseRoutes);
+    // ✅ Pages publiques en lecture (AVANT la protection globale)
+    app.use("/blacklist", blacklistRoutes);
+    app.use("/employes", partenariatEmployerRoutes);
+    app.use("/entreprises", partenariatEntrepriseRoutes);
 
-  // 🔒 MIDDLEWARE DE PROTECTION GLOBAL (pour tout ce qui suit)
-  app.use(protectRoutes);
+    // 🔒 MIDDLEWARE DE PROTECTION GLOBAL (pour tout ce qui suit)
+    app.use(protectRoutes);
 
-  // 🔒 Pages protégées
-  app.get("/dashboard", (req, res) => res.render("dashboard"));
+    // 🔒 Pages protégées
+    app.get("/dashboard", (req, res) => res.render("dashboard"));
 
-  const PORT = process.env.PORT || 8080;
-  app.listen(PORT, "0.0.0.0", () => console.log("Serveur lancé sur", PORT));
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, "0.0.0.0", () => console.log("✅ Serveur lancé sur", PORT));
+  } catch (err) {
+    console.error("❌ ERREUR LORS DU DÉMARRAGE:", err);
+    process.exit(1);
+  }
 })();

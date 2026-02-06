@@ -1,25 +1,245 @@
 <%- include('partials/header') %>
-<%- include('partials/nav') %>
 
-<div class="center">
-  <div class="card">
-    <h2>Connexion</h2>
+<nav class="topbar">
+  <div class="brand">💎 Casino</div>
+  <div class="links">
+    <a href="/">Accueil</a>
+  </div>
+</nav>
 
-    <% if (error) { %>
-      <p class="error"><%= error %></p>
-    <% } %>
+<div class="login-wrapper">
+  <!-- Hero Section -->
+  <div class="login-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Diamond Casino</h1>
+      <p>Bienvenue dans votre espace de gestion</p>
+    </div>
+  </div>
 
-    <form method="post" action="/login">
-      <label>Email</label>
-      <input type="email" name="email" required>
+  <!-- Login Form -->
+  <div class="login-container">
+    <div class="login-card">
+      <div class="form-header">
+        <h2>Connexion</h2>
+        <p>Accédez à votre compte administrateur</p>
+      </div>
 
-      <label>Mot de passe</label>
-      <input type="password" name="password" required>
+      <% if (error) { %>
+        <div class="error-banner"><%= error %></div>
+      <% } %>
 
-      <button type="submit">Se connecter</button>
-    </form>
+      <form method="post" action="/login" class="login-form">
+        <div class="form-group">
+          <label for="email">📧 Email</label>
+          <input type="email" id="email" name="email" placeholder="service@diamond-casino.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">🔐 Mot de passe</label>
+          <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+        </div>
+
+        <button type="submit" class="login-btn">Se connecter</button>
+      </form>
+
+      <div class="login-footer">
+        <p>Un problème ? <a href="/">Retour à l'accueil</a></p>
+      </div>
+    </div>
   </div>
 </div>
+
+<style>
+.login-wrapper {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .login-hero {
+    display: none;
+  }
+}
+
+.login-hero {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02));
+  border-right: 1px solid rgba(255,215,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255,215,0,0.03), transparent 70%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  margin: 0 0 16px;
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(255,215,0,0.15);
+  letter-spacing: 1px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.3));
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+
+.form-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.form-header h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  color: var(--accent);
+}
+
+.form-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.error-banner {
+  background: rgba(255,107,107,0.1);
+  border: 1px solid rgba(255,107,107,0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.form-group input {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 12px;
+  color: #e9eef3;
+  font-size: 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.form-group input::placeholder {
+  color: rgba(255,255,255,0.3);
+}
+
+.form-group input:focus {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,215,0,0.3);
+  box-shadow: 0 0 10px rgba(255,215,0,0.1);
+}
+
+.login-btn {
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 6px 20px rgba(255,215,0,0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.login-footer a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.login-footer a:hover {
+  color: var(--accent-strong);
+}
+</style>
+
+<script>
+// Auto focus first input on load
+document.addEventListener('DOMContentLoaded', () => {
+  const emailInput = document.getElementById('email');
+  if (emailInput) emailInput.focus();
+});
+</script>
 
 </body>
 </html>

@@ -77,12 +77,12 @@
 
 .page-header h1 {
   margin: 0 0 10px 0;
-  color: #ffd700;
+  color: var(--accent, #ffd700);
   font-size: 36px;
 }
 
 .page-header p {
-  color: #bdbdbd;
+  color: var(--muted, #bdbdbd);
   margin: 0;
 }
 
@@ -93,12 +93,12 @@
 }
 
 .add-form h3 {
-  color: #ffd700;
+  color: var(--accent, #ffd700);
   margin-top: 0;
 }
 
 .btn-add {
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  background: linear-gradient(135deg, var(--accent, #ffd700), var(--accent-strong, #ffed4e));
   color: #000;
   font-weight: bold;
   padding: 12px 20px;
@@ -120,15 +120,15 @@
 
 .list-header h3 {
   margin: 0;
-  color: #ffd700;
+  color: var(--accent, #ffd700);
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
 .badge {
-  background: rgba(255, 215, 0, 0.2);
-  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--accent, #ffd700);
   padding: 2px 8px;
   border-radius: 20px;
   font-size: 14px;
@@ -190,13 +190,13 @@
 
 .card-content h4 {
   margin: 0 0 12px 0;
-  color: #fff;
+  color: #e9eef3;
   font-size: 16px;
 }
 
 .info-item {
   margin: 4px 0;
-  color: #bdbdbd;
+  color: var(--muted, #bdbdbd);
   font-size: 13px;
 }
 
@@ -216,9 +216,9 @@
 
 .btn-delete {
   width: 100%;
-  background: rgba(255, 107, 107, 0.2);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  color: var(--danger, #ff6b6b);
   padding: 8px;
   border-radius: 6px;
   cursor: pointer;
@@ -233,7 +233,7 @@
 
 .empty-state {
   text-align: center;
-  color: #bdbdbd;
+  color: var(--muted, #bdbdbd);
   padding: 40px;
   grid-column: 1 / -1;
 }
@@ -248,12 +248,12 @@
 }
 
 .login-cta p {
-  color: #bdbdbd;
+  color: var(--muted, #bdbdbd);
   margin: 0 0 15px 0;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  background: linear-gradient(135deg, var(--accent, #ffd700), var(--accent-strong, #ffed4e));
   color: #000;
   padding: 10px 25px;
   border-radius: 6px;

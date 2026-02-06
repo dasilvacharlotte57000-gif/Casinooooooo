@@ -48,13 +48,15 @@ app.use(cookieParser());
   // AUTH public
   app.use("/", authRoutes);
 
-  // ✅ Pages publiques en lecture
+  // ✅ Pages publiques en lecture (AVANT la protection globale)
   app.use("/blacklist", blacklistRoutes);
   app.use("/employes", partenariatEmployerRoutes);
   app.use("/entreprises", partenariatEntrepriseRoutes);
 
-  // ✅ Tout le reste protégé
+  // 🔒 MIDDLEWARE DE PROTECTION GLOBAL (pour tout ce qui suit)
   app.use(protectRoutes);
+
+  // 🔒 Pages protégées
   app.get("/dashboard", (req, res) => res.render("dashboard"));
 
   const PORT = process.env.PORT || 8080;

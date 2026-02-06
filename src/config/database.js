@@ -7,6 +7,11 @@ module.exports = async function connectDB() {
     return;
   }
 
-  await mongoose.connect(uri);
-  console.log("MongoDB connecté");
+  try {
+    await mongoose.connect(uri);
+    console.log("✅ MongoDB connecté");
+  } catch (err) {
+    console.warn("⚠️  MongoDB non disponible – mode développement sans DB persistante");
+    console.warn("   Erreur:", err.message);
+  }
 };

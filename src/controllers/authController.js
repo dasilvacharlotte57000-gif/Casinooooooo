@@ -1,4 +1,11 @@
-// ...existing code...
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const User = require('../models/user');
+
+exports.getLogin = async (req, res) => {
+  res.render("login", { error: null });
+};
+
 exports.postLogin = async (req, res) => {
   const { email, password } = req.body;
   const normalized = String(email).toLowerCase().trim();
@@ -40,4 +47,7 @@ exports.postLogin = async (req, res) => {
 
   return res.status(401).render("login", { error: "Identifiants invalides" });
 };
-// ...existing code...
+
+exports.postLogout = (req, res) => {
+  req.session.destroy(() => res.redirect("/login"));
+};

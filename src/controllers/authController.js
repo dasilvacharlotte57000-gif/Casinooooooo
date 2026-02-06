@@ -1,42 +1,18 @@
-const bcrypt = require("bcryptjs");
-const mongoose = require("mongoose");
-const User = require("../models/user");
-
-async function ensureDefaultAdmin() {
-  const email = process.env.ADMIN_EMAIL;
-  const pass = process.env.ADMIN_PASSWORD;
-
-  if (!email || !pass) return; // admin géré manuellement
-
-  // Si la DB n'est pas connectée, on ne tente pas d'utiliser Mongoose
-  if (mongoose.connection.readyState !== 1) {
-    console.warn("DB non connectée — saut de la création automatique d'admin");
-    return;
-  }
-
-  const existing = await User.findOne({ email });
-  if (existing) return;
-
-  const passwordHash = await bcrypt.hash(pass, 12);
-  await User.create({ email, passwordHash });
-  console.log("Admin créé:", email);
-}
-
-exports.getLogin = async (req, res) => {
-  await ensureDefaultAdmin();
-  res.render("login", { error: null });
-};
-
+// ...existing code...
 exports.postLogin = async (req, res) => {
   const { email, password } = req.body;
   const normalized = String(email).toLowerCase().trim();
 
-  // Si la DB est connectée, tenter l'auth via la collection `users`
+  console.log("Tentative de connexion:", normalized);
+  console.log("DB connectée:", mongoose.connection.readyState === 1);
+
   if (mongoose.connection.readyState === 1) {
     try {
       const user = await User.findOne({ email: normalized });
+      console.log("Utilisateur trouvé:", user ? user.email : "aucun");
       if (user) {
         const ok = await bcrypt.compare(password, user.passwordHash);
+        console.log("Mot de passe correct:", ok);
         if (!ok) return res.status(401).render("login", { error: "Identifiants invalides" });
 
         req.session.userId = user._id.toString();
@@ -64,7 +40,4 @@ exports.postLogin = async (req, res) => {
 
   return res.status(401).render("login", { error: "Identifiants invalides" });
 };
-
-exports.postLogout = (req, res) => {
-  req.session.destroy(() => res.redirect("/login"));
-};
+// ...existing code...

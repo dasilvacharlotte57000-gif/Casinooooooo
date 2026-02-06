@@ -3,7 +3,8 @@ const path = require("path");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 
-dotenv.config();
+// Charge le .env à la racine du workspace (utile quand npm est lancé depuis /src)
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const connectDB = require("./config/database");
 const createSessionMiddleware = require("./config/session");

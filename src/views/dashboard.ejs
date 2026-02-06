@@ -1,44 +1,257 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
-<div class="container">
-  <div class="dashboard-header">
-    <h1>Diamond Casino</h1>
-    <p class="muted">Connecté: <b><%= user.email %></b></p>
-  </div>
+<div class="container dashboard">
+  <section class="dash-hero">
+    <div class="dash-hero__badge">Centre de pilotage</div>
+    <div class="dash-hero__title">
+      <h1>Diamond Casino</h1>
+      <p>Vue rapide des operations, acces et actions essentielles.</p>
+    </div>
+    <div class="dash-hero__user">
+      <span class="user-chip">Connecte : <strong><%= user.email %></strong></span>
+      <span class="user-status">Session active</span>
+    </div>
+  </section>
 
-  <div class="grid">
-    <a class="tile" href="/blacklist">
-      <div class="tile-icon">🚫</div>
-      <div>
-        <strong>BlackList</strong>
-        <div class="tile-sub">Consulter et gérer la liste noire</div>
+  <section class="dash-grid">
+    <a class="dash-card" href="/blacklist">
+      <div class="dash-card__icon">🚫</div>
+      <div class="dash-card__body">
+        <h3>BlackList</h3>
+        <p>Suivre les personnes interdites et les motifs sensibles.</p>
+        <span class="dash-card__cta">Acceder a la liste</span>
       </div>
     </a>
 
-    <a class="tile" href="/employes">
-      <div class="tile-icon">👥</div>
-      <div>
-        <strong>Employés</strong>
-        <div class="tile-sub">Gérer les employés et partenaires</div>
+
+    <a class="dash-card" href="/entreprises">
+      <div class="dash-card__icon">🏢</div>
+      <div class="dash-card__body">
+        <h3>Entreprises</h3>
+        <p>Centraliser les partenaires, contacts et notes.</p>
+        <span class="dash-card__cta">Voir les partenaires</span>
       </div>
     </a>
 
-    <a class="tile" href="/entreprises">
-      <div class="tile-icon">🏢</div>
-      <div>
-        <strong>Entreprises</strong>
-        <div class="tile-sub">Gérer les partenariats entreprises</div>
+    <a class="dash-card" href="/employeurs">
+      <div class="dash-card__icon">🧑‍💼</div>
+      <div class="dash-card__body">
+        <h3>Employeurs</h3>
+        <p>Suivre les employeurs internes et leur date d'entree.</p>
+        <span class="dash-card__cta">Gerer les employeurs</span>
       </div>
     </a>
-  </div>
+  </section>
+
+  <section class="dash-panels">
+    <div class="dash-panel">
+      <h4>Actions rapides</h4>
+      <div class="dash-actions">
+        <a href="/blacklist" class="dash-action">
+          <span>Ajouter une personne</span>
+          <small>Acces direct a l'ajout BlackList</small>
+        </a>
+        <a href="/entreprises" class="dash-action">
+          <span>Nouvelle entreprise</span>
+          <small>Ajouter un partenaire et un contact</small>
+        </a>
+        <a href="/employeurs" class="dash-action">
+          <span>Nouvel employeur</span>
+          <small>Ajouter un employeur et sa date d'entree</small>
+        </a>
+      </div>
+    </div>
+
+    <div class="dash-panel">
+      <h4>Priorites du jour</h4>
+      <ul class="dash-list">
+        <li>Verifier les acces sensibles et expirations.</li>
+        <li>Mettre a jour les contacts d'entreprise.</li>
+        <li>Controler les profils employes recents.</li>
+      </ul>
+      <div class="dash-note">Astuce : commence par la BlackList si un incident est signale.</div>
+    </div>
+  </section>
 </div>
 
 <style>
-.dashboard-header { margin-bottom: 20px; }
-.tile { display:flex; gap:12px; align-items:center; padding:18px; }
-.tile-icon { font-size: 34px; width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:10px; background: rgba(255,255,255,0.03); }
-.tile-sub { color: #bdbdbd; font-size: 13px; }
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap");
+
+.dashboard {
+  font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+}
+
+.dash-hero {
+  position: relative;
+  padding: 32px 28px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(255, 215, 0, 0.16), transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.3));
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  margin-bottom: 26px;
+  display: grid;
+  gap: 16px;
+}
+
+.dash-hero__badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffe89b;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.dash-hero__title h1 {
+  margin: 0;
+  font-family: "Fraunces", "Times New Roman", serif;
+  font-size: 42px;
+  letter-spacing: 0.02em;
+}
+
+.dash-hero__title p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dash-hero__user {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.user-chip {
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.user-status {
+  color: #8ee6b8;
+  font-size: 13px;
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.dash-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.35));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.dash-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.dash-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  background: rgba(255, 215, 0, 0.12);
+}
+
+.dash-card__body h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.dash-card__body p {
+  margin: 6px 0 12px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 14px;
+}
+
+.dash-card__cta {
+  color: #ffe89b;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.dash-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.dash-panel {
+  padding: 22px;
+  border-radius: 16px;
+  background: rgba(8, 10, 12, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dash-panel h4 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffe89b;
+}
+
+.dash-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.dash-action {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  gap: 4px;
+}
+
+.dash-action span {
+  font-weight: 600;
+}
+
+.dash-action small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dash-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.dash-note {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 215, 0, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .dash-hero__title h1 { font-size: 32px; }
+  .dash-hero { padding: 24px; }
+}
 </style>
 
 </body></html>

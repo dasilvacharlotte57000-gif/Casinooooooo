@@ -1,4 +1,5 @@
 module.exports = function protectRoutes(req, res, next) {
+  console.log('Session actuelle:', req.session);
   // Routes totalement publiques
   const fullyPublic = ["/", "/login", "/logout"];
 

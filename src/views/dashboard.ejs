@@ -15,29 +15,44 @@
   </section>
 
   <section class="dash-grid">
-    <a class="dash-card" href="/employes">
+    <a class="dash-card dash-card--glow" href="/employes">
       <div class="dash-card__icon">👥</div>
       <div class="dash-card__body">
         <h3>Partenariat Employes</h3>
-        <p>Gerer l'equipe, les partenaires et les profils actifs.</p>
+        <p>Equipe interne et partenaires operationnels.</p>
+        <div class="dash-preview">
+          <span>Ajouts & mises a jour</span>
+          <span>Photos et profils</span>
+          <span>Suivi des postes</span>
+        </div>
         <span class="dash-card__cta">Ouvrir la gestion</span>
       </div>
     </a>
-    <a class="dash-card" href="/blacklist">
+
+    <a class="dash-card dash-card--danger" href="/blacklist">
       <div class="dash-card__icon">🚫</div>
       <div class="dash-card__body">
         <h3>BlackList</h3>
-        <p>Suivre les personnes interdites et les motifs sensibles.</p>
+        <p>Acces sensibles et signalements.</p>
+        <div class="dash-preview">
+          <span>Motifs & dates</span>
+          <span>Photos d'identification</span>
+          <span>Alertes rapides</span>
+        </div>
         <span class="dash-card__cta">Acceder a la liste</span>
       </div>
     </a>
 
-
     <a class="dash-card" href="/entreprises">
       <div class="dash-card__icon">🏢</div>
       <div class="dash-card__body">
-        <h3>Entreprises</h3>
-        <p>Centraliser les partenaires, contacts et notes.</p>
+        <h3>Partenariat Entreprise</h3>
+        <p>Contacts, contrats et notes de suivi.</p>
+        <div class="dash-preview">
+          <span>Comptes principaux</span>
+          <span>Emails de contact</span>
+          <span>Historique rapide</span>
+        </div>
         <span class="dash-card__cta">Voir les partenaires</span>
       </div>
     </a>
@@ -46,7 +61,12 @@
       <div class="dash-card__icon">🧑‍💼</div>
       <div class="dash-card__body">
         <h3>Employeurs</h3>
-        <p>Suivre les employeurs internes et leur date d'entree.</p>
+        <p>Managers et responsables internes.</p>
+        <div class="dash-preview">
+          <span>Date d'entree</span>
+          <span>Photos officielles</span>
+          <span>Profil principal</span>
+        </div>
         <span class="dash-card__cta">Gerer les employeurs</span>
       </div>
     </a>
@@ -55,7 +75,12 @@
       <div class="dash-card__icon">📜</div>
       <div class="dash-card__body">
         <h3>Menu</h3>
-        <p>Consulter la carte et calculer un total.</p>
+        <p>Carte premium et calculatrice integrée.</p>
+        <div class="dash-preview">
+          <span>Softs, snacks, cocktails</span>
+          <span>Prix rapides</span>
+          <span>Calcul instantane</span>
+        </div>
         <span class="dash-card__cta">Ouvrir le menu</span>
       </div>
     </a>
@@ -206,6 +231,38 @@
   color: #ffe89b;
   font-weight: 600;
   font-size: 13px;
+}
+
+.dash-card--glow {
+  box-shadow: 0 18px 40px rgba(255, 215, 0, 0.08);
+}
+
+.dash-card--danger {
+  border-color: rgba(255, 107, 107, 0.35);
+}
+
+.dash-card--danger .dash-card__cta {
+  color: #ff9b9b;
+}
+
+.dash-preview {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.dash-preview span {
+  position: relative;
+  padding-left: 14px;
+}
+
+.dash-preview span::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: rgba(255, 215, 0, 0.6);
 }
 
 .dash-panels {

@@ -3,6 +3,8 @@ const initCloudinary = require("../config/cloudinary");
 
 exports.list = async (req, res) => {
   try {
+    // Auto-clean expired entries before listing
+    await Blacklist.deleteMany({ expireAt: { $ne: null, $lte: new Date() } });
     const items = await Blacklist.find().sort({ createdAt: -1 }).lean();
     return res.render("blacklist", { items });
   } catch (err) {

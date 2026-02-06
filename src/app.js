@@ -14,6 +14,7 @@ const blacklistRoutes = require("./routes/blacklistRoutes");
 const partenariatEmployerRoutes = require("./routes/partenariatEmployerRoutes");
 const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoutes");
 const employeurRoutes = require("./routes/employeurRoutes");
+const menuRoutes = require("./routes/menuRoutes");
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use(express.urlencoded({ extended: true }));
     app.use("/employes", partenariatEmployerRoutes);
     app.use("/entreprises", partenariatEntrepriseRoutes);
     app.use("/employeurs", employeurRoutes);
+    app.use("/menu", menuRoutes);
 
     // 🔒 MIDDLEWARE DE PROTECTION GLOBAL (pour tout ce qui suit)
     app.use(protectRoutes);

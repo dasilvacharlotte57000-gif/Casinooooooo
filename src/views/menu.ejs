@@ -1,0 +1,326 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<section class="menu-hero">
+  <div class="menu-frame">
+    <div class="menu-header">
+      <div class="menu-kicker">Menu</div>
+      <div class="menu-line"></div>
+      <p>Selection Diamond Casino & Resort</p>
+    </div>
+
+    <div class="menu-grid">
+      <% sections.forEach(section => { %>
+        <div class="menu-section">
+          <div class="section-title">
+            <span class="section-icon"><%= section.icon %></span>
+            <h2><%= section.title %></h2>
+          </div>
+          <ul class="menu-items">
+            <% section.items.forEach(item => { %>
+              <li class="menu-item" data-price="<%= item.price %>">
+                <span class="item-name"><%= item.name %></span>
+                <span class="item-dots"></span>
+                <span class="item-price"><%= item.price %> $</span>
+                <div class="item-actions">
+                  <button type="button" class="add-btn">+</button>
+                  <input type="number" min="0" value="0" class="qty-input" />
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      <% }); %>
+    </div>
+
+    <div class="menu-divider">♦</div>
+
+    <section class="calc-panel">
+      <div>
+        <h3>Calculatrice de commande</h3>
+        <p>Ajoute des quantites ou clique sur + pour remplir le ticket.</p>
+      </div>
+      <div class="calc-total">
+        <span>Total</span>
+        <strong id="calcTotal">0 $</strong>
+      </div>
+      <div class="calc-actions">
+        <button type="button" id="resetCalc" class="reset-btn">Reinitialiser</button>
+        <button type="button" id="copyCalc" class="copy-btn">Copier le total</button>
+      </div>
+      <div class="calc-summary" id="calcSummary">Aucun article selectionne.</div>
+    </section>
+  </div>
+</section>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:wght@400;500;600&display=swap");
+
+.menu-hero {
+  padding: 40px 16px 80px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 50%),
+    linear-gradient(180deg, #0b0b0b 0%, #050505 100%);
+}
+
+.menu-frame {
+  max-width: 980px;
+  margin: 0 auto;
+  border-radius: 22px;
+  padding: 34px 28px 40px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.5));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  color: #f5f2ea;
+}
+
+.menu-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.menu-kicker {
+  font-family: "Cinzel", serif;
+  font-size: 44px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.menu-line {
+  width: 140px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  margin: 10px auto 12px;
+}
+
+.menu-header p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-family: "Crimson Pro", serif;
+  font-size: 18px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 26px;
+  margin-top: 24px;
+}
+
+.menu-section {
+  padding: 18px 18px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.section-icon {
+  font-size: 22px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-family: "Cinzel", serif;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.menu-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.menu-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  font-family: "Crimson Pro", serif;
+  font-size: 16px;
+}
+
+.item-name {
+  white-space: nowrap;
+}
+
+.item-dots {
+  flex: 1;
+  height: 1px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.item-price {
+  min-width: 70px;
+  text-align: right;
+}
+
+.item-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.add-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.qty-input {
+  width: 64px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  text-align: right;
+}
+
+.menu-divider {
+  text-align: center;
+  font-size: 26px;
+  margin: 28px 0 18px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.calc-panel {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  background: rgba(255, 215, 0, 0.08);
+  display: grid;
+  gap: 12px;
+}
+
+.calc-panel h3 {
+  margin: 0;
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calc-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.calc-total strong {
+  font-size: 24px;
+  color: #ffd700;
+}
+
+.calc-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reset-btn,
+.copy-btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.reset-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.copy-btn {
+  background: linear-gradient(120deg, #ffd700, #ffef8a);
+  color: #1a1a1a;
+}
+
+.calc-summary {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 720px) {
+  .menu-frame { padding: 28px 18px; }
+  .menu-kicker { font-size: 34px; }
+}
+</style>
+
+<script>
+const formatCurrency = (value) => `${value.toLocaleString("fr-FR")} $`;
+
+const updateTotals = () => {
+  const items = document.querySelectorAll(".menu-item");
+  let total = 0;
+  const summary = [];
+
+  items.forEach((item) => {
+    const price = Number(item.dataset.price || 0);
+    const qtyInput = item.querySelector(".qty-input");
+    const qty = Number(qtyInput.value || 0);
+    if (qty > 0) {
+      total += price * qty;
+      const name = item.querySelector(".item-name").textContent.trim();
+      summary.push(`${qty} x ${name}`);
+    }
+  });
+
+  document.getElementById("calcTotal").textContent = formatCurrency(total);
+  document.getElementById("calcSummary").textContent = summary.length
+    ? summary.join(" | ")
+    : "Aucun article selectionne.";
+};
+
+document.querySelectorAll(".add-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const input = btn.closest(".menu-item").querySelector(".qty-input");
+    input.value = Number(input.value || 0) + 1;
+    updateTotals();
+  });
+});
+
+document.querySelectorAll(".qty-input").forEach((input) => {
+  input.addEventListener("input", updateTotals);
+});
+
+document.getElementById("resetCalc").addEventListener("click", () => {
+  document.querySelectorAll(".qty-input").forEach((input) => {
+    input.value = 0;
+  });
+  updateTotals();
+});
+
+document.getElementById("copyCalc").addEventListener("click", async () => {
+  const totalText = document.getElementById("calcTotal").textContent;
+  try {
+    await navigator.clipboard.writeText(`Total: ${totalText}`);
+    document.getElementById("copyCalc").textContent = "Copie !";
+    setTimeout(() => {
+      document.getElementById("copyCalc").textContent = "Copier le total";
+    }, 1200);
+  } catch (err) {
+    document.getElementById("calcSummary").textContent = "Copie impossible dans ce navigateur.";
+  }
+});
+
+updateTotals();
+</script>
+
+</body></html>

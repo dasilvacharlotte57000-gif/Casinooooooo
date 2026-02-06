@@ -4,7 +4,7 @@ module.exports = function protectRoutes(req, res, next) {
   const fullyPublic = ["/", "/login", "/logout"];
 
   // Préfixes en lecture publique
-  const publicPrefixes = ["/blacklist", "/employes", "/entreprises", "/employeurs"];
+  const publicPrefixes = ["/blacklist", "/employes", "/entreprises", "/employeurs", "/menu"];
 
   // Autoriser home/login/logout
   if (fullyPublic.includes(req.path)) return next();

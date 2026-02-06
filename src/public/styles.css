@@ -1,84 +1,80 @@
+a:link, a:visited { color: inherit; }
+:root{
+  --bg-0: #070707;
+  --bg-1: #0f1113;
+  --card: rgba(255,255,255,0.03);
+  --muted: #bdbdbd;
+  --accent: #ffd700;
+  --accent-strong: #ffda47;
+  --danger: #ff6b6b;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #1b1b1b, #000);
-  color: #fff;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+  color: #e9eef3;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
+a { text-decoration: none; }
 a { color: inherit; text-decoration: none; }
-.container { max-width: 980px; margin: 40px auto; padding: 0 16px; }
-.muted { color: #bdbdbd; margin-top: 6px; }
+.container { max-width: 980px; margin: 36px auto; padding: 0 16px; }
+.muted { color: var(--muted); margin-top: 6px; }
 
 .topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 18px;
-  border-bottom: 1px solid rgba(255, 215, 0, 0.25);
-  position: sticky; top: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(8px);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 18px; position:sticky; top:0; z-index:40;
+  border-bottom: 1px solid rgba(255,215,0,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25));
+  backdrop-filter: blur(6px);
 }
-.brand { font-weight: 800; color: #ffd700; font-size: 22px; }
-.links { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.links a { padding: 8px 10px; border-radius: 10px; }
-.links a.active { outline: 1px solid rgba(255,215,0,.55); }
+.brand { font-weight:800; color:var(--accent); font-size:20px; }
+.links { display:flex; gap:12px; align-items:center; }
+.links a { padding:8px 12px; border-radius:10px; color:var(--muted); }
+.links a.active { outline: 1px solid rgba(255,215,0,0.28); color:var(--accent-strong); }
 
-.center { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding: 20px; }
+.center { min-height: 72vh; display:flex; align-items:center; justify-content:center; padding:20px; }
 .card {
-  width: 420px; max-width: 92vw;
-  background: rgba(20,20,20,.7);
-  border: 1px solid rgba(255,215,0,.25);
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 0 40px rgba(0,0,0,.6);
+  width:420px; max-width:92vw;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius:14px; padding:22px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
 }
 .card.wide { width: 100%; }
 
 .title { text-align:center; color:#ffd700; margin: 4px 0 18px; }
 .error { color: #ff6b6b; }
 
-label { display:block; margin-top: 10px; margin-bottom: 6px; color:#ffd700; font-size: 13px; }
-input {
-  width: 100%;
-  padding: 12px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.05);
-  color:#fff;
-  outline: none;
-  box-sizing: border-box;
+label { display:block; margin-top:10px; margin-bottom:6px; color:var(--accent); font-size:13px; }
+input, textarea, select {
+  width:100%; padding:11px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.02); color: #e9eef3; outline:none; box-sizing:border-box;
 }
+textarea { min-height:100px; }
 .row { display:flex; gap: 10px; }
 .row input { flex:1; }
 
 .btn {
-  margin-top: 14px;
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: none;
-  background: #ffd700;
-  color: #000;
-  font-weight: 800;
-  cursor: pointer;
+  margin-top:14px; width:100%; padding:12px 14px; border-radius:10px; border:none; cursor:pointer;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong)); color:#000; font-weight:700;
+  box-shadow: 0 6px 18px rgba(255,215,0,0.06);
 }
 .btn.small { width: auto; padding: 8px 10px; margin-top: 0; }
-.btn.danger { background: #ff4d4d; color: #000; }
+.btn.danger { background: linear-gradient(90deg, #ff6b6b, #ff5252); color:#000; }
 .inline { display:inline; margin:0; }
 
-.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 18px; }
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:16px; margin-top:18px; }
 .tile {
-  display:block; padding: 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,215,0,.25);
-  background: rgba(255,255,255,.04);
+  display:flex; gap:12px; align-items:center; padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+  transition: transform .18s ease, box-shadow .18s ease;
 }
+.tile:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
 
 .list { margin-top: 18px; display:flex; flex-direction: column; gap: 10px; }
-.item {
-  display:flex; align-items:center; justify-content: space-between;
-  gap: 12px;
-  padding: 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,215,0,.18);
-  background: rgba(255,255,255,.03);
-}
+.item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); background:var(--card); }
 .avatar { width: 54px; height: 54px; border-radius: 14px; overflow:hidden; border: 1px solid rgba(255,215,0,.25); }
 .avatar img { width:100%; height:100%; object-fit: cover; display:block; }
 .ph { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,.05); }
@@ -112,14 +108,7 @@ input {
   justify-content: center;
 }
 
-.card-xl {
-  max-width: 920px;
-  width: 100%;
-  padding: 36px 42px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 212, 0, 0.25);
-  box-shadow: 0 0 30px rgba(255, 212, 0, 0.08);
-}
+.card-xl { max-width:920px; width:100%; padding:36px 42px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
 
 .card-title {
   text-align: center;

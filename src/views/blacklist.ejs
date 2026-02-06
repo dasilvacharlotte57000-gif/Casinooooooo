@@ -21,13 +21,17 @@
   <% if (user) { %>
     <div class="card wide add-form">
       <h3>➕ Ajouter une personne</h3>
-      <form method="post" action="/blacklist">
+      <form method="post" action="/blacklist" enctype="multipart/form-data">
         <div class="row">
           <input name="prenom" placeholder="Prénom" required />
           <input name="nom" placeholder="Nom" required />
         </div>
         <input name="raison" placeholder="Raison (optionnel)" />
         <input name="expireAt" type="date" placeholder="Expiration (optionnel)" />
+        <div class="row">
+          <input name="photoUrl" placeholder="URL de la photo (optionnel)" />
+          <input name="photo" type="file" accept="image/*" />
+        </div>
         <button class="btn btn-add" type="submit">Ajouter</button>
       </form>
     </div>
@@ -44,6 +48,13 @@
       <% } else { %>
         <% items.forEach(item => { %>
           <div class="list-item" data-nom="<%= item.nom.toLowerCase() %>" data-prenom="<%= item.prenom.toLowerCase() %>">
+            <div class="item-avatar">
+              <% if (item.photoUrl) { %>
+                <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" />
+              <% } else { %>
+                <div class="item-avatar__placeholder">👤</div>
+              <% } %>
+            </div>
             <div class="item-content">
               <div class="item-header">
                 <h4><%= item.prenom %> <%= item.nom %></h4>
@@ -177,6 +188,7 @@
 
 .list-item {
   display: flex;
+  gap: 14px;
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 215, 0, 0.05);
@@ -195,6 +207,30 @@
 
 .item-content {
   flex: 1;
+}
+
+.item-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.item-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.item-avatar__placeholder {
+  font-size: 28px;
 }
 
 .item-header h4 {

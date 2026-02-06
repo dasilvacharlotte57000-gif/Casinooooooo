@@ -7,3 +7,52 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+
+<script>
+  (function () {
+    function updateUrl(params) {
+      var query = params.toString();
+      var next = window.location.pathname + (query ? "?" + query : "");
+      window.history.replaceState(null, "", next);
+    }
+
+    var params = new URLSearchParams(window.location.search);
+
+    if (params.has("logout")) {
+      localStorage.removeItem("casinoToken");
+      params.delete("logout");
+      updateUrl(params);
+    }
+
+    var tokenFromUrl = params.get("token");
+    if (tokenFromUrl) {
+      localStorage.setItem("casinoToken", tokenFromUrl);
+      params.delete("token");
+      updateUrl(params);
+    }
+
+    var token = localStorage.getItem("casinoToken");
+    if (!token) return;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("a[href^='/']").forEach(function (link) {
+        var href = link.getAttribute("href");
+        if (!href) return;
+        var url = new URL(href, window.location.origin);
+        if (!url.searchParams.get("token")) {
+          url.searchParams.set("token", token);
+          link.setAttribute("href", url.pathname + "?" + url.searchParams.toString());
+        }
+      });
+
+      document.querySelectorAll("form").forEach(function (form) {
+        if (form.querySelector("input[name='token']")) return;
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "token";
+        input.value = token;
+        form.appendChild(input);
+      });
+    });
+  })();
+</script>

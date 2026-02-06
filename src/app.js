@@ -1,13 +1,12 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
-const cookieParser = require("cookie-parser");
+const { verifyToken } = require("./utils/authToken");
 
 // Charge le .env à la racine du workspace (utile quand npm est lancé depuis /src)
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const connectDB = require("./config/database");
-const createSessionMiddleware = require("./config/session");
 const protectRoutes = require("./middlewares/protectRoutes");
 
 const authRoutes = require("./routes/authRoutes");
@@ -29,23 +28,23 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 (async () => {
   try {
     // DB
     await connectDB();
 
-    // Session (DOIT être avant les routes)
-    const sessionMiddleware = await createSessionMiddleware();
-    app.use(sessionMiddleware);
-
-    // Locals EJS
+    // User from token (no cookies)
     app.use((req, res, next) => {
+      const auth = req.headers.authorization || "";
+      const bearer = auth.startsWith("Bearer ") ? auth.slice(7) : null;
+      const token = req.query.token || req.body?.token || bearer || null;
+      const payload = token ? verifyToken(token) : null;
+
+      req.user = payload ? { id: payload.sub, email: payload.email } : null;
       res.locals.currentPath = req.path;
-      res.locals.user = req.session?.userId
-        ? { id: req.session.userId, email: req.session.email }
-        : null;
+      res.locals.user = req.user;
+      res.locals.authToken = payload ? token : null;
       next();
     });
 

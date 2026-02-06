@@ -17,7 +17,7 @@ module.exports = function protectRoutes(req, res, next) {
   if (isPublicSection && req.method === "GET") return next();
 
   // Sinon -> il faut être connecté
-  if (!req.session?.userId) return res.redirect("/login");
+  if (!req.user) return res.redirect("/login");
 
   next();
 };

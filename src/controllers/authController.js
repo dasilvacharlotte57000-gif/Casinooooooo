@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const User = require("../models/user");
+const { createToken } = require("../utils/authToken");
 
 exports.getLogin = async (req, res) => {
   res.render("login", { error: null });
@@ -22,9 +23,8 @@ exports.postLogin = async (req, res) => {
         console.log("Mot de passe correct:", ok);
         if (!ok) return res.status(401).render("login", { error: "Identifiants invalides" });
 
-        req.session.userId = user._id.toString();
-        req.session.email = user.email;
-        return res.redirect("/dashboard");
+        const token = createToken({ sub: user._id.toString(), email: user.email });
+        return res.redirect(`/dashboard?token=${encodeURIComponent(token)}`);
       }
     } catch (err) {
       console.warn("Erreur DB lors de la recherche d'utilisateur — fallback admin possible", err.message);
@@ -40,14 +40,13 @@ exports.postLogin = async (req, res) => {
     normalized === String(adminEmail).toLowerCase().trim() &&
     password === adminPass
   ) {
-    req.session.userId = "dev-admin";
-    req.session.email = adminEmail;
-    return res.redirect("/dashboard");
+    const token = createToken({ sub: "dev-admin", email: adminEmail });
+    return res.redirect(`/dashboard?token=${encodeURIComponent(token)}`);
   }
 
   return res.status(401).render("login", { error: "Identifiants invalides" });
 };
 
 exports.postLogout = (req, res) => {
-  req.session.destroy(() => res.redirect("/login"));
+  res.redirect("/login?logout=1");
 };

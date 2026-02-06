@@ -2,14 +2,43 @@
 <%- include('partials/nav') %>
 
 <div class="container">
-  <h1>Diamond Casino</h1>
-  <p class="muted">Connecté: <b><%= user.email %></b></p>
+  <div class="dashboard-header">
+    <h1>Diamond Casino</h1>
+    <p class="muted">Connecté: <b><%= user.email %></b></p>
+  </div>
 
   <div class="grid">
-    <a class="tile" href="/blacklist">Gérer BlackList</a>
-    <a class="tile" href="/employes">Gérer Employés</a>
-    <a class="tile" href="/entreprises">Gérer Entreprises</a>
+    <a class="tile" href="/blacklist">
+      <div class="tile-icon">🚫</div>
+      <div>
+        <strong>BlackList</strong>
+        <div class="tile-sub">Consulter et gérer la liste noire</div>
+      </div>
+    </a>
+
+    <a class="tile" href="/employes">
+      <div class="tile-icon">👥</div>
+      <div>
+        <strong>Employés</strong>
+        <div class="tile-sub">Gérer les employés et partenaires</div>
+      </div>
+    </a>
+
+    <a class="tile" href="/entreprises">
+      <div class="tile-icon">🏢</div>
+      <div>
+        <strong>Entreprises</strong>
+        <div class="tile-sub">Gérer les partenariats entreprises</div>
+      </div>
+    </a>
   </div>
 </div>
+
+<style>
+.dashboard-header { margin-bottom: 20px; }
+.tile { display:flex; gap:12px; align-items:center; padding:18px; }
+.tile-icon { font-size: 34px; width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:10px; background: rgba(255,255,255,0.03); }
+.tile-sub { color: #bdbdbd; font-size: 13px; }
+</style>
 
 </body></html>

@@ -3,21 +3,21 @@
 
 <% const formatDate = (d) => d ? new Date(d).toISOString().slice(0, 10) : ""; %>
 
-<div class="container">
+<div class="container page-shell">
+  <div class="page-toolbar">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Rechercher..."
+      class="page-search-input"
+    />
+    <button class="page-search-btn" type="button">🔍</button>
+  </div>
+
   <div class="page-header">
     <h1>🚫 BlackList</h1>
     <p>Gestion des personnes interdites d'accès</p>
     <p class="page-note">Les fiches peuvent etre modifiees apres publication.</p>
-  </div>
-
-  <!-- Barre de recherche -->
-  <div class="search-card">
-    <input 
-      type="text" 
-      id="searchInput" 
-      placeholder="🔍 Rechercher par nom ou prénom..." 
-      class="search-input"
-    />
   </div>
 
   <!-- Formulaire d'ajout (uniquement connecté) -->

@@ -22,11 +22,22 @@
       </div>
       <input name="motif" placeholder="Motif (ex: retard, comportement...)" />
       <div class="row">
+        <select name="grade" required>
+          <option value="stagiaire">Stagiaire</option>
+          <option value="agent polyvalent">Agent polyvalent</option>
+          <option value="agent polyvalent confirme">Agent polyvalent confirme</option>
+          <option value="responsable securite">Responsable securite</option>
+          <option value="manager">Manager</option>
+          <option value="adjoint de direction">Adjoint de direction</option>
+        </select>
         <select name="type" required>
           <option value="temporaire">Temporaire</option>
           <option value="definitif">Definitif</option>
         </select>
+      </div>
+      <div class="row">
         <input name="durationDays" type="number" min="1" placeholder="Duree (jours)" />
+        <span class="hint">Choisir le grade avant le type.</span>
       </div>
       <div class="row">
         <input name="expireAt" type="date" placeholder="Date d'expiration" />
@@ -51,6 +62,7 @@
               <div>
                 <h4><%= item.prenom %> <%= item.nom %></h4>
                 <p class="warn-type"><%= item.type === 'definitif' ? 'Definitif' : 'Temporaire' %></p>
+                <p class="warn-grade">🎖️ <%= item.grade || 'stagiaire' %></p>
                 <% if (item.motif) { %>
                   <p class="warn-motif">📝 <%= item.motif %></p>
                 <% } %>
@@ -188,6 +200,12 @@
 .warn-motif {
   margin: 6px 0 0;
   color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+.warn-grade {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 13px;
 }
 

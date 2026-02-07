@@ -16,7 +16,7 @@ exports.list = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const { prenom, nom, motif, type, expireAt, durationDays } = req.body;
+  const { prenom, nom, motif, grade, type, expireAt, durationDays } = req.body;
   const token = req.body?.token || req.query?.token || "";
   let finalExpireAt = null;
 
@@ -34,6 +34,7 @@ exports.create = async (req, res) => {
       prenom,
       nom,
       motif: motif || "",
+      grade: grade || "stagiaire",
       type,
       expireAt: finalExpireAt
     });

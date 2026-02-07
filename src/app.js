@@ -15,6 +15,7 @@ const partenariatEmployerRoutes = require("./routes/partenariatEmployerRoutes");
 const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoutes");
 const employeurRoutes = require("./routes/employeurRoutes");
 const menuRoutes = require("./routes/menuRoutes");
+const avertissementRoutes = require("./routes/avertissementRoutes");
 
 const app = express();
 
@@ -68,6 +69,7 @@ app.use(express.urlencoded({ extended: true }));
 
     // 🔒 Pages protégées
     app.get("/dashboard", (req, res) => res.render("dashboard"));
+    app.use("/avertissements", avertissementRoutes);
 
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, "0.0.0.0", () => console.log("✅ Serveur lancé sur", PORT));

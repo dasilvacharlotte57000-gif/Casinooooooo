@@ -1,0 +1,197 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container warn">
+  <section class="warn-hero">
+    <div>
+      <h1>⚠️ Avertissements</h1>
+      <p>Suivi des avertissements pour les employes. Acces reserve.</p>
+    </div>
+    <div class="warn-hero__meta">
+      <span class="warn-chip">Acces securise</span>
+      <span class="warn-chip warn-chip--alt">Suppression auto apres expiration</span>
+    </div>
+  </section>
+
+  <section class="warn-form">
+    <h3>Ajouter un avertissement</h3>
+    <form method="post" action="/avertissements">
+      <div class="row">
+        <input name="prenom" placeholder="Prenom" required />
+        <input name="nom" placeholder="Nom" required />
+      </div>
+      <div class="row">
+        <select name="type" required>
+          <option value="temporaire">Temporaire</option>
+          <option value="definitif">Definitif</option>
+        </select>
+        <input name="durationDays" type="number" min="1" placeholder="Duree (jours)" />
+      </div>
+      <div class="row">
+        <input name="expireAt" type="date" placeholder="Date d'expiration" />
+        <span class="hint">Utilise soit la duree en jours, soit la date.</span>
+      </div>
+      <button class="btn btn-add" type="submit">Ajouter</button>
+    </form>
+  </section>
+
+  <section class="warn-list">
+    <div class="warn-list__header">
+      <h3>Avertissements actifs (<span class="badge"><%= items.length %></span>)</h3>
+    </div>
+
+    <% if (items.length === 0) { %>
+      <p class="empty-state">Aucun avertissement actif.</p>
+    <% } else { %>
+      <div class="warn-grid">
+        <% items.forEach(item => { %>
+          <div class="warn-card <%= item.type === 'definitif' ? 'warn-card--danger' : '' %>">
+            <div class="warn-card__top">
+              <div>
+                <h4><%= item.prenom %> <%= item.nom %></h4>
+                <p class="warn-type"><%= item.type === 'definitif' ? 'Definitif' : 'Temporaire' %></p>
+              </div>
+              <form method="post" action="/avertissements/<%= item._id %>/delete">
+                <button class="btn-delete" type="submit">Supprimer</button>
+              </form>
+            </div>
+
+            <div class="warn-meta">
+              <% if (item.type === 'temporaire' && item.expireAt) { %>
+                <span>Expire le <%= item.expireAt.toLocaleDateString('fr-FR') %></span>
+              <% } else { %>
+                <span>Sans expiration</span>
+              <% } %>
+              <span>Ajoute le <%= item.createdAt.toLocaleDateString('fr-FR') %></span>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </section>
+</div>
+
+<%- include('partials/footer') %>
+
+<style>
+.warn {
+  display: grid;
+  gap: 26px;
+}
+
+.warn-hero {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 183, 77, 0.14), rgba(0, 0, 0, 0.4));
+  border: 1px solid rgba(255, 183, 77, 0.25);
+}
+
+.warn-hero h1 {
+  margin: 0 0 6px;
+  color: #ffcf8a;
+}
+
+.warn-hero p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.warn-hero__meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.warn-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 183, 77, 0.18);
+  color: #ffd9a6;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.warn-chip--alt {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.warn-form {
+  padding: 22px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.warn-form h3 {
+  margin: 0 0 14px;
+  color: #ffd9a6;
+}
+
+.warn-form .hint {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  align-self: center;
+}
+
+.warn-list__header {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.warn-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.warn-card {
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.warn-card--danger {
+  border-color: rgba(255, 107, 107, 0.4);
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.12);
+}
+
+.warn-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.warn-card h4 {
+  margin: 0 0 6px;
+}
+
+.warn-type {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+.warn-meta {
+  margin-top: 12px;
+  display: grid;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .warn-hero { flex-direction: column; }
+}
+</style>
+
+</body></html>

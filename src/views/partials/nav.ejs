@@ -11,6 +11,7 @@
 
     <% if (user) { %>
       <a class="<%= currentPath.startsWith('/dashboard') ? 'active':'' %>" href="/dashboard">Dashboard</a>
+      <a class="<%= currentPath.startsWith('/avertissements') ? 'active':'' %>" href="/avertissements">Avertissements</a>
 
       <form method="post" action="/logout" class="inline">
         <button class="btn small" type="submit">Déconnexion</button>

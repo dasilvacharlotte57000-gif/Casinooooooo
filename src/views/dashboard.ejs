@@ -84,6 +84,20 @@
         <span class="dash-card__cta">Ouvrir le menu</span>
       </div>
     </a>
+
+    <a class="dash-card dash-card--warning" href="/avertissements">
+      <div class="dash-card__icon">⚠️</div>
+      <div class="dash-card__body">
+        <h3>Avertissements</h3>
+        <p>Suivi interne des sanctions et durees.</p>
+        <div class="dash-preview">
+          <span>Temporaire ou definitif</span>
+          <span>Dates d'expiration</span>
+          <span>Suppression automatique</span>
+        </div>
+        <span class="dash-card__cta">Voir les avertissements</span>
+      </div>
+    </a>
   </section>
 
   <section class="dash-panels">
@@ -243,6 +257,15 @@
 
 .dash-card--danger .dash-card__cta {
   color: #ff9b9b;
+}
+
+.dash-card--warning {
+  border-color: rgba(255, 183, 77, 0.4);
+  box-shadow: 0 16px 34px rgba(255, 183, 77, 0.15);
+}
+
+.dash-card--warning .dash-card__cta {
+  color: #ffcf8a;
 }
 
 .dash-preview {

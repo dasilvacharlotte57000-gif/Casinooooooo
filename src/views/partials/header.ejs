@@ -46,6 +46,13 @@
       });
 
       document.querySelectorAll("form").forEach(function (form) {
+        var action = form.getAttribute("action") || window.location.pathname;
+        var actionUrl = new URL(action, window.location.origin);
+        if (!actionUrl.searchParams.get("token")) {
+          actionUrl.searchParams.set("token", token);
+          form.setAttribute("action", actionUrl.pathname + "?" + actionUrl.searchParams.toString());
+        }
+
         if (form.querySelector("input[name='token']")) return;
         var input = document.createElement("input");
         input.type = "hidden";

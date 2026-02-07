@@ -1,6 +1,8 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
+<% const gradeClass = (g) => (g || '').toLowerCase().replace(/\s+/g, '-'); %>
+
 <div class="container warn">
   <section class="warn-hero">
     <div>
@@ -57,7 +59,7 @@
     <% } else { %>
       <div class="warn-grid">
         <% items.forEach(item => { %>
-          <div class="warn-card <%= item.type === 'definitif' ? 'warn-card--danger' : '' %>">
+          <div class="warn-card <%= item.type === 'definitif' ? 'warn-card--danger' : '' %> grade-<%= gradeClass(item.grade) %>">
             <div class="warn-card__top">
               <div>
                 <h4><%= item.prenom %> <%= item.nom %></h4>
@@ -179,6 +181,31 @@
 .warn-card--danger {
   border-color: rgba(255, 107, 107, 0.4);
   box-shadow: 0 12px 30px rgba(255, 107, 107, 0.12);
+}
+
+.grade-stagiaire {
+  border-color: rgba(116, 209, 255, 0.55);
+  box-shadow: 0 12px 30px rgba(116, 209, 255, 0.12);
+}
+
+.grade-agent-polyvalent {
+  border-color: rgba(70, 150, 255, 0.55);
+  box-shadow: 0 12px 30px rgba(70, 150, 255, 0.12);
+}
+
+.grade-agent-polyvalent-confirme {
+  border-color: rgba(255, 107, 107, 0.7);
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.2);
+}
+
+.grade-responsable-securite {
+  border-color: rgba(20, 20, 20, 0.9);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.grade-manager {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.08);
 }
 
 .warn-card__top {

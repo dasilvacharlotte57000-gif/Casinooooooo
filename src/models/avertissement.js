@@ -4,6 +4,7 @@ const AvertissementSchema = new mongoose.Schema(
   {
     prenom: { type: String, required: true, trim: true },
     nom: { type: String, required: true, trim: true },
+    motif: { type: String, default: "", trim: true },
     type: { type: String, enum: ["temporaire", "definitif"], required: true },
     expireAt: { type: Date, default: null }
   },

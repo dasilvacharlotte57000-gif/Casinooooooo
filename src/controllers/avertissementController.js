@@ -16,7 +16,8 @@ exports.list = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const { prenom, nom, type, expireAt, durationDays } = req.body;
+  const { prenom, nom, motif, type, expireAt, durationDays } = req.body;
+  const token = req.body?.token || req.query?.token || "";
   let finalExpireAt = null;
 
   if (type === "temporaire") {
@@ -32,6 +33,7 @@ exports.create = async (req, res) => {
     await Avertissement.create({
       prenom,
       nom,
+      motif: motif || "",
       type,
       expireAt: finalExpireAt
     });
@@ -39,14 +41,17 @@ exports.create = async (req, res) => {
     console.warn("Erreur creation avertissement (DB):", err.message);
   }
 
-  res.redirect("/avertissements");
+  const redirectUrl = token ? `/avertissements?token=${encodeURIComponent(token)}` : "/avertissements";
+  res.redirect(redirectUrl);
 };
 
 exports.remove = async (req, res) => {
+  const token = req.body?.token || req.query?.token || "";
   try {
     await Avertissement.findByIdAndDelete(req.params.id);
   } catch (err) {
     console.warn("Erreur suppression avertissement (DB):", err.message);
   }
-  res.redirect("/avertissements");
+  const redirectUrl = token ? `/avertissements?token=${encodeURIComponent(token)}` : "/avertissements";
+  res.redirect(redirectUrl);
 };

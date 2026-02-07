@@ -20,6 +20,7 @@
         <input name="prenom" placeholder="Prenom" required />
         <input name="nom" placeholder="Nom" required />
       </div>
+      <input name="motif" placeholder="Motif (ex: retard, comportement...)" />
       <div class="row">
         <select name="type" required>
           <option value="temporaire">Temporaire</option>
@@ -50,6 +51,9 @@
               <div>
                 <h4><%= item.prenom %> <%= item.nom %></h4>
                 <p class="warn-type"><%= item.type === 'definitif' ? 'Definitif' : 'Temporaire' %></p>
+                <% if (item.motif) { %>
+                  <p class="warn-motif">📝 <%= item.motif %></p>
+                <% } %>
               </div>
               <form method="post" action="/avertissements/<%= item._id %>/delete">
                 <button class="btn-delete" type="submit">Supprimer</button>
@@ -177,6 +181,12 @@
 
 .warn-type {
   margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+.warn-motif {
+  margin: 6px 0 0;
   color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
 }

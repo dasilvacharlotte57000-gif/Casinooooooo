@@ -1,6 +1,8 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
+<% const formatDate = (d) => d ? new Date(d).toISOString().slice(0, 10) : ""; %>
+
 <div class="container">
   <div class="page-header">
     <h1>🚫 BlackList</h1>
@@ -51,7 +53,7 @@
           <div class="list-item" data-nom="<%= item.nom.toLowerCase() %>" data-prenom="<%= item.prenom.toLowerCase() %>">
             <div class="item-avatar">
               <% if (item.photoUrl) { %>
-                <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" />
+                <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" class="zoomable" data-full="<%= item.photoUrl %>" />
               <% } else { %>
                 <div class="item-avatar__placeholder">👤</div>
               <% } %>
@@ -68,11 +70,29 @@
               <% } %>
             </div>
             <% if (user) { %>
-              <form method="post" action="/blacklist/<%= item._id %>/delete" class="delete-form">
-                <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
-              </form>
+              <div class="item-actions">
+                <button class="btn-edit" type="button" data-edit="<%= item._id %>">Editer</button>
+                <form method="post" action="/blacklist/<%= item._id %>/delete" class="delete-form">
+                  <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
+                </form>
+              </div>
             <% } %>
           </div>
+          <% if (user) { %>
+            <form method="post" action="/blacklist/<%= item._id %>/update" class="edit-form" data-edit-form="<%= item._id %>" enctype="multipart/form-data">
+              <div class="row">
+                <input name="prenom" value="<%= item.prenom %>" required />
+                <input name="nom" value="<%= item.nom %>" required />
+              </div>
+              <input name="raison" value="<%= item.raison || '' %>" placeholder="Raison (optionnel)" />
+              <input name="expireAt" type="date" value="<%= formatDate(item.expireAt) %>" />
+              <div class="row">
+                <input name="photoUrl" value="<%= item.photoUrl || '' %>" placeholder="URL de la photo (optionnel)" />
+                <input name="photo" type="file" accept="image/*" />
+              </div>
+              <button class="btn btn-add" type="submit">Enregistrer</button>
+            </form>
+          <% } %>
         <% }); %>
       <% } %>
     </div>
@@ -221,6 +241,39 @@
   flex: 1;
 }
 
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-edit {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e9eef3;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-edit:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.edit-form {
+  display: none;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.edit-form.is-open {
+  display: block;
+}
+
 .item-avatar {
   width: 64px;
   height: 64px;
@@ -239,10 +292,34 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  cursor: zoom-in;
 }
 
 .item-avatar__placeholder {
   font-size: 28px;
+}
+
+.photo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  padding: 20px;
+}
+
+.photo-modal.is-open {
+  display: flex;
+}
+
+.photo-modal img {
+  max-width: min(90vw, 820px);
+  max-height: 80vh;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
 }
 
 .item-header h4 {
@@ -344,6 +421,34 @@ document.getElementById('searchInput').addEventListener('input', function() {
   });
 
   document.getElementById('count').textContent = visibleCount;
+});
+
+document.querySelectorAll('[data-edit]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const id = btn.getAttribute('data-edit');
+    const form = document.querySelector(`[data-edit-form="${id}"]`);
+    if (form) form.classList.toggle('is-open');
+  });
+});
+
+const modal = document.createElement('div');
+modal.className = 'photo-modal';
+modal.innerHTML = '<img alt="Zoom" />';
+document.body.appendChild(modal);
+
+const modalImg = modal.querySelector('img');
+modal.addEventListener('click', () => {
+  modal.classList.remove('is-open');
+  modalImg.removeAttribute('src');
+});
+
+document.querySelectorAll('.zoomable').forEach((img) => {
+  img.addEventListener('click', () => {
+    const src = img.getAttribute('data-full');
+    if (!src) return;
+    modalImg.setAttribute('src', src);
+    modal.classList.add('is-open');
+  });
 });
 </script>
 

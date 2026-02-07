@@ -47,6 +47,46 @@ exports.create = async (req, res) => {
   res.redirect(redirectUrl);
 };
 
+exports.update = async (req, res) => {
+  const { prenom, nom, raison, expireAt, photoUrl } = req.body;
+  const token = req.body?.token || req.query?.token || "";
+  let finalPhotoUrl = typeof photoUrl === "string" ? photoUrl.trim() : "";
+
+  if (!finalPhotoUrl && req.file) {
+    try {
+      const cloudinary = initCloudinary();
+      const b64 = req.file.buffer.toString("base64");
+      const dataUri = `data:${req.file.mimetype};base64,${b64}`;
+      const uploaded = await cloudinary.uploader.upload(dataUri, {
+        folder: "casino/blacklist"
+      });
+      finalPhotoUrl = uploaded.secure_url;
+    } catch (err) {
+      console.warn("Erreur upload photo blacklist:", err.message);
+    }
+  }
+
+  const update = {
+    prenom,
+    nom,
+    raison: raison || "",
+    expireAt: expireAt ? new Date(expireAt) : null
+  };
+
+  if (finalPhotoUrl) {
+    update.photoUrl = finalPhotoUrl;
+  }
+
+  try {
+    await Blacklist.findByIdAndUpdate(req.params.id, update);
+  } catch (err) {
+    console.warn("Erreur modification blacklist (DB):", err.message);
+  }
+
+  const redirectUrl = token ? `/blacklist?token=${encodeURIComponent(token)}` : "/blacklist";
+  res.redirect(redirectUrl);
+};
+
 exports.remove = async (req, res) => {
   const token = req.body?.token || req.query?.token || "";
   try {

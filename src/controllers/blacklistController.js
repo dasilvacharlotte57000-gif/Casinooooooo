@@ -4,7 +4,10 @@ const initCloudinary = require("../config/cloudinary");
 exports.list = async (req, res) => {
   try {
     // Auto-clean expired entries before listing
-    await Blacklist.deleteMany({ expireAt: { $ne: null, $lte: new Date() } });
+    await Blacklist.deleteMany({
+      permanent: { $ne: true },
+      expireAt: { $ne: null, $lte: new Date() }
+    });
     const items = await Blacklist.find().sort({ createdAt: -1 }).lean();
     return res.render("blacklist", { items });
   } catch (err) {
@@ -14,9 +17,10 @@ exports.list = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const { prenom, nom, raison, expireAt, photoUrl } = req.body;
+  const { prenom, nom, raison, expireAt, photoUrl, permanent } = req.body;
   let finalPhotoUrl = photoUrl || "";
   const token = req.body?.token || req.query?.token || "";
+  const isPermanent = permanent === "on" || permanent === "true";
 
   if (!finalPhotoUrl && req.file) {
     try {
@@ -36,7 +40,8 @@ exports.create = async (req, res) => {
       prenom,
       nom,
       raison: raison || "",
-      expireAt: expireAt ? new Date(expireAt) : null,
+      expireAt: !isPermanent && expireAt ? new Date(expireAt) : null,
+      permanent: isPermanent,
       photoUrl: finalPhotoUrl
     });
   } catch (err) {
@@ -48,9 +53,10 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const { prenom, nom, raison, expireAt, photoUrl } = req.body;
+  const { prenom, nom, raison, expireAt, photoUrl, permanent } = req.body;
   const token = req.body?.token || req.query?.token || "";
   let finalPhotoUrl = typeof photoUrl === "string" ? photoUrl.trim() : "";
+  const isPermanent = permanent === "on" || permanent === "true";
 
   if (!finalPhotoUrl && req.file) {
     try {
@@ -70,7 +76,8 @@ exports.update = async (req, res) => {
     prenom,
     nom,
     raison: raison || "",
-    expireAt: expireAt ? new Date(expireAt) : null
+    expireAt: !isPermanent && expireAt ? new Date(expireAt) : null,
+    permanent: isPermanent
   };
 
   if (finalPhotoUrl) {

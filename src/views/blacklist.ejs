@@ -30,7 +30,13 @@
           <input name="nom" placeholder="Nom" required />
         </div>
         <input name="raison" placeholder="Raison (optionnel)" />
-        <input name="expireAt" type="date" placeholder="Expiration (optionnel)" />
+        <div class="row">
+          <input name="expireAt" type="date" placeholder="Expiration (optionnel)" class="expire-input" />
+          <label class="checkbox-row">
+            <input name="permanent" type="checkbox" class="perm-checkbox" />
+            <span>Blacklist permanent</span>
+          </label>
+        </div>
         <div class="row">
           <input name="photoUrl" placeholder="URL de la photo (optionnel)" />
           <input name="photo" type="file" accept="image/*" />
@@ -65,7 +71,9 @@
               <% if (item.raison) { %>
                 <p class="item-reason">📝 <%= item.raison %></p>
               <% } %>
-              <% if (item.expireAt) { %>
+              <% if (item.permanent) { %>
+                <p class="item-date">♾️ Blacklist permanent</p>
+              <% } else if (item.expireAt) { %>
                 <p class="item-date">⏰ Expire le <%= item.expireAt.toLocaleDateString('fr-FR') %></p>
               <% } %>
             </div>
@@ -85,7 +93,13 @@
                 <input name="nom" value="<%= item.nom %>" required />
               </div>
               <input name="raison" value="<%= item.raison || '' %>" placeholder="Raison (optionnel)" />
-              <input name="expireAt" type="date" value="<%= formatDate(item.expireAt) %>" />
+              <div class="row">
+                <input name="expireAt" type="date" value="<%= formatDate(item.expireAt) %>" class="expire-input" />
+                <label class="checkbox-row">
+                  <input name="permanent" type="checkbox" class="perm-checkbox" <%= item.permanent ? 'checked' : '' %> />
+                  <span>Blacklist permanent</span>
+                </label>
+              </div>
               <div class="row">
                 <input name="photoUrl" value="<%= item.photoUrl || '' %>" placeholder="URL de la photo (optionnel)" />
                 <input name="photo" type="file" accept="image/*" />
@@ -335,6 +349,24 @@
   font-size: 15px;
 }
 
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  margin-top: 8px;
+}
+
+.checkbox-row input {
+  width: 16px;
+  height: 16px;
+}
+
 .btn-delete {
   background: rgba(255, 107, 107, 0.2);
   border: 1px solid rgba(255, 107, 107, 0.3);
@@ -430,6 +462,25 @@ document.querySelectorAll('[data-edit]').forEach((btn) => {
     if (form) form.classList.toggle('is-open');
   });
 });
+
+const syncPermanent = (scope) => {
+  scope.querySelectorAll('.perm-checkbox').forEach((box) => {
+    const expireInput = box.closest('.row')?.querySelector('.expire-input');
+    const toggle = () => {
+      if (!expireInput) return;
+      if (box.checked) {
+        expireInput.value = '';
+        expireInput.setAttribute('disabled', 'disabled');
+      } else {
+        expireInput.removeAttribute('disabled');
+      }
+    };
+    box.addEventListener('change', toggle);
+    toggle();
+  });
+};
+
+syncPermanent(document);
 
 const modal = document.createElement('div');
 modal.className = 'photo-modal';

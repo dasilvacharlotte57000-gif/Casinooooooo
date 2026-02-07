@@ -16,6 +16,7 @@ exports.list = async (req, res) => {
 exports.create = async (req, res) => {
   const { prenom, nom, raison, expireAt, photoUrl } = req.body;
   let finalPhotoUrl = photoUrl || "";
+  const token = req.body?.token || req.query?.token || "";
 
   if (!finalPhotoUrl && req.file) {
     try {
@@ -42,14 +43,17 @@ exports.create = async (req, res) => {
     console.warn("Erreur création blacklist (DB):", err.message);
   }
 
-  res.redirect("/blacklist");
+  const redirectUrl = token ? `/blacklist?token=${encodeURIComponent(token)}` : "/blacklist";
+  res.redirect(redirectUrl);
 };
 
 exports.remove = async (req, res) => {
+  const token = req.body?.token || req.query?.token || "";
   try {
     await Blacklist.findByIdAndDelete(req.params.id);
   } catch (err) {
     console.warn("Erreur suppression blacklist (DB):", err.message);
   }
-  res.redirect("/blacklist");
+  const redirectUrl = token ? `/blacklist?token=${encodeURIComponent(token)}` : "/blacklist";
+  res.redirect(redirectUrl);
 };

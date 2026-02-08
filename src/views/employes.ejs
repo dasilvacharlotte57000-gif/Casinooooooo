@@ -1,6 +1,8 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
+<% const formatDescription = (text) => (text || "").replace(/\n/g, "<br>"); %>
+
 <div class="container page-shell">
   <div class="page-toolbar">
     <input type="text" class="page-search-input" placeholder="Rechercher..." />
@@ -8,20 +10,16 @@
   </div>
   <div class="page-header">
     <h1>👥 Partenariat Employés</h1>
-    <p>Gestion des employés et partenaires du casino</p>
+    <p>Suivi des entreprises partenaires et descriptions</p>
   </div>
 
   <!-- Formulaire d'ajout (uniquement connecté) -->
   <% if (user) { %>
     <div class="card wide add-form">
-      <h3>➕ Ajouter un employé/partenaire</h3>
+      <h3>➕ Ajouter une entreprise partenaire</h3>
       <form method="post" action="/employes" enctype="multipart/form-data">
-        <div class="row">
-          <input name="prenom" placeholder="Prénom" required />
-          <input name="nom" placeholder="Nom" required />
-        </div>
-        <input name="grade" placeholder="Grade/Poste (ex: Manager, Partenaire...)" />
-        <input name="dateEmbauche" type="date" placeholder="Date d'embauche/partenariat" />
+        <input name="entrepriseName" placeholder="Nom de l'entreprise" required />
+        <textarea name="description" placeholder="Description / informations (retours a la ligne possibles)"></textarea>
         <input name="photo" type="file" accept="image/*" placeholder="Photo (optionnel)" />
         <button class="btn btn-add" type="submit">Ajouter</button>
       </form>
@@ -47,9 +45,10 @@
               <% } %>
             </div>
             <div class="card-content">
-              <h4><%= item.prenom %> <%= item.nom %></h4>
-              <% if (item.grade) { %><p class="info-item">💼 <%= item.grade %></p><% } %>
-              <% if (item.dateEmbauche) { %><p class="info-item">📅 <%= new Date(item.dateEmbauche).toLocaleDateString('fr-FR') %></p><% } %>
+              <h4><%= item.entrepriseName || 'Entreprise' %></h4>
+              <% if (item.description) { %>
+                <p class="info-item">📝 <%- formatDescription(item.description) %></p>
+              <% } %>
               <% if (user) { %>
                 <form method="post" action="/employes/<%= item._id %>/delete" class="delete-btn-container">
                   <button class="btn-delete" type="submit">🗑️ Supprimer</button>

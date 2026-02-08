@@ -2,10 +2,8 @@ const mongoose = require("mongoose");
 
 const EmployerSchema = new mongoose.Schema(
   {
-    prenom: { type: String, required: true, trim: true },
-    nom: { type: String, required: true, trim: true },
-    grade: { type: String, default: "", trim: true },
-    dateEmbauche: { type: Date, default: null },
+    entrepriseName: { type: String, required: true, trim: true },
+    description: { type: String, default: "", trim: true },
     photoUrl: { type: String, default: "" }
   },
   { timestamps: true }

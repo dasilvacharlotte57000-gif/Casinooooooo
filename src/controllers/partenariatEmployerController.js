@@ -12,7 +12,7 @@ exports.list = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const { prenom, nom, grade, dateEmbauche } = req.body;
+  const { entrepriseName, description } = req.body;
 
   let photoUrl = "";
   if (req.file) {
@@ -33,10 +33,8 @@ exports.create = async (req, res) => {
 
   try {
     await Employer.create({
-      prenom,
-      nom,
-      grade: grade || "",
-      dateEmbauche: dateEmbauche ? new Date(dateEmbauche) : null,
+      entrepriseName,
+      description: description || "",
       photoUrl
     });
   } catch (err) {

@@ -11,13 +11,11 @@ exports.list = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const { nomEntreprise, contactNom, contactEmail, notes } = req.body;
+  const { nomEntreprise, notes } = req.body;
 
   try {
     await Entreprise.create({
       nomEntreprise,
-      contactNom: contactNom || "",
-      contactEmail: contactEmail || "",
       notes: notes || ""
     });
   } catch (err) {

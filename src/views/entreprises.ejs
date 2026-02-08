@@ -1,6 +1,8 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
+<% const formatNotes = (text) => (text || "").replace(/\n/g, "<br>"); %>
+
 <div class="container page-shell">
   <div class="page-toolbar">
     <input type="text" class="page-search-input" placeholder="Rechercher..." />
@@ -17,11 +19,7 @@
       <h3>➕ Ajouter une entreprise</h3>
       <form method="post" action="/entreprises">
         <input name="nomEntreprise" placeholder="Nom de l'entreprise" required />
-        <div class="row">
-          <input name="contactNom" placeholder="Nom du contact" />
-          <input name="contactEmail" placeholder="Email du contact" />
-        </div>
-        <input name="notes" placeholder="Notes / Détails du partenariat" />
+        <textarea name="notes" placeholder="Notes / Détails du partenariat"></textarea>
         <button class="btn btn-add" type="submit">Ajouter</button>
       </form>
     </div>
@@ -42,21 +40,9 @@
               <h4><%= item.nomEntreprise %></h4>
             </div>
             <div class="card-content">
-              <% if (item.contactNom || item.contactEmail) { %>
-                <p class="info-item">
-                  👤 <strong><%= item.contactNom || 'Contact' %></strong>
-                </p>
-              <% } %>
-              <% if (item.contactEmail) { %>
-                <p class="info-item">
-                  📧 <a href="mailto:<%= item.contactEmail %>" style="color: var(--accent, #ffd700); text-decoration: underline;">
-                    <%= item.contactEmail %>
-                  </a>
-                </p>
-              <% } %>
               <% if (item.notes) { %>
                 <p class="info-item notes">
-                  📝 <%= item.notes %>
+                  📝 <%- formatNotes(item.notes) %>
                 </p>
               <% } %>
               <% if (user) { %>

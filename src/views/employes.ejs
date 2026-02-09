@@ -31,30 +31,32 @@
     <div class="list-header">
       <h3>Partenariat Employés (<span class="badge"><%= items.length %></span>)</h3>
     </div>
-    <div class="list employee-grid">
+    <div class="list">
       <% if (items.length === 0) { %>
         <p class="empty-state">📭 Aucun employé/partenaire enregistré</p>
       <% } else { %>
         <% items.forEach(item => { %>
-          <div class="employee-card">
-            <div class="employee-photo-container">
+          <div class="list-item">
+            <div class="item-avatar">
               <% if (item.photoUrl) { %>
-                <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" class="employee-photo" />
+                <img src="<%= item.photoUrl %>" alt="<%= item.entrepriseName || 'Entreprise' %>" />
               <% } else { %>
-                <div class="employee-placeholder">👤</div>
+                <div class="item-avatar__placeholder">👤</div>
               <% } %>
             </div>
-            <div class="card-content">
-              <h4><%= item.entrepriseName || 'Entreprise' %></h4>
+            <div class="item-content">
+              <div class="item-header">
+                <h4><%= item.entrepriseName || 'Entreprise' %></h4>
+              </div>
               <% if (item.description) { %>
-                <p class="info-item">📝 <%- formatDescription(item.description) %></p>
-              <% } %>
-              <% if (user) { %>
-                <form method="post" action="/employes/<%= item._id %>/delete" class="delete-btn-container">
-                  <button class="btn-delete" type="submit">🗑️ Supprimer</button>
-                </form>
+                <p class="item-reason">📝 <%- formatDescription(item.description) %></p>
               <% } %>
             </div>
+            <% if (user) { %>
+              <form method="post" action="/employes/<%= item._id %>/delete" class="delete-form">
+                <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
+              </form>
+            <% } %>
           </div>
         <% }); %>
       <% } %>
@@ -128,87 +130,88 @@
   font-size: 15px;
   font-weight: bold;
 }
-.employee-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  align-items: start;
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.employee-card {
+
+.list-item {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
   background: rgba(255, 215, 0, 0.07);
   border: 1px solid rgba(255, 215, 0, 0.13);
   border-radius: 16px;
-  overflow: hidden;
+  padding: 18px;
   transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-shadow: 0 2px 12px rgba(255,215,0,0.07);
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 2px 12px rgba(255, 215, 0, 0.07);
 }
-.employee-card:hover {
+
+.list-item:hover {
   background: rgba(255, 215, 0, 0.13);
   border-color: rgba(255, 215, 0, 0.22);
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(255,215,0,0.13);
+  transform: translateX(5px);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.13);
 }
-.employee-photo-container {
-  width: 100%;
-  height: 180px;
+
+.item-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
   overflow: hidden;
-  background: rgba(255, 215, 0, 0.13);
-}
-.employee-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.employee-placeholder {
-  width: 100%;
-  height: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 215, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 60px;
-  background: rgba(255, 215, 0, 0.10);
+  flex-shrink: 0;
 }
-.card-content {
-  padding: 18px;
+
+.item-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.item-avatar__placeholder {
+  font-size: 28px;
+}
+
+.item-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
 }
-.card-content h4 {
-  margin: 0 0 12px 0;
+
+.item-header h4 {
+  margin: 0 0 8px 0;
   color: #e9eef3;
   font-size: 18px;
 }
-.info-item {
-  margin: 10px 0;
+
+.item-reason {
+  margin: 6px 0;
   color: var(--muted);
   font-size: 15px;
 }
-.delete-btn-container {
-  margin-top: auto;
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.25s ease, opacity 0.25s ease;
-}
-.employee-card.show-actions .delete-btn-container {
-  max-height: 80px;
-  opacity: 1;
-}
+
 .btn-delete {
-  width: 100%;
-  background: rgba(255, 107, 107, 0.18);
-  border: 1px solid rgba(255, 107, 107, 0.22);
-  color: var(--danger);
-  padding: 10px;
-  border-radius: 10px;
+  background: rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-  margin-top: 12px;
-  font-size: 15px;
+  transition: all 0.2s;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.btn-delete:hover {
+  background: rgba(255, 107, 107, 0.3);
+  border-color: #ff6b6b;
 }
 .btn-delete:hover {
   background: rgba(255, 107, 107, 0.28);

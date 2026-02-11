@@ -13,6 +13,7 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
   const { entrepriseName, description } = req.body;
+  const token = req.body?.token || req.query?.token || "";
 
   let photoUrl = "";
   if (req.file) {
@@ -41,14 +42,17 @@ exports.create = async (req, res) => {
     console.warn("Erreur création employé (DB):", err.message);
   }
 
-  res.redirect("/employes");
+  const redirectUrl = token ? `/employes?token=${encodeURIComponent(token)}` : "/employes";
+  res.redirect(redirectUrl);
 };
 
 exports.remove = async (req, res) => {
+  const token = req.body?.token || req.query?.token || "";
   try {
     await Employer.findByIdAndDelete(req.params.id);
   } catch (err) {
     console.warn("Erreur suppression employé (DB):", err.message);
   }
-  res.redirect("/employes");
+  const redirectUrl = token ? `/employes?token=${encodeURIComponent(token)}` : "/employes";
+  res.redirect(redirectUrl);
 };

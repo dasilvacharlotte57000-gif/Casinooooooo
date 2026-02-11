@@ -12,6 +12,7 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
   const { nomEntreprise, notes } = req.body;
+  const token = req.body?.token || req.query?.token || "";
 
   try {
     await Entreprise.create({
@@ -22,14 +23,17 @@ exports.create = async (req, res) => {
     console.warn("Erreur création entreprise (DB):", err.message);
   }
 
-  res.redirect("/entreprises");
+  const redirectUrl = token ? `/entreprises?token=${encodeURIComponent(token)}` : "/entreprises";
+  res.redirect(redirectUrl);
 };
 
 exports.remove = async (req, res) => {
+  const token = req.body?.token || req.query?.token || "";
   try {
     await Entreprise.findByIdAndDelete(req.params.id);
   } catch (err) {
     console.warn("Erreur suppression entreprise (DB):", err.message);
   }
-  res.redirect("/entreprises");
+  const redirectUrl = token ? `/entreprises?token=${encodeURIComponent(token)}` : "/entreprises";
+  res.redirect(redirectUrl);
 };

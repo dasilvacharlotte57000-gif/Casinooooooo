@@ -1,0 +1,177 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="page">
+  <div class="container">
+    <div class="hero">
+      <div class="hero-kicker">Règlement</div>
+      <h1 class="hero-title">Diamond Casino & Resort</h1>
+      <p class="hero-subtitle">Respect des règles pour un environnement agréable et professionnel</p>
+    </div>
+
+    <div class="reglement-grid">
+      <!-- Règlement Employés (Gauche) -->
+      <div class="reglement-section">
+        <div class="reglement-header">
+          <h2 class="reglement-title">📋 <%= reglementEmployes.titre %></h2>
+        </div>
+        <div class="reglement-content">
+          <% reglementEmployes.sections.forEach(section => { %>
+            <div class="reglement-block">
+              <h3 class="reglement-subtitle"><%= section.titre %></h3>
+              <ul class="reglement-list">
+                <% section.regles.forEach(regle => { %>
+                  <li class="reglement-item">
+                    <span class="reglement-bullet">♦</span>
+                    <%= regle %>
+                  </li>
+                <% }); %>
+              </ul>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Règlement Clients (Droite) -->
+      <div class="reglement-section">
+        <div class="reglement-header">
+          <h2 class="reglement-title">👥 <%= reglementClients.titre %></h2>
+        </div>
+        <div class="reglement-content">
+          <% reglementClients.sections.forEach(section => { %>
+            <div class="reglement-block">
+              <h3 class="reglement-subtitle"><%= section.titre %></h3>
+              <ul class="reglement-list">
+                <% section.regles.forEach(regle => { %>
+                  <li class="reglement-item">
+                    <span class="reglement-bullet">♦</span>
+                    <%= regle %>
+                  </li>
+                <% }); %>
+              </ul>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .hero-kicker {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--accent-strong);
+    margin: 0 0 12px 0;
+  }
+
+  .hero-subtitle {
+    color: var(--muted);
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .reglement-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 40px;
+  }
+
+  .reglement-section {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  }
+
+  .reglement-header {
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+    margin-bottom: 24px;
+  }
+
+  .reglement-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  .reglement-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .reglement-block {
+    background: rgba(255,255,255,0.01);
+    border-radius: 10px;
+    padding: 18px;
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+
+  .reglement-subtitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin: 0 0 14px 0;
+  }
+
+  .reglement-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reglement-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: #e9eef3;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .reglement-bullet {
+    color: var(--accent);
+    font-size: 12px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 968px) {
+    .reglement-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .hero-title {
+      font-size: 36px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+    }
+  }
+</style>
+
+<%- include('partials/footer') %>

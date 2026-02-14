@@ -57,43 +57,49 @@ const reglementClients = {
   titre: "Règlement Clients",
   sections: [
     {
-      titre: "1. Accès au Casino",
+      titre: "1. Accès et Admission",
       regles: [
-        "Accès réservé aux personnes majeures (18 ans minimum)",
-        "Présentation d'une pièce d'identité valide obligatoire",
-        "Tenue correcte exigée (pas de short, tongs, débardeur)"
+        "L'accès au casino est payant et soumis à un nombre de places limité. Toute sortie est définitive.",
+        "L'accès est autorisé uniquement aux personnes disposant d'une carte d'identité valide, comportant une photo fidèle à votre apparence.",
+        "En l'absence de carte d'identité, le personnel se réserve le droit de refuser l'entrée."
       ]
     },
     {
-      titre: "2. Conduite à l'Intérieur",
+      titre: "2. Tenue et Comportement",
       regles: [
-        "Comportement respectueux envers le personnel et les autres clients",
-        "Interdiction de filmer ou photographier sans autorisation",
-        "Consommation d'alcool avec modération"
+        "Une tenue correcte, élégante et chic est obligatoire (chemise, costume, tenue de soirée).",
+        "Sont strictement interdits : la nudité / les masques / les couvre-chefs / les objets fantaisistes / sac 36",
+        "Toute forme de violence, menace ou comportement inapproprié entraînera une expulsion immédiate."
       ]
     },
     {
-      titre: "3. Jeux",
+      titre: "3. Sécurité",
       regles: [
-        "Respecter les règles de chaque jeu",
-        "Les décisions des croupiers et superviseurs sont finales",
-        "Interdiction de tricher ou de manipuler l'équipement"
+        "L'accès au casino est soumis à une fouille obligatoire. Le paiement du droit d'entrée est effectué lors de celle-ci.",
+        "Toute arme est strictement interdite dans l'enceinte du casino.",
+        "Sont également interdits : les armes de service / les menottes / les bidons d'essence / boombox",
+        "La possession ou l'utilisation d'armes entraînera des sanctions graves."
       ]
     },
     {
-      titre: "4. Sécurité",
+      titre: "4. Règles Internes",
       regles: [
-        "Ne pas laisser d'objets de valeur sans surveillance",
-        "Signaler tout comportement inapproprié au personnel",
-        "Respecter les consignes de sécurité"
+        "Il est interdit de demander des jetons aux employés ou aux autres clients.",
+        "Les zones arrière sont strictement réservées au personnel. Toute tentative d'intrusion entraînera une expulsion ou un blacklist.",
+        "Le nombre de tables de jeu étant limité, merci de faire preuve de civisme et de patience afin que chacun puisse jouer."
       ]
     },
     {
-      titre: "5. Exclusions",
+      titre: "5. Responsabilité",
       regles: [
-        "Le casino se réserve le droit de refuser l'entrée",
-        "Tout comportement inapproprié entraîne une exclusion immédiate",
-        "Les personnes inscrites sur la blacklist ne peuvent pas entrer"
+        "En cas de perte ou de vol de jetons, le casino décline toute responsabilité, que ce soit pendant les jeux ou au sein de l'établissement."
+      ]
+    },
+    {
+      titre: "6. Infractions Graves",
+      regles: [
+        "Il est strictement interdit de forcer l'entrée, d'exercer des violences ou de menacer les agents de sécurité, y compris à l'extérieur du casino.",
+        "Toute infraction de ce type entraînera un blacklist."
       ]
     }
   ]

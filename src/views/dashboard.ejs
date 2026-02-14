@@ -6,7 +6,7 @@
     <div class="dash-hero__badge">Centre de pilotage</div>
     <div class="dash-hero__title">
       <h1>Diamond Casino</h1>
-      <p>Vue rapide des operations, acces et actions essentielles.</p>
+      <p>Vue rapide des operations, acces et actions prioritaires.</p>
     </div>
     <div class="dash-hero__user">
       <span class="user-chip">Connecte : <strong><%= user.email %></strong></span>
@@ -19,13 +19,13 @@
       <div class="dash-card__icon">👥</div>
       <div class="dash-card__body">
         <h3>Partenariat Employes</h3>
-        <p>Equipe interne et partenaires operationnels.</p>
+        <p>Partenaires, prestataires et notes internes.</p>
         <div class="dash-preview">
-          <span>Ajouts & mises a jour</span>
-          <span>Photos et profils</span>
-          <span>Suivi des postes</span>
+          <span>Ajouts et mises a jour</span>
+          <span>Photos, logos, notes</span>
+          <span>Suivi des besoins</span>
         </div>
-        <span class="dash-card__cta">Ouvrir la gestion</span>
+        <span class="dash-card__cta">Ouvrir le suivi</span>
       </div>
     </a>
 
@@ -33,13 +33,13 @@
       <div class="dash-card__icon">🚫</div>
       <div class="dash-card__body">
         <h3>BlackList</h3>
-        <p>Acces sensibles et signalements.</p>
+        <p>Acces sensibles, alertes et decisions.</p>
         <div class="dash-preview">
-          <span>Motifs & dates</span>
+          <span>Motifs et dates</span>
           <span>Photos d'identification</span>
-          <span>Alertes rapides</span>
+          <span>Suivi des expirations</span>
         </div>
-        <span class="dash-card__cta">Acceder a la liste</span>
+        <span class="dash-card__cta">Voir la liste</span>
       </div>
     </a>
 
@@ -47,13 +47,13 @@
       <div class="dash-card__icon">🏢</div>
       <div class="dash-card__body">
         <h3>Partenariat Entreprise</h3>
-        <p>Contacts, contrats et notes de suivi.</p>
+        <p>Entreprises partenaires et notes de suivi.</p>
         <div class="dash-preview">
-          <span>Comptes principaux</span>
-          <span>Emails de contact</span>
-          <span>Historique rapide</span>
+          <span>Comptes cles</span>
+          <span>Points de contact</span>
+          <span>Derniers echanges</span>
         </div>
-        <span class="dash-card__cta">Voir les partenaires</span>
+        <span class="dash-card__cta">Voir les entreprises</span>
       </div>
     </a>
 
@@ -61,13 +61,13 @@
       <div class="dash-card__icon">🧑‍💼</div>
       <div class="dash-card__body">
         <h3>Employeurs</h3>
-        <p>Managers et responsables internes.</p>
+        <p>Managers internes et referents.</p>
         <div class="dash-preview">
           <span>Date d'entree</span>
-          <span>Photos officielles</span>
-          <span>Profil principal</span>
+          <span>Photos de profil</span>
+          <span>Role et responsabilites</span>
         </div>
-        <span class="dash-card__cta">Gerer les employeurs</span>
+        <span class="dash-card__cta">Ouvrir les profils</span>
       </div>
     </a>
 
@@ -75,11 +75,11 @@
       <div class="dash-card__icon">📜</div>
       <div class="dash-card__body">
         <h3>Menu</h3>
-        <p>Carte premium et calculatrice integrée.</p>
+        <p>Carte premium et calculatrice integree.</p>
         <div class="dash-preview">
           <span>Softs, snacks, cocktails</span>
           <span>Prix rapides</span>
-          <span>Calcul instantane</span>
+          <span>Total instantane</span>
         </div>
         <span class="dash-card__cta">Ouvrir le menu</span>
       </div>
@@ -89,7 +89,7 @@
       <div class="dash-card__icon">⚠️</div>
       <div class="dash-card__body">
         <h3>Avertissements</h3>
-        <p>Suivi interne des sanctions et durees.</p>
+        <p>Sanctions internes, durees et suivis.</p>
         <div class="dash-preview">
           <span>Temporaire ou definitif</span>
           <span>Dates d'expiration</span>
@@ -105,20 +105,20 @@
       <h4>Actions rapides</h4>
       <div class="dash-actions">
         <a href="/employes" class="dash-action">
-          <span>Nouveau partenariat employé</span>
-          <small>contrat employés</small>
+          <span>Nouveau partenaire employe</span>
+          <small>Notes internes et contact</small>
         </a>
         <a href="/blacklist" class="dash-action">
           <span>Blacklist</span>
-          <small>Acces direct a l'ajout BlackList</small>
+          <small>Ajout rapide d'un signalement</small>
         </a>
         <a href="/entreprises" class="dash-action">
           <span>Nouvelle entreprise</span>
-          <small>Ajouter un partenaire et un contact</small>
+          <small>Ajouter notes et contact</small>
         </a>
         <a href="/employeurs" class="dash-action">
           <span>Nouvel employeur</span>
-          <small>Ajouter un employeur et sa date d'entree</small>
+          <small>Ajouter un responsable interne</small>
         </a>
       </div>
     </div>
@@ -126,11 +126,11 @@
     <div class="dash-panel">
       <h4>Priorites du jour</h4>
       <ul class="dash-list">
-        <li>Verifier les acces sensibles et expirations.</li>
+        <li>Verifier les acces sensibles et les expirations.</li>
         <li>Mettre a jour les contacts d'entreprise.</li>
-        <li>Controler les profils employes recents.</li>
+        <li>Controler les profils recents.</li>
       </ul>
-      <div class="dash-note">Astuce : commence par la BlackList si un incident est signale.</div>
+      <div class="dash-note">Astuce : commence par la BlackList en cas d'incident.</div>
     </div>
   </section>
 </div>

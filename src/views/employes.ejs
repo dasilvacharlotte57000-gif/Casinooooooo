@@ -10,7 +10,7 @@
   </div>
   <div class="page-header">
     <h1>👥 Partenariat Employés</h1>
-    <p>Suivi des entreprises partenaires et descriptions</p>
+    <p>Centralise les entreprises partenaires, les contacts cles et les notes utiles.</p>
   </div>
 
   <!-- Formulaire d'ajout (uniquement connecté) -->
@@ -18,10 +18,10 @@
     <div class="card wide add-form">
       <h3>➕ Ajouter une entreprise partenaire</h3>
       <form method="post" action="/employes" enctype="multipart/form-data">
-        <input name="entrepriseName" placeholder="Nom de l'entreprise" required />
-        <textarea name="description" placeholder="Description / informations (retours a la ligne possibles)"></textarea>
-        <input name="photo" type="file" accept="image/*" placeholder="Photo (optionnel)" />
-        <button class="btn btn-add" type="submit">Ajouter</button>
+        <input name="entrepriseName" placeholder="Nom de l'entreprise (ex: Atlas Group)" required />
+        <textarea name="description" placeholder="Notes internes, services, conditions, points de contact, etc."></textarea>
+        <input name="photo" type="file" accept="image/*" placeholder="Logo ou photo (optionnel)" />
+        <button class="btn btn-add" type="submit">Enregistrer</button>
       </form>
     </div>
   <% } %>
@@ -29,35 +29,44 @@
   <!-- Liste des employés/partenaires -->
   <div class="list-section">
     <div class="list-header">
-      <h3>Partenariat Employés (<span class="badge"><%= items.length %></span>)</h3>
+      <h3>Partenaires actifs</h3>
+      <span class="badge"><%= items.length %></span>
     </div>
-    <div class="list">
+    <div class="partner-stack">
       <% if (items.length === 0) { %>
-        <p class="empty-state">📭 Aucun employé/partenaire enregistré</p>
+        <p class="empty-state">📭 Aucun partenaire pour le moment. Ajoute le premier pour demarrer le suivi.</p>
       <% } else { %>
         <% items.forEach(item => { %>
-          <div class="list-item">
-            <div class="item-avatar">
+          <article class="partner-card">
+            <div class="partner-card__media">
               <% if (item.photoUrl) { %>
                 <img src="<%= item.photoUrl %>" alt="<%= item.entrepriseName || 'Entreprise' %>" />
               <% } else { %>
-                <div class="item-avatar__placeholder">👤</div>
+                <div class="partner-placeholder">👥</div>
               <% } %>
             </div>
-            <div class="item-content">
-              <div class="item-header">
-                <h4><%= item.entrepriseName || 'Entreprise' %></h4>
+            <div class="partner-card__body">
+              <div class="partner-card__head">
+                <div>
+                  <h4><%= item.entrepriseName || 'Entreprise' %></h4>
+                  <p class="partner-sub">Partenaire actif</p>
+                </div>
+                <% if (user) { %>
+                  <form method="post" action="/employes/<%= item._id %>/delete">
+                    <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
+                  </form>
+                <% } %>
               </div>
               <% if (item.description) { %>
-                <p class="item-reason">📝 <%- formatDescription(item.description) %></p>
+                <div class="partner-notes">
+                  <span>📝 Notes</span>
+                  <p><%- formatDescription(item.description) %></p>
+                </div>
+              <% } else { %>
+                <div class="partner-notes empty">Aucune note pour le moment.</div>
               <% } %>
             </div>
-            <% if (user) { %>
-              <form method="post" action="/employes/<%= item._id %>/delete" class="delete-form">
-                <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
-              </form>
-            <% } %>
-          </div>
+          </article>
         <% }); %>
       <% } %>
     </div>
@@ -118,7 +127,9 @@
   margin-bottom: 28px;
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(255, 215, 0, 0.18);
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .list-header h3 {
   margin: 0;
@@ -136,36 +147,25 @@
   font-size: 15px;
   font-weight: bold;
 }
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.partner-stack {
+  display: grid;
+  gap: 14px;
 }
 
-.list-item {
-  display: flex;
+.partner-card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
   gap: 16px;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.65);
+  padding: 18px 20px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 215, 0, 0.35);
-  border-radius: 14px;
-  padding: 16px 18px;
-  transition: all 0.3s ease;
-  animation: slideIn 0.3s ease;
-  box-shadow: inset 0 0 12px rgba(255, 215, 0, 0.12);
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 0 14px rgba(255, 215, 0, 0.12);
 }
 
-.list-item:hover {
-  background: rgba(0, 0, 0, 0.75);
-  border-color: rgba(255, 215, 0, 0.5);
-  transform: none;
-  box-shadow: inset 0 0 16px rgba(255, 215, 0, 0.16);
-}
-
-.item-avatar {
-  width: 64px;
-  height: 64px;
+.partner-card__media {
+  width: 120px;
+  height: 120px;
   border-radius: 14px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.06);
@@ -173,34 +173,61 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
-.item-avatar img {
+.partner-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.item-avatar__placeholder {
-  font-size: 28px;
+.partner-placeholder {
+  font-size: 40px;
 }
 
-.item-content {
-  flex: 1;
+.partner-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.item-header h4 {
-  margin: 0 0 8px 0;
+.partner-card__head h4 {
+  margin: 0;
   color: #e9eef3;
-  font-size: 18px;
+  font-size: 19px;
 }
 
-.item-reason {
-  margin: 6px 0;
+.partner-sub {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.partner-notes {
+  border-top: 1px solid rgba(255, 215, 0, 0.18);
+  padding-top: 10px;
   color: var(--muted);
   font-size: 15px;
+  line-height: 1.6;
+}
+
+.partner-notes span {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: #ffd700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.partner-notes.empty {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
 }
 
 .btn-delete {
@@ -212,16 +239,22 @@
   cursor: pointer;
   transition: all 0.2s;
   font-size: 16px;
-  margin-left: 10px;
 }
 
 .btn-delete:hover {
   background: rgba(255, 107, 107, 0.3);
   border-color: #ff6b6b;
 }
-.btn-delete:hover {
-  background: rgba(255, 107, 107, 0.28);
-  border-color: #ff6b6b;
+
+@media (max-width: 720px) {
+  .partner-card {
+    grid-template-columns: 1fr;
+  }
+
+  .partner-card__media {
+    width: 100%;
+    height: 180px;
+  }
 }
 .empty-state {
   text-align: center;
@@ -258,14 +291,7 @@
 </style>
 
 <script>
-// Toggle actions (supprimer) when clicking on a card
-document.addEventListener('click', function (e) {
-  const card = e.target.closest('.employee-card');
-  if (!card) return;
-  // don't toggle when clicking on interactive elements inside the card
-  if (e.target.closest('form') || e.target.closest('button') || e.target.tagName === 'A' || e.target.tagName === 'INPUT') return;
-  card.classList.toggle('show-actions');
-});
+// reserved
 </script>
 
 <%- include('partials/footer') %>

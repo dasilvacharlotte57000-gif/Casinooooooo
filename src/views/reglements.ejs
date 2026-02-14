@@ -1,175 +1,578 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
-<div class="page">
-  <div class="container">
-    <div class="hero">
-      <div class="hero-kicker">Règlement</div>
-      <h1 class="hero-title">Diamond Casino & Resort</h1>
-      <p class="hero-subtitle">Respect des règles pour un environnement agréable et professionnel</p>
+<div class="reglement-page">
+  <!-- Hero Section avec animation -->
+  <div class="reglement-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="diamond-icon">◆</span>
+        <span class="badge-text">Règlement Officiel</span>
+        <span class="diamond-icon">◆</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line">Diamond Casino</span>
+        <span class="title-line title-accent">& Resort</span>
+      </h1>
+      <p class="hero-description">
+        Le respect de ces règles garantit une expérience exceptionnelle pour tous
+      </p>
+      <div class="hero-divider">
+        <span class="divider-diamond">♦</span>
+        <span class="divider-line"></span>
+        <span class="divider-diamond">♦</span>
+        <span class="divider-line"></span>
+        <span class="divider-diamond">♦</span>
+      </div>
     </div>
+  </div>
 
+  <!-- Container principal -->
+  <div class="reglement-container">
     <div class="reglement-grid">
-      <!-- Règlement Employés (Gauche) -->
-      <div class="reglement-section">
-        <div class="reglement-header">
-          <h2 class="reglement-title">📋 <%= reglementEmployes.titre %></h2>
+      
+      <!-- Règlement Employés -->
+      <div class="reglement-card employes-card">
+        <div class="card-shine"></div>
+        <div class="card-header">
+          <div class="header-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h2 class="card-title"><%= reglementEmployes.titre %></h2>
+          <p class="card-subtitle">Pour le personnel du casino</p>
         </div>
-        <div class="reglement-content">
-          <% reglementEmployes.sections.forEach(section => { %>
-            <div class="reglement-block">
-              <h3 class="reglement-subtitle"><%= section.titre %></h3>
-              <ul class="reglement-list">
+
+        <div class="card-content">
+          <% reglementEmployes.sections.forEach((section, index) => { %>
+            <div class="rule-section">
+              <div class="section-header">
+                <span class="section-number"><%= index + 1 %></span>
+                <h3 class="section-title"><%= section.titre %></h3>
+              </div>
+              <div class="rules-list">
                 <% section.regles.forEach(regle => { %>
-                  <li class="reglement-item">
-                    <span class="reglement-bullet">♦</span>
-                    <%= regle %>
-                  </li>
+                  <div class="rule-item">
+                    <div class="rule-bullet">
+                      <span class="bullet-inner">♦</span>
+                    </div>
+                    <p class="rule-text"><%= regle %></p>
+                  </div>
                 <% }); %>
-              </ul>
+              </div>
             </div>
           <% }); %>
         </div>
       </div>
 
-      <!-- Règlement Clients (Droite) -->
-      <div class="reglement-section">
-        <div class="reglement-header">
-          <h2 class="reglement-title">👥 <%= reglementClients.titre %></h2>
+      <!-- Règlement Clients -->
+      <div class="reglement-card clients-card">
+        <div class="card-shine"></div>
+        <div class="card-header">
+          <div class="header-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h2 class="card-title"><%= reglementClients.titre %></h2>
+          <p class="card-subtitle">Pour nos clients et visiteurs</p>
         </div>
-        <div class="reglement-content">
-          <% reglementClients.sections.forEach(section => { %>
-            <div class="reglement-block">
-              <h3 class="reglement-subtitle"><%= section.titre %></h3>
-              <ul class="reglement-list">
+
+        <div class="card-content">
+          <% reglementClients.sections.forEach((section, index) => { %>
+            <div class="rule-section">
+              <div class="section-header">
+                <span class="section-number"><%= index + 1 %></span>
+                <h3 class="section-title"><%= section.titre %></h3>
+              </div>
+              <div class="rules-list">
                 <% section.regles.forEach(regle => { %>
-                  <li class="reglement-item">
-                    <span class="reglement-bullet">♦</span>
-                    <%= regle %>
-                  </li>
+                  <div class="rule-item">
+                    <div class="rule-bullet">
+                      <span class="bullet-inner">♦</span>
+                    </div>
+                    <p class="rule-text"><%= regle %></p>
+                  </div>
                 <% }); %>
-              </ul>
+              </div>
             </div>
           <% }); %>
         </div>
       </div>
+
+    </div>
+  </div>
+
+  <!-- Footer décoratif -->
+  <div class="reglement-footer">
+    <div class="footer-line"></div>
+    <p class="footer-text">Ces règles sont susceptibles d'être modifiées à tout moment</p>
+    <div class="footer-diamonds">
+      <span>♦</span>
+      <span>♦</span>
+      <span>♦</span>
     </div>
   </div>
 </div>
 
 <style>
-  .hero {
-    text-align: center;
-    margin-bottom: 60px;
+  .reglement-page {
+    min-height: 100vh;
+    padding-bottom: 80px;
+    background: linear-gradient(180deg, #0a0a0a 0%, #050505 50%, #0a0a0a 100%);
   }
 
-  .hero-kicker {
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
+  /* ===== HERO SECTION ===== */
+  .reglement-hero {
+    position: relative;
+    padding: 120px 20px 100px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+    50% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.05));
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 50px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  .diamond-icon {
     color: var(--accent);
-    margin-bottom: 12px;
+    font-size: 12px;
+    animation: rotate 3s linear infinite;
+  }
+
+  @keyframes rotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+  }
+
+  .badge-text {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
   }
 
   .hero-title {
-    font-size: 48px;
-    font-weight: 800;
-    color: var(--accent-strong);
-    margin: 0 0 12px 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: fadeInUp 1s ease-out;
   }
 
-  .hero-subtitle {
+  .title-line {
+    font-size: 64px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    text-shadow: 0 0 40px rgba(255,215,0,0.3);
+  }
+
+  .title-accent {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 50%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+  }
+
+  .hero-description {
+    font-size: 20px;
     color: var(--muted);
-    font-size: 18px;
+    margin: 30px auto;
     max-width: 600px;
+    line-height: 1.6;
+    animation: fadeIn 1.2s ease-out;
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+    animation: fadeIn 1.4s ease-out;
+  }
+
+  .divider-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .divider-diamond {
+    color: var(--accent);
+    font-size: 16px;
+    animation: float 2s ease-in-out infinite;
+  }
+
+  .divider-diamond:nth-child(2) { animation-delay: 0.2s; }
+  .divider-diamond:nth-child(4) { animation-delay: 0.4s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ===== CONTAINER ===== */
+  .reglement-container {
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0 20px;
   }
 
   .reglement-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 40px;
+    gap: 40px;
   }
 
-  .reglement-section {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 14px;
-    padding: 24px;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.6);
-  }
-
-  .reglement-header {
-    padding-bottom: 16px;
-    border-bottom: 2px solid rgba(255, 215, 0, 0.2);
-    margin-bottom: 24px;
-  }
-
-  .reglement-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--accent);
-    margin: 0;
-  }
-
-  .reglement-content {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .reglement-block {
-    background: rgba(255,255,255,0.01);
-    border-radius: 10px;
-    padding: 18px;
-    border: 1px solid rgba(255,255,255,0.02);
-  }
-
-  .reglement-subtitle {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--accent-blue);
-    margin: 0 0 14px 0;
-  }
-
-  .reglement-list {
-    list-style: none;
+  /* ===== CARDS ===== */
+  .reglement-card {
+    position: relative;
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,215,0,0.15);
+    border-radius: 24px;
     padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideInUp 0.6s ease-out both;
   }
 
-  .reglement-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    color: #e9eef3;
-    line-height: 1.6;
-    font-size: 15px;
+  .employes-card { animation-delay: 0.1s; }
+  .clients-card { animation-delay: 0.2s; }
+
+  @keyframes slideInUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .reglement-bullet {
+  .reglement-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255,215,0,0.4);
+    box-shadow: 0 20px 60px rgba(255,215,0,0.15), 0 0 0 1px rgba(255,215,0,0.1);
+  }
+
+  .card-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.05) 50%, transparent 70%);
+    transform: rotate(45deg);
+    animation: shine 6s ease-in-out infinite;
+  }
+
+  @keyframes shine {
+    0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  }
+
+  /* ===== CARD HEADER ===== */
+  .card-header {
+    position: relative;
+    padding: 40px 35px 30px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(255,215,0,0.02) 100%);
+    border-bottom: 1px solid rgba(255,215,0,0.2);
+    text-align: center;
+  }
+
+  .header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+    border: 2px solid rgba(255,215,0,0.3);
+    border-radius: 50%;
     color: var(--accent);
-    font-size: 12px;
-    margin-top: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .reglement-card:hover .header-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+  }
+
+  .card-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .card-subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* ===== CARD CONTENT ===== */
+  .card-content {
+    padding: 35px;
+  }
+
+  .rule-section {
+    margin-bottom: 35px;
+    opacity: 0;
+    animation: fadeInSection 0.5s ease-out forwards;
+  }
+
+  .rule-section:nth-child(1) { animation-delay: 0.2s; }
+  .rule-section:nth-child(2) { animation-delay: 0.3s; }
+  .rule-section:nth-child(3) { animation-delay: 0.4s; }
+  .rule-section:nth-child(4) { animation-delay: 0.5s; }
+  .rule-section:nth-child(5) { animation-delay: 0.6s; }
+  .rule-section:nth-child(6) { animation-delay: 0.7s; }
+
+  @keyframes fadeInSection {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .rule-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .section-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, rgba(74,163,255,0.2), rgba(74,163,255,0.05));
+    border: 1px solid rgba(74,163,255,0.3);
+    border-radius: 10px;
+    color: var(--accent-blue);
+    font-size: 16px;
+    font-weight: 700;
     flex-shrink: 0;
   }
 
-  @media (max-width: 968px) {
+  .section-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    flex: 1;
+  }
+
+  /* ===== RULES LIST ===== */
+  .rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 15px;
+    padding: 16px;
+    background: rgba(255,255,255,0.02);
+    border-left: 3px solid rgba(255,215,0,0.3);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .rule-item:hover {
+    background: rgba(255,255,255,0.04);
+    border-left-color: var(--accent);
+    transform: translateX(5px);
+  }
+
+  .rule-bullet {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bullet-inner {
+    color: var(--accent);
+    font-size: 14px;
+    animation: pulse-bullet 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-bullet {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.9); }
+  }
+
+  .rule-text {
+    flex: 1;
+    margin: 0;
+    color: #e9eef3;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ===== FOOTER ===== */
+  .reglement-footer {
+    text-align: center;
+    margin-top: 80px;
+    padding: 40px 20px;
+  }
+
+  .footer-line {
+    width: 200px;
+    height: 1px;
+    margin: 0 auto 30px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .footer-text {
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+    margin: 0 0 20px 0;
+  }
+
+  .footer-diamonds {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .footer-diamonds span {
+    color: var(--accent);
+    font-size: 12px;
+    opacity: 0.5;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  .footer-diamonds span:nth-child(2) { animation-delay: 0.3s; }
+  .footer-diamonds span:nth-child(3) { animation-delay: 0.6s; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
     .reglement-grid {
       grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 30px;
     }
 
-    .hero-title {
+    .title-line {
+      font-size: 48px;
+    }
+
+    .hero-description {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .reglement-hero {
+      padding: 80px 20px 60px;
+    }
+
+    .title-line {
       font-size: 36px;
     }
 
-    .hero-subtitle {
+    .hero-description {
       font-size: 16px;
+    }
+
+    .card-header {
+      padding: 30px 25px 25px;
+    }
+
+    .card-content {
+      padding: 25px;
+    }
+
+    .card-title {
+      font-size: 26px;
+    }
+
+    .section-title {
+      font-size: 17px;
+    }
+
+    .rule-text {
+      font-size: 14px;
     }
   }
 </style>

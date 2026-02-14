@@ -17,10 +17,9 @@
   <% if (user) { %>
     <div class="card wide add-form">
       <h3>➕ Ajouter une entreprise partenaire</h3>
-      <form method="post" action="/employes" enctype="multipart/form-data">
+      <form method="post" action="/employes">
         <input name="entrepriseName" placeholder="Nom de l'entreprise (ex: Atlas Group)" required />
         <textarea name="description" placeholder="Notes internes, services, conditions, points de contact, etc."></textarea>
-        <input name="photo" type="file" accept="image/*" placeholder="Logo ou photo (optionnel)" />
         <button class="btn btn-add" type="submit">Enregistrer</button>
       </form>
     </div>
@@ -38,13 +37,6 @@
       <% } else { %>
         <% items.forEach(item => { %>
           <article class="partner-card">
-            <div class="partner-card__media">
-              <% if (item.photoUrl) { %>
-                <img src="<%= item.photoUrl %>" alt="<%= item.entrepriseName || 'Entreprise' %>" />
-              <% } else { %>
-                <div class="partner-placeholder">👥</div>
-              <% } %>
-            </div>
             <div class="partner-card__body">
               <div class="partner-card__head">
                 <div>
@@ -154,36 +146,13 @@
 
 .partner-card {
   display: grid;
-  grid-template-columns: 120px 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
   padding: 18px 20px;
   border-radius: 16px;
   border: 1px solid rgba(255, 215, 0, 0.35);
   background: rgba(0, 0, 0, 0.7);
   box-shadow: inset 0 0 14px rgba(255, 215, 0, 0.12);
-}
-
-.partner-card__media {
-  width: 120px;
-  height: 120px;
-  border-radius: 14px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.partner-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.partner-placeholder {
-  font-size: 40px;
 }
 
 .partner-card__head {
@@ -249,11 +218,6 @@
 @media (max-width: 720px) {
   .partner-card {
     grid-template-columns: 1fr;
-  }
-
-  .partner-card__media {
-    width: 100%;
-    height: 180px;
   }
 }
 .empty-state {

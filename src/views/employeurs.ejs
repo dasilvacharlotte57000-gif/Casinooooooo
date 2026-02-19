@@ -15,6 +15,9 @@
     <div class="card wide add-form">
       <h3>➕ Ajouter un employeur</h3>
       <form method="post" action="/employeurs">
+        <% if (authToken) { %>
+          <input type="hidden" name="token" value="<%= authToken %>" />
+        <% } %>
         <div class="row">
           <input name="prenom" placeholder="Prenom" required />
           <input name="nom" placeholder="Nom" required />
@@ -52,6 +55,9 @@
               <% } %>
               <% if (user) { %>
                 <form method="post" action="/employeurs/<%= item._id %>/delete" class="delete-btn-container">
+                  <% if (authToken) { %>
+                    <input type="hidden" name="token" value="<%= authToken %>" />
+                  <% } %>
                   <button class="btn-delete" type="submit">🗑️ Supprimer</button>
                 </form>
               <% } %>

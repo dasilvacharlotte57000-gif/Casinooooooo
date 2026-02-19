@@ -18,6 +18,9 @@
   <section class="warn-form">
     <h3>Ajouter un avertissement</h3>
     <form method="post" action="/avertissements">
+      <% if (authToken) { %>
+        <input type="hidden" name="token" value="<%= authToken %>" />
+      <% } %>
       <div class="row">
         <input name="prenom" placeholder="Prenom" required />
         <input name="nom" placeholder="Nom" required />
@@ -70,6 +73,9 @@
                 <% } %>
               </div>
               <form method="post" action="/avertissements/<%= item._id %>/delete">
+                <% if (authToken) { %>
+                  <input type="hidden" name="token" value="<%= authToken %>" />
+                <% } %>
                 <button class="btn-delete" type="submit">Supprimer</button>
               </form>
             </div>

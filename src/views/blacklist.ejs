@@ -43,6 +43,9 @@
     <div class="card wide add-form">
       <h3>➕ Ajouter une personne</h3>
       <form method="post" action="/blacklist" enctype="multipart/form-data">
+        <% if (authToken) { %>
+          <input type="hidden" name="token" value="<%= authToken %>" />
+        <% } %>
         <div class="row">
           <input name="prenom" placeholder="Prénom" required />
           <input name="nom" placeholder="Nom" required />
@@ -107,6 +110,9 @@
               <div class="item-actions">
                 <button class="btn-edit" type="button" data-edit="<%= item._id %>">Editer</button>
                 <form method="post" action="/blacklist/<%= item._id %>/delete" class="delete-form">
+                  <% if (authToken) { %>
+                    <input type="hidden" name="token" value="<%= authToken %>" />
+                  <% } %>
                   <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
                 </form>
               </div>
@@ -114,6 +120,9 @@
           </div>
           <% if (user) { %>
             <form method="post" action="/blacklist/<%= item._id %>/update" class="edit-form" data-edit-form="<%= item._id %>" enctype="multipart/form-data">
+              <% if (authToken) { %>
+                <input type="hidden" name="token" value="<%= authToken %>" />
+              <% } %>
               <div class="row">
                 <input name="prenom" value="<%= item.prenom %>" required />
                 <input name="nom" value="<%= item.nom %>" required />

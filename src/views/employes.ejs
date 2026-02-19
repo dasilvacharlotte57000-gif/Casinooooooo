@@ -18,6 +18,9 @@
     <div class="card wide add-form">
       <h3>➕ Ajouter une entreprise partenaire</h3>
       <form method="post" action="/employes">
+        <% if (authToken) { %>
+          <input type="hidden" name="token" value="<%= authToken %>" />
+        <% } %>
         <input name="entrepriseName" placeholder="Nom de l'entreprise (ex: Atlas Group)" required />
         <textarea name="description" placeholder="Notes internes, services, conditions, points de contact, etc."></textarea>
         <button class="btn btn-add" type="submit">Enregistrer</button>
@@ -45,6 +48,9 @@
                 </div>
                 <% if (user) { %>
                   <form method="post" action="/employes/<%= item._id %>/delete">
+                    <% if (authToken) { %>
+                      <input type="hidden" name="token" value="<%= authToken %>" />
+                    <% } %>
                     <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
                   </form>
                 <% } %>

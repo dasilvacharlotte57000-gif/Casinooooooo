@@ -18,6 +18,9 @@
     <div class="card wide add-form">
       <h3>➕ Ajouter une entreprise</h3>
       <form method="post" action="/entreprises">
+        <% if (authToken) { %>
+          <input type="hidden" name="token" value="<%= authToken %>" />
+        <% } %>
         <input name="nomEntreprise" placeholder="Nom de l'entreprise" required />
         <textarea name="notes" placeholder="Notes / Détails du partenariat"></textarea>
         <button class="btn btn-add" type="submit">Ajouter</button>
@@ -44,6 +47,9 @@
               </div>
               <% if (user) { %>
                 <form method="post" action="/entreprises/<%= item._id %>/delete">
+                  <% if (authToken) { %>
+                    <input type="hidden" name="token" value="<%= authToken %>" />
+                  <% } %>
                   <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
                 </form>
               <% } %>

@@ -2,266 +2,937 @@
 <%- include('partials/nav') %>
 
 <% const formatDescription = (text) => (text || "").replace(/\n/g, "<br>"); %>
+<% const getInitials = (name) => name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(); %>
 
-<div class="container page-shell">
-  <div class="page-toolbar">
-    <input type="text" class="page-search-input" placeholder="Rechercher..." />
-    <button class="page-search-btn" type="button">🔍</button>
-  </div>
-  <div class="page-header">
-    <h1>👥 Partenariat Employés</h1>
-    <p>Centralise les entreprises partenaires, les contacts cles et les notes utiles.</p>
-  </div>
-
-  <!-- Formulaire d'ajout (uniquement connecté) -->
-  <% if (user) { %>
-    <div class="card wide add-form">
-      <h3>➕ Ajouter une entreprise partenaire</h3>
-      <form method="post" action="/employes">
-        <% if (authToken) { %>
-          <input type="hidden" name="token" value="<%= authToken %>" />
-        <% } %>
-        <input name="entrepriseName" placeholder="Nom de l'entreprise (ex: Atlas Group)" required />
-        <textarea name="description" placeholder="Notes internes, services, conditions, points de contact, etc."></textarea>
-        <button class="btn btn-add" type="submit">Enregistrer</button>
-      </form>
+<div class="partners-page">
+  <!-- Hero Section -->
+  <div class="partners-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="diamond-icon">◆</span>
+        <span class="badge-text">Partenariats Employés</span>
+        <span class="diamond-icon">◆</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line">Réseau de</span>
+        <span class="title-line title-accent">Partenaires</span>
+      </h1>
+      <p class="hero-description">
+        Gestion centralisée des entreprises partenaires et collaborations stratégiques
+      </p>
+      
+      <!-- Stats Cards -->
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-icon">🏢</div>
+          <div class="stat-content">
+            <span class="stat-label">Total Partenaires</span>
+            <span class="stat-value"><%= items.length %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✓</div>
+          <div class="stat-content">
+            <span class="stat-label">Actifs</span>
+            <span class="stat-value"><%= items.length %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <span class="stat-label">Avec Notes</span>
+            <span class="stat-value"><%= items.filter(i => i.description).length %></span>
+          </div>
+        </div>
+      </div>
     </div>
-  <% } %>
+  </div>
 
-  <!-- Liste des employés/partenaires -->
-  <div class="list-section">
-    <div class="list-header">
-      <h3>Partenaires actifs</h3>
-      <span class="badge"><%= items.length %></span>
+  <div class="partners-container">
+    
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-wrapper">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un partenaire..." />
+      </div>
     </div>
-    <div class="partner-stack">
+
+    <!-- Add Form (Only if authenticated) -->
+    <% if (user) { %>
+      <div class="add-section">
+        <div class="add-card">
+          <div class="add-header">
+            <div class="add-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="add-title">Nouveau Partenaire</h3>
+              <p class="add-subtitle">Ajouter une entreprise à votre réseau</p>
+            </div>
+          </div>
+          <form method="post" action="/employes" class="add-form">
+            <% if (authToken) { %>
+              <input type="hidden" name="token" value="<%= authToken %>" />
+            <% } %>
+            <div class="form-group">
+              <label class="form-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                Nom de l'entreprise
+              </label>
+              <input 
+                name="entrepriseName" 
+                class="form-input" 
+                placeholder="Ex: Atlas Group, Diamond Corp..." 
+                required 
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Notes & Informations
+              </label>
+              <textarea 
+                name="description" 
+                class="form-textarea" 
+                rows="4"
+                placeholder="Services proposés, contacts clés, conditions du partenariat, notes importantes..."
+              ></textarea>
+            </div>
+            <button class="form-submit" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span>Enregistrer le partenaire</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Partners Grid -->
+    <div class="partners-section">
+      <div class="section-header">
+        <h2 class="section-title">Tous les partenaires</h2>
+        <span class="partners-count"><%= items.length %> entreprise<%= items.length > 1 ? 's' : '' %></span>
+      </div>
+
       <% if (items.length === 0) { %>
-        <p class="empty-state">📭 Aucun partenaire pour le moment. Ajoute le premier pour demarrer le suivi.</p>
+        <div class="empty-state-modern">
+          <div class="empty-icon">🏢</div>
+          <h3>Aucun partenaire enregistré</h3>
+          <p>Commencez par ajouter votre première entreprise partenaire</p>
+          <% if (!user) { %>
+            <a href="/login" class="empty-cta">Se connecter pour ajouter</a>
+          <% } %>
+        </div>
       <% } else { %>
-        <% items.forEach(item => { %>
-          <article class="partner-card">
-            <div class="partner-card__body">
-              <div class="partner-card__head">
-                <div>
-                  <h4><%= item.entrepriseName || 'Entreprise' %></h4>
-                  <p class="partner-sub">Partenaire actif</p>
+        <div class="partners-grid" id="partnersContainer">
+          <% items.forEach((item, index) => { %>
+            <article class="partner-card" data-name="<%= (item.entrepriseName || '').toLowerCase() %>">
+              <div class="card-shine"></div>
+              
+              <div class="partner-header">
+                <div class="partner-avatar">
+                  <span class="avatar-text"><%= getInitials(item.entrepriseName || 'XX') %></span>
+                  <div class="avatar-glow"></div>
                 </div>
-                <% if (user) { %>
-                  <form method="post" action="/employes/<%= item._id %>/delete">
+                <div class="partner-info">
+                  <h3 class="partner-name"><%= item.entrepriseName || 'Entreprise' %></h3>
+                  <span class="partner-status">
+                    <span class="status-dot"></span>
+                    Partenaire Actif
+                  </span>
+                </div>
+              </div>
+
+              <div class="partner-body">
+                <% if (item.description) { %>
+                  <div class="partner-description">
+                    <div class="description-header">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                      </svg>
+                      <span>Informations</span>
+                    </div>
+                    <p class="description-text"><%- formatDescription(item.description) %></p>
+                  </div>
+                <% } else { %>
+                  <div class="partner-empty">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Aucune information enregistrée</span>
+                  </div>
+                <% } %>
+              </div>
+
+              <% if (user) { %>
+                <div class="partner-footer">
+                  <div class="partner-meta">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>Ajouté le <%= item.createdAt ? new Date(item.createdAt).toLocaleDateString('fr-FR') : 'N/A' %></span>
+                  </div>
+                  <form method="post" action="/employes/<%= item._id %>/delete" class="delete-action">
                     <% if (authToken) { %>
                       <input type="hidden" name="token" value="<%= authToken %>" />
                     <% } %>
-                    <button class="btn-delete" type="submit" title="Supprimer">🗑️</button>
+                    <button class="delete-btn" type="submit" onclick="return confirm('Supprimer ce partenaire ?')">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                      <span>Supprimer</span>
+                    </button>
                   </form>
-                <% } %>
-              </div>
-              <% if (item.description) { %>
-                <div class="partner-notes">
-                  <span>📝 Notes</span>
-                  <p><%- formatDescription(item.description) %></p>
                 </div>
-              <% } else { %>
-                <div class="partner-notes empty">Aucune note pour le moment.</div>
               <% } %>
-            </div>
-          </article>
-        <% }); %>
+            </article>
+          <% }); %>
+        </div>
       <% } %>
     </div>
-  </div>
 
+  </div>
 </div>
 
 <style>
-.page-header {
-  margin-bottom: 32px;
-  text-align: center;
-  border-bottom: 2px solid rgba(255, 215, 0, 0.18);
-  padding-bottom: 18px;
-}
-.page-header h1 {
-  margin: 0 0 10px 0;
-  color: var(--accent);
-  font-size: 38px;
-  letter-spacing: 1px;
-}
-.page-header p {
-  color: var(--muted);
-  margin: 0;
-}
-.add-form {
-  background: rgba(255, 215, 0, 0.10);
-  border: 1px solid rgba(255, 215, 0, 0.22);
-  margin-bottom: 32px;
-  box-shadow: 0 4px 18px rgba(255,215,0,0.08);
-}
-.add-form h3 {
-  color: var(--accent);
-  margin-top: 0;
-  font-size: 22px;
-}
-.btn-add {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #000;
-  font-weight: bold;
-  padding: 13px 22px;
-  border-radius: 10px;
-  font-size: 16px;
-  box-shadow: 0 2px 8px rgba(255,215,0,0.08);
-}
-.btn-add:hover {
-  transform: scale(1.04);
-  box-shadow: 0 6px 18px rgba(255,215,0,0.18);
-}
-.list-section {
-  margin-top: 32px;
-  padding: 20px;
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 215, 0, 0.35);
-  box-shadow: 0 0 24px rgba(255, 215, 0, 0.2);
-}
-.list-header {
-  margin-bottom: 28px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 215, 0, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.list-header h3 {
-  margin: 0;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 20px;
-}
-.badge {
-  background: rgba(255, 215, 0, 0.13);
-  color: var(--accent);
-  padding: 2px 10px;
-  border-radius: 20px;
-  font-size: 15px;
-  font-weight: bold;
-}
-.partner-stack {
-  display: grid;
-  gap: 14px;
-}
-
-.partner-card {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  padding: 18px 20px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 215, 0, 0.35);
-  background: rgba(0, 0, 0, 0.7);
-  box-shadow: inset 0 0 14px rgba(255, 215, 0, 0.12);
-}
-
-.partner-card__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.partner-card__head h4 {
-  margin: 0;
-  color: #e9eef3;
-  font-size: 19px;
-}
-
-.partner-sub {
-  margin: 4px 0 0;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.partner-notes {
-  border-top: 1px solid rgba(255, 215, 0, 0.18);
-  padding-top: 10px;
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.partner-notes span {
-  display: inline-block;
-  margin-bottom: 6px;
-  color: #ffd700;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.partner-notes.empty {
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
-}
-
-.btn-delete {
-  background: rgba(255, 107, 107, 0.2);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  color: #ff6b6b;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 16px;
-}
-
-.btn-delete:hover {
-  background: rgba(255, 107, 107, 0.3);
-  border-color: #ff6b6b;
-}
-
-@media (max-width: 720px) {
-  .partner-card {
-    grid-template-columns: 1fr;
+  /* ===== BASE STYLES ===== */
+  .partners-page {
+    min-height: 100vh;
+    padding-bottom: 80px;
+    background: linear-gradient(180deg, #0a0a0a 0%, #050505 50%, #0a0a0a 100%);
   }
-}
-.empty-state {
-  text-align: center;
-  color: var(--muted);
-  padding: 44px;
-  grid-column: 1 / -1;
-  font-size: 18px;
-}
-.login-cta {
-  background: rgba(255, 215, 0, 0.10);
-  border: 2px solid rgba(255, 215, 0, 0.22);
-  border-radius: 14px;
-  padding: 32px;
-  text-align: center;
-  margin-top: 32px;
-  box-shadow: 0 2px 12px rgba(255,215,0,0.07);
-}
-.login-cta p {
-  color: var(--muted);
-  margin: 0 0 15px 0;
-  font-size: 16px;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #000;
-  padding: 12px 28px;
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 16px;
-}
-.btn-primary:hover {
-  transform: scale(1.05);
-}
+
+  /* ===== HERO SECTION ===== */
+  .partners-hero {
+    position: relative;
+    padding: 100px 20px 80px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(74,163,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+    50% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgba(74,163,255,0.15), rgba(74,163,255,0.05));
+    border: 1px solid rgba(74,163,255,0.3);
+    border-radius: 50px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  .diamond-icon {
+    color: var(--accent-blue);
+    font-size: 12px;
+    animation: rotate 3s linear infinite;
+  }
+
+  @keyframes rotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+  }
+
+  .badge-text {
+    color: var(--accent-blue);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .hero-title {
+    margin: 0 0 30px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .title-line {
+    font-size: 52px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+
+  .title-accent {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, #5bb5ff 50%, var(--accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+  }
+
+  .hero-description {
+    font-size: 18px;
+    color: var(--muted);
+    margin: 0 auto 50px;
+    max-width: 600px;
+    line-height: 1.6;
+    animation: fadeIn 1.2s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ===== STATS CARDS ===== */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeIn 1.4s ease-out;
+  }
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border: 1px solid rgba(74,163,255,0.2);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(74,163,255,0.4);
+    box-shadow: 0 10px 30px rgba(74,163,255,0.2);
+  }
+
+  .stat-icon {
+    font-size: 32px;
+    filter: grayscale(0.3);
+  }
+
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent-blue);
+  }
+
+  /* ===== CONTAINER ===== */
+  .partners-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ===== SEARCH SECTION ===== */
+  .search-section {
+    margin-bottom: 40px;
+  }
+
+  .search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-blue);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 16px 20px 16px 50px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(74,163,255,0.2);
+    border-radius: 50px;
+    color: #e9eef3;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(74,163,255,0.1);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .search-input::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ===== ADD SECTION ===== */
+  .add-section {
+    margin-bottom: 50px;
+  }
+
+  .add-card {
+    background: linear-gradient(135deg, rgba(74,163,255,0.08), rgba(74,163,255,0.02));
+    border: 1px solid rgba(74,163,255,0.2);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+
+  .add-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .add-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(74,163,255,0.2), rgba(74,163,255,0.05));
+    border: 2px solid rgba(74,163,255,0.3);
+    border-radius: 16px;
+    color: var(--accent-blue);
+    flex-shrink: 0;
+  }
+
+  .add-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color: #fff;
+  }
+
+  .add-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ===== FORM STYLES ===== */
+  .add-form, .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .form-label svg {
+    color: var(--accent-blue);
+  }
+
+  .form-input,
+  .form-textarea {
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #e9eef3;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(74,163,255,0.1);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  .form-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--accent-blue), #5bb5ff);
+    border: none;
+    border-radius: 12px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(74,163,255,0.3);
+  }
+
+  .form-submit:active {
+    transform: translateY(0);
+  }
+
+  /* ===== PARTNERS SECTION ===== */
+  .partners-section {
+    margin-top: 30px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(74,163,255,0.2);
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+  }
+
+  .partners-count {
+    padding: 6px 16px;
+    background: rgba(74,163,255,0.15);
+    border: 1px solid rgba(74,163,255,0.3);
+    border-radius: 20px;
+    color: var(--accent-blue);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* ===== PARTNERS GRID ===== */
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+  }
+
+  .partner-card {
+    position: relative;
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border: 1px solid rgba(74,163,255,0.15);
+    border-radius: 20px;
+    padding: 25px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideInUp 0.6s ease-out both;
+  }
+
+  @keyframes slideInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .partner-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(74,163,255,0.4);
+    box-shadow: 0 20px 50px rgba(74,163,255,0.2);
+  }
+
+  .card-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(74,163,255,0.05) 50%, transparent 70%);
+    transform: rotate(45deg);
+    animation: shine 6s ease-in-out infinite;
+  }
+
+  @keyframes shine {
+    0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  }
+
+  /* ===== PARTNER HEADER ===== */
+  .partner-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .partner-avatar {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(74,163,255,0.2), rgba(74,163,255,0.05));
+    border: 2px solid rgba(74,163,255,0.3);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .avatar-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    z-index: 2;
+    position: relative;
+  }
+
+  .avatar-glow {
+    position: absolute;
+    inset: -5px;
+    background: radial-gradient(circle, rgba(74,163,255,0.3) 0%, transparent 70%);
+    border-radius: 14px;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .partner-info {
+    flex: 1;
+  }
+
+  .partner-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color: #fff;
+  }
+
+  .partner-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* ===== PARTNER BODY ===== */
+  .partner-body {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 15px;
+  }
+
+  .partner-description {
+    padding: 15px;
+    background: rgba(255,255,255,0.02);
+    border-left: 3px solid var(--accent-blue);
+    border-radius: 8px;
+  }
+
+  .description-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: var(--accent-blue);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .description-text {
+    margin: 0;
+    color: #e9eef3;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .partner-empty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(255,255,255,0.01);
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .partner-empty svg {
+    color: rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+
+  /* ===== PARTNER FOOTER ===== */
+  .partner-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    z-index: 1;
+  }
+
+  .partner-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .partner-meta svg {
+    color: var(--accent-blue);
+    flex-shrink: 0;
+  }
+
+  .delete-action {
+    margin: 0;
+  }
+
+  .delete-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255,107,107,0.1);
+    border: 1px solid rgba(255,107,107,0.3);
+    border-radius: 8px;
+    color: #ff6b6b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .delete-btn:hover {
+    background: rgba(255,107,107,0.2);
+    border-color: #ff6b6b;
+    transform: translateY(-2px);
+  }
+
+  .delete-btn svg {
+    flex-shrink: 0;
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state-modern {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .empty-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    filter: grayscale(0.5);
+  }
+
+  .empty-state-modern h3 {
+    font-size: 24px;
+    color: #fff;
+    margin: 0 0 10px 0;
+  }
+
+  .empty-state-modern p {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0 0 30px 0;
+  }
+
+  .empty-cta {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--accent-blue), #5bb5ff);
+    color: #000;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .empty-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(74,163,255,0.3);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .partners-grid {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    .title-line {
+      font-size: 42px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .partners-hero {
+      padding: 60px 20px 50px;
+    }
+
+    .title-line {
+      font-size: 36px;
+    }
+
+    .hero-description {
+      font-size: 16px;
+    }
+
+    .hero-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .partners-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .add-card {
+      padding: 25px;
+    }
+
+    .section-title {
+      font-size: 22px;
+    }
+  }
 </style>
 
 <script>
-// reserved
+  // Search functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const partnersContainer = document.getElementById('partnersContainer');
+    
+    if (searchInput && partnersContainer) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const cards = partnersContainer.querySelectorAll('.partner-card');
+        
+        cards.forEach(card => {
+          const name = card.dataset.name || '';
+          const match = name.includes(query);
+          card.style.display = match ? '' : 'none';
+        });
+      });
+    }
+  });
 </script>
 
 <%- include('partials/footer') %>

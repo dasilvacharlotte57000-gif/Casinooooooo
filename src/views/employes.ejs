@@ -228,7 +228,7 @@
   .partners-page {
     min-height: 100vh;
     padding-bottom: 80px;
-    background: linear-gradient(180deg, #0a0a0a 0%, #050505 50%, #0a0a0a 100%);
+    background: #000;
   }
 
   /* ===== HERO SECTION ===== */
@@ -246,14 +246,14 @@
     transform: translateX(-50%);
     width: 700px;
     height: 700px;
-    background: radial-gradient(circle, rgba(74,163,255,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(74,163,255,0.05) 0%, transparent 70%);
     pointer-events: none;
     animation: pulse 4s ease-in-out infinite;
   }
 
   @keyframes pulse {
-    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
-    50% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.2; }
+    50% { transform: translateX(-50%) scale(1.05); opacity: 0.3; }
   }
 
   .hero-content {
@@ -266,12 +266,13 @@
     align-items: center;
     gap: 12px;
     padding: 10px 24px;
-    background: linear-gradient(135deg, rgba(74,163,255,0.15), rgba(74,163,255,0.05));
+    background: linear-gradient(135deg, rgba(74,163,255,0.1), rgba(74,163,255,0.03));
     border: 1px solid rgba(74,163,255,0.3);
     border-radius: 50px;
     margin-bottom: 30px;
     backdrop-filter: blur(10px);
     animation: fadeInDown 0.8s ease-out;
+    box-shadow: 0 0 10px rgba(74,163,255,0.1);
   }
 
   .diamond-icon {
@@ -363,16 +364,17 @@
     align-items: center;
     gap: 15px;
     padding: 20px 25px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     border: 1px solid rgba(74,163,255,0.2);
     border-radius: 16px;
     transition: all 0.3s ease;
+    box-shadow: none;
   }
 
   .stat-card:hover {
     transform: translateY(-5px);
     border-color: rgba(74,163,255,0.4);
-    box-shadow: 0 10px 30px rgba(74,163,255,0.2);
+    box-shadow: 0 5px 15px rgba(74,163,255,0.1);
   }
 
   .stat-icon {
@@ -442,8 +444,8 @@
 
   .search-input:focus {
     border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(74,163,255,0.1);
-    background: rgba(255,255,255,0.03);
+    box-shadow: 0 0 0 2px rgba(74,163,255,0.1);
+    background: rgba(255,255,255,0.02);
   }
 
   .search-input::placeholder {
@@ -456,11 +458,11 @@
   }
 
   .add-card {
-    background: linear-gradient(135deg, rgba(74,163,255,0.08), rgba(74,163,255,0.02));
+    background: linear-gradient(135deg, rgba(74,163,255,0.05), rgba(74,163,255,0.02));
     border: 1px solid rgba(74,163,255,0.2);
     border-radius: 20px;
     padding: 35px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: none;
   }
 
   .add-header {
@@ -538,8 +540,8 @@
   .form-input:focus,
   .form-textarea:focus {
     border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(74,163,255,0.1);
-    background: rgba(255,255,255,0.03);
+    box-shadow: 0 0 0 2px rgba(74,163,255,0.1);
+    background: rgba(255,255,255,0.02);
   }
 
   .form-textarea {
@@ -567,7 +569,7 @@
 
   .form-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(74,163,255,0.3);
+    box-shadow: 0 5px 15px rgba(74,163,255,0.15);
   }
 
   .form-submit:active {
@@ -597,12 +599,13 @@
 
   .partners-count {
     padding: 6px 16px;
-    background: rgba(74,163,255,0.15);
+    background: rgba(74,163,255,0.1);
     border: 1px solid rgba(74,163,255,0.3);
     border-radius: 20px;
     color: var(--accent-blue);
     font-size: 14px;
     font-weight: 600;
+    box-shadow: none;
   }
 
   /* ===== PARTNERS GRID ===== */
@@ -631,7 +634,7 @@
   .partner-card:hover {
     transform: translateY(-8px);
     border-color: rgba(74,163,255,0.4);
-    box-shadow: 0 20px 50px rgba(74,163,255,0.2);
+    box-shadow: 0 10px 25px rgba(74,163,255,0.1);
   }
 
   .card-shine {
@@ -640,9 +643,9 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent 30%, rgba(74,163,255,0.05) 50%, transparent 70%);
+    background: linear-gradient(45deg, transparent 40%, rgba(74,163,255,0.03) 50%, transparent 60%);
     transform: rotate(45deg);
-    animation: shine 6s ease-in-out infinite;
+    animation: shine 8s ease-in-out infinite;
   }
 
   @keyframes shine {
@@ -684,14 +687,14 @@
   .avatar-glow {
     position: absolute;
     inset: -5px;
-    background: radial-gradient(circle, rgba(74,163,255,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(74,163,255,0.1) 0%, transparent 70%);
     border-radius: 14px;
-    animation: pulse-glow 2s ease-in-out infinite;
+    animation: pulse-glow 3s ease-in-out infinite;
   }
 
   @keyframes pulse-glow {
-    0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.05); }
   }
 
   .partner-info {

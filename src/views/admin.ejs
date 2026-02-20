@@ -141,7 +141,8 @@
       <div class="kpi-content">
         <div class="kpi-label">Activité 24h</div>
         <div class="kpi-value animate-count" data-target="<%= recentActivity %>">0</div>
-        <div class="kpi-trend <%= recentActivity > 10 ? 'positive' : 'neutral' %>">
+        <% const activityTrend = recentActivity > 10 ? 'positive' : 'neutral'; %>
+        <div class="kpi-trend <%= activityTrend %>">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
           </svg>

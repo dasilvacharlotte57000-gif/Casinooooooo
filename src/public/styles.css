@@ -2,8 +2,8 @@
 
 a:link, a:visited { color: inherit; }
 :root{
-  --bg-0: #070707;
-  --bg-1: #0f1113;
+  --bg-0: #000000;
+  --bg-1: #1a1a1a;
   --card: rgba(255,255,255,0.03);
   --muted: #bdbdbd;
   --accent: #3b82f6;

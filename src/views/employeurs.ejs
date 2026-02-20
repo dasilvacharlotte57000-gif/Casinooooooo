@@ -156,99 +156,84 @@
         <% items.forEach((item, index) => { %>
           <div class="executive-card-wrapper" style="animation-delay: <%= index * 0.1 %>s;">
             <div class="executive-card" data-id="<%= item._id %>">
-              <!-- Face avant de la carte -->
-              <div class="card-face card-front">
-                <div class="card-hologram"></div>
-                <div class="card-border-glow"></div>
-                
-                <!-- Photo avec effets premium -->
-                <div class="executive-photo-container">
-                  <div class="photo-frame"></div>
-                  <div class="photo-glow"></div>
-                  <% if (item.photoUrl) { %>
-                    <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" class="executive-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="executive-placeholder" style="display: none;">
-                      <span class="placeholder-icon">👤</span>
-                    </div>
-                  <% } else { %>
-                    <div class="executive-placeholder">
-                      <span class="placeholder-icon">👤</span>
-                    </div>
-                  <% } %>
-                  <div class="photo-overlay"></div>
-                </div>
-
-                <!-- Informations principales -->
-                <div class="card-content-premium">
-                  <div class="executive-rank-badge">
-                    <span class="rank-icon">⭐</span>
-                    <span class="rank-text"><%= item.grade || 'Non spécifié' %></span>
-                    <div class="badge-shine"></div>
+              <div class="card-hologram"></div>
+              <div class="card-border-glow"></div>
+              <div class="card-light-sweep"></div>
+              
+              <!-- Photo avec effets premium -->
+              <div class="executive-photo-container">
+                <div class="photo-frame"></div>
+                <div class="photo-glow"></div>
+                <% if (item.photoUrl) { %>
+                  <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" class="executive-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                  <div class="executive-placeholder" style="display: none;">
+                    <span class="placeholder-icon">👤</span>
                   </div>
-                  
-                  <h4 class="executive-name">
-                    <span class="name-first"><%= item.prenom %></span>
-                    <span class="name-last"><%= item.nom %></span>
-                  </h4>
-                  
-                  <div class="card-flip-hint">
-                    <span class="flip-icon">🔄</span>
-                    <span class="flip-text">Survoler pour plus d'actions</span>
+                <% } else { %>
+                  <div class="executive-placeholder">
+                    <span class="placeholder-icon">👤</span>
                   </div>
+                <% } %>
+                <div class="photo-overlay"></div>
+                <div class="photo-particles">
+                  <span class="photo-particle"></span>
+                  <span class="photo-particle"></span>
+                  <span class="photo-particle"></span>
+                  <span class="photo-particle"></span>
                 </div>
-                
-                <div class="card-corner-decor top-left"></div>
-                <div class="card-corner-decor top-right"></div>
-                <div class="card-corner-decor bottom-left"></div>
-                <div class="card-corner-decor bottom-right"></div>
               </div>
 
-              <!-- Face arrière de la carte avec actions -->
+              <!-- Informations principales -->
+              <div class="card-content-premium">
+                <div class="executive-rank-badge">
+                  <span class="rank-icon">⭐</span>
+                  <span class="rank-text"><%= item.grade || 'Non spécifié' %></span>
+                  <div class="badge-shine"></div>
+                </div>
+                
+                <h4 class="executive-name">
+                  <span class="name-first"><%= item.prenom %></span>
+                  <span class="name-last"><%= item.nom %></span>
+                </h4>
+                
+                <div class="card-status-indicator">
+                  <span class="status-dot"></span>
+                  <span class="status-text">Membre Actif</span>
+                </div>
+              </div>
+              
+              <!-- Panneau d'actions qui glisse depuis le bas -->
               <% if (user) { %>
-                <div class="card-face card-back">
-                  <div class="card-hologram"></div>
-                  <div class="back-content">
-                    <div class="back-header">
-                      <div class="back-icon">🎯</div>
-                      <h5>Actions Disponibles</h5>
-                    </div>
-                    
-                    <div class="executive-info-grid">
-                      <div class="info-box">
-                        <div class="info-icon">👤</div>
-                        <div class="info-text"><%= item.prenom %> <%= item.nom %></div>
-                      </div>
-                      <div class="info-box">
-                        <div class="info-icon">🎖️</div>
-                        <div class="info-text"><%= item.grade || 'Non spécifié' %></div>
-                      </div>
-                    </div>
-                    
-                    <div class="action-buttons-premium">
-                      <button class="btn-edit-premium" onclick="openEditModal('<%= item._id %>')">
-                        <span class="btn-icon-premium">✏️</span>
-                        <span class="btn-text-premium">Modifier</span>
-                        <div class="btn-ripple"></div>
-                      </button>
-                      <form method="post" action="/employeurs/<%= item._id %>/delete" style="width: 100%;">
-                        <% if (authToken) { %>
-                          <input type="hidden" name="token" value="<%= authToken %>" />
-                        <% } %>
-                        <button class="btn-delete-premium" type="submit" onclick="return confirm('⚠️ Confirmer la suppression de <%= item.prenom %> <%= item.nom %> ?')">
-                          <span class="btn-icon-premium">🗑️</span>
-                          <span class="btn-text-premium">Supprimer</span>
-                          <div class="btn-ripple"></div>
-                        </button>
-                      </form>
-                    </div>
+                <div class="action-panel-slide">
+                  <div class="action-panel-header">
+                    <div class="action-icon-main">⚡</div>
+                    <h5>Actions Rapides</h5>
                   </div>
                   
-                  <div class="card-corner-decor top-left"></div>
-                  <div class="card-corner-decor top-right"></div>
-                  <div class="card-corner-decor bottom-left"></div>
-                  <div class="card-corner-decor bottom-right"></div>
+                  <div class="action-buttons-slide">
+                    <button class="btn-action-slide btn-edit-slide" onclick="openEditModal('<%= item._id %>')">
+                      <span class="btn-slide-icon">✏️</span>
+                      <span class="btn-slide-text">Modifier</span>
+                      <div class="btn-slide-glow"></div>
+                    </button>
+                    <form method="post" action="/employeurs/<%= item._id %>/delete" style="width: 100%;">
+                      <% if (authToken) { %>
+                        <input type="hidden" name="token" value="<%= authToken %>" />
+                      <% } %>
+                      <button class="btn-action-slide btn-delete-slide" type="submit" onclick="return confirm('⚠️ Supprimer <%= item.prenom %> <%= item.nom %> ?')">
+                        <span class="btn-slide-icon">🗑️</span>
+                        <span class="btn-slide-text">Supprimer</span>
+                        <div class="btn-slide-glow"></div>
+                      </button>
+                    </form>
+                  </div>
                 </div>
               <% } %>
+              
+              <div class="card-corner-decor top-left"></div>
+              <div class="card-corner-decor top-right"></div>
+              <div class="card-corner-decor bottom-left"></div>
+              <div class="card-corner-decor bottom-right"></div>
             </div>
           </div>
         <% }); %>
@@ -531,6 +516,42 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-200%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+@keyframes photoParticleFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translate(var(--tx), var(--ty)) scale(1);
+  }
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
   }
 }
 
@@ -1185,24 +1206,10 @@ document.addEventListener('DOMContentLoaded', () => {
   animation: slideInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-/* Carte 3D avec effet flip */
+/* Carte 3D avec effet zoom et élévation */
 .executive-card {
   position: relative;
   height: 550px;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  cursor: pointer;
-}
-
-.executive-card:hover {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
   border-radius: 30px;
   overflow: hidden;
   background: linear-gradient(135deg, 
@@ -1212,22 +1219,20 @@ document.addEventListener('DOMContentLoaded', () => {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
               inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
-}
-
-.card-front {
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  perspective: 1000px;
   display: flex;
   flex-direction: column;
 }
 
-.card-back {
-  transform: rotateY(180deg);
-  background: linear-gradient(135deg, 
-    rgba(118, 75, 162, 0.3) 0%, 
-    rgba(102, 126, 234, 0.3) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
+.executive-card:hover {
+  transform: translateY(-25px) scale(1.05) rotateX(2deg);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7),
+              0 0 80px rgba(102, 126, 234, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(102, 126, 234, 0.8);
 }
 
 /* Effet holographique */
@@ -1247,6 +1252,31 @@ document.addEventListener('DOMContentLoaded', () => {
   pointer-events: none;
   animation: hologramEffect 4s linear infinite;
   z-index: 10;
+}
+
+/* Effet de balayage de lumière */
+.card-light-sweep {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    transparent 100%);
+  transform: translateX(-200%);
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.executive-card:hover .card-light-sweep {
+  animation: lightSweep 1.5s ease-in-out;
+  opacity: 1;
 }
 
 .card-border-glow {
@@ -1403,6 +1433,69 @@ document.addEventListener('DOMContentLoaded', () => {
   pointer-events: none;
 }
 
+/* Particules autour de la photo */
+.photo-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.executive-card:hover .photo-particles {
+  opacity: 1;
+}
+
+.photo-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, var(--neon-gold) 0%, transparent 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 15px var(--neon-gold);
+  animation: photoParticleFloat 2s ease-in-out infinite;
+}
+
+.photo-particle:nth-child(1) {
+  top: 10%;
+  left: 10%;
+  --tx: 20px;
+  --ty: -30px;
+  animation-delay: 0s;
+}
+
+.photo-particle:nth-child(2) {
+  top: 20%;
+  right: 15%;
+  --tx: -25px;
+  --ty: -20px;
+  animation-delay: 0.3s;
+  background: radial-gradient(circle, var(--neon-blue) 0%, transparent 70%);
+  box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.photo-particle:nth-child(3) {
+  bottom: 20%;
+  left: 20%;
+  --tx: -20px;
+  --ty: 25px;
+  animation-delay: 0.6s;
+  background: radial-gradient(circle, var(--neon-purple) 0%, transparent 70%);
+  box-shadow: 0 0 15px var(--neon-purple);
+}
+
+.photo-particle:nth-child(4) {
+  bottom: 15%;
+  right: 10%;
+  --tx: 30px;
+  --ty: 20px;
+  animation-delay: 0.9s;
+}
+
 /* Contenu de la carte */
 .card-content-premium {
   flex: 1;
@@ -1479,96 +1572,91 @@ document.addEventListener('DOMContentLoaded', () => {
   text-transform: uppercase;
 }
 
-.card-flip-hint {
+/* Indicateur de statut */
+.card-status-indicator {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.5);
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 25px;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--neon-blue);
+  border-radius: 50%;
+  box-shadow: 0 0 15px var(--neon-blue);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.status-text {
+  color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  margin-top: auto;
+  text-transform: uppercase;
 }
 
-.flip-icon {
+/* Panneau d'actions qui glisse depuis le bas */
+.action-panel-slide {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(26, 26, 46, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border-top: 2px solid rgba(102, 126, 234, 0.5);
+  padding: 25px;
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 20;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.executive-card:hover .action-panel-slide {
+  transform: translateY(0);
+}
+
+.action-panel-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.action-icon-main {
+  font-size: 36px;
+  margin-bottom: 10px;
   animation: glowPulse 2s ease-in-out infinite;
 }
 
-/* Face arrière de la carte */
-.back-content {
-  width: 100%;
-  position: relative;
-  z-index: 2;
-}
-
-.back-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.back-icon {
-  font-size: 48px;
-  margin-bottom: 15px;
-  animation: bounceIn 1s ease;
-}
-
-.back-header h5 {
+.action-panel-header h5 {
   margin: 0;
   color: #ffffff;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
 }
 
-.executive-info-grid {
-  display: grid;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.info-box {
-  background: rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s;
-}
-
-.info-box:hover {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
-  transform: translateX(5px);
-}
-
-.info-icon {
-  font-size: 24px;
-}
-
-.info-text {
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.action-buttons-premium {
+.action-buttons-slide {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
-.btn-edit-premium,
-.btn-delete-premium {
+.btn-action-slide {
   width: 100%;
-  padding: 16px 25px;
+  padding: 15px 20px;
   border: 2px solid;
   border-radius: 15px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1583,45 +1671,45 @@ document.addEventListener('DOMContentLoaded', () => {
   backdrop-filter: blur(10px);
 }
 
-.btn-edit-premium {
-  background: linear-gradient(135deg, 
-    rgba(0, 243, 255, 0.2) 0%, 
+.btn-edit-slide {
+  background: linear-gradient(135deg,
+    rgba(0, 243, 255, 0.2) 0%,
     rgba(102, 126, 234, 0.2) 100%);
   border-color: var(--neon-blue);
   color: var(--neon-blue);
   box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
 }
 
-.btn-edit-premium:hover {
-  background: linear-gradient(135deg, 
-    rgba(0, 243, 255, 0.4) 0%, 
+.btn-edit-slide:hover {
+  background: linear-gradient(135deg,
+    rgba(0, 243, 255, 0.4) 0%,
     rgba(102, 126, 234, 0.4) 100%);
   box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.02);
 }
 
-.btn-delete-premium {
-  background: linear-gradient(135deg, 
-    rgba(245, 87, 108, 0.2) 0%, 
+.btn-delete-slide {
+  background: linear-gradient(135deg,
+    rgba(245, 87, 108, 0.2) 0%,
     rgba(240, 147, 251, 0.2) 100%);
   border-color: #f5576c;
   color: #ff6b95;
   box-shadow: 0 0 20px rgba(245, 87, 108, 0.3);
 }
 
-.btn-delete-premium:hover {
-  background: linear-gradient(135deg, 
-    rgba(245, 87, 108, 0.4) 0%, 
+.btn-delete-slide:hover {
+  background: linear-gradient(135deg,
+    rgba(245, 87, 108, 0.4) 0%,
     rgba(240, 147, 251, 0.4) 100%);
   box-shadow: 0 0 30px rgba(245, 87, 108, 0.6);
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.02);
 }
 
-.btn-icon-premium {
-  font-size: 20px;
+.btn-slide-icon {
+  font-size: 18px;
 }
 
-.btn-ripple {
+.btn-slide-glow {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1633,8 +1721,7 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: width 0.6s, height 0.6s;
 }
 
-.btn-edit-premium:hover .btn-ripple,
-.btn-delete-premium:hover .btn-ripple {
+.btn-action-slide:hover .btn-slide-glow {
   width: 400px;
   height: 400px;
 }

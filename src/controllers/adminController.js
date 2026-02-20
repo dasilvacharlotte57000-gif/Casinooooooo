@@ -33,6 +33,8 @@ exports.postLogin = (req, res) => {
 };
 
 exports.listAudit = async (req, res) => {
+  console.log("🔍 DEBUG listAudit - req.user:", req.user);
+  
   const { action, entity, actor, q, from, to } = req.query;
   const limitRaw = Number(req.query.limit || 200);
   const limit = Number.isFinite(limitRaw) ? Math.min(Math.max(limitRaw, 50), 1000) : 200;

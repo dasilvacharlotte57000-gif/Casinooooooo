@@ -50,7 +50,7 @@
             </svg>
           </div>
           <div>
-            <div class="user-name"><%= user.email %></div>
+            <div class="user-name"><%= user && user.email ? user.email : 'Admin' %></div>
             <div class="user-role">Super Admin</div>
           </div>
         </div>

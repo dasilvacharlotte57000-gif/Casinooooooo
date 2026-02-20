@@ -70,6 +70,7 @@ exports.listAudit = async (req, res) => {
   }
 
   res.render("admin", {
+    user: req.user,
     items,
     filters: {
       action: action || "",

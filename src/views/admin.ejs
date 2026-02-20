@@ -19,7 +19,10 @@
   // Activité récente (dernières 24h)
   const now = new Date();
   const last24h = new Date(now - 24 * 60 * 60 * 1000);
-  const recentActivity = items.filter(i => i.createdAt && new Date(i.createdAt) > last24h).length;
+  const recentActivity = items.filter(function(i) { 
+    if (!i.createdAt) return false;
+    return new Date(i.createdAt).getTime() >= last24h.getTime();
+  }).length;
   
   // Acteurs uniques
   const uniqueActors = new Set(items.map(i => i.actorEmail || i.actorId).filter(Boolean));

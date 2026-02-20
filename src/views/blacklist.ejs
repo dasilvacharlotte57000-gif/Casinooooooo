@@ -17,11 +17,11 @@
         <span class="badge-icon">⛔</span>
       </div>
       <h1 class="hero-title">
-        <span class="title-line">Liste</span>
-        <span class="title-line title-accent">d'Interdiction</span>
+        <span class="title-line">Liste des </span>
+        <span class="title-line title-accent">Blacklist</span>
       </h1>
       <p class="hero-description">
-        Gestion centralisée des personnes interdites d'accès à l'établissement
+        Gestion centralisée des personnes interdites d'accès au Diamond Casino.
       </p>
       
       <!-- Stats Cards -->
@@ -193,7 +193,7 @@
     <% } else { %>
       <div class="blacklist-grid" id="blacklistContainer">
         <% items.forEach((item, index) => { %>
-          <article class="person-card" data-nom="<%= (item.nom || '').toLowerCase() %>" data-prenom="<%= (item.prenom || '').toLowerCase() %>">
+          <article class="person-card <%= item.permanent ? 'permanent-entry' : 'temporary-entry' %>" data-nom="<%= (item.nom || '').toLowerCase() %>" data-prenom="<%= (item.prenom || '').toLowerCase() %>">
             <div class="card-shine"></div>
             
             <div class="person-header">
@@ -353,7 +353,7 @@
   .blacklist-page {
     min-height: 100vh;
     padding-bottom: 80px;
-    background: #000;
+    background: linear-gradient(135deg, #0a1a4d 0%, #1e3a8a 50%, #0f2661 100%);
   }
 
   /* ===== HERO SECTION ===== */
@@ -877,6 +877,16 @@
     font-weight: 700;
     margin: 0 0 5px 0;
     color: #fff;
+  }
+
+  .permanent-entry .person-name {
+    color: #ff3333;
+    text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+  }
+
+  .temporary-entry .person-name {
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
   }
 
   .person-status {

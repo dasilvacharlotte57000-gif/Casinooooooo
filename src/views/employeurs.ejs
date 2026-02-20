@@ -2,34 +2,12 @@
 <%- include('partials/nav') %>
 
 <div class="container page-shell">
-  <!-- Barre de recherche et filtres -->
+  <!-- Barre de recherche -->
   <div class="page-toolbar">
     <form method="get" action="/employeurs" class="search-filter-form">
-      <input type="text" name="search" class="page-search-input" placeholder="Rechercher par nom, prénom, poste..." value="<%= filters?.search || '' %>" />
-      <select name="departement" class="filter-select">
-        <option value="">Tous les départements</option>
-        <option value="Direction" <%= filters?.departement === 'Direction' ? 'selected' : '' %>>Direction</option>
-        <option value="Finances" <%= filters?.departement === 'Finances' ? 'selected' : '' %>>Finances</option>
-        <option value="RH" <%= filters?.departement === 'RH' ? 'selected' : '' %>>RH</option>
-        <option value="Marketing" <%= filters?.departement === 'Marketing' ? 'selected' : '' %>>Marketing</option>
-        <option value="Ventes" <%= filters?.departement === 'Ventes' ? 'selected' : '' %>>Ventes</option>
-        <option value="IT" <%= filters?.departement === 'IT' ? 'selected' : '' %>>IT</option>
-        <option value="Operations" <%= filters?.departement === 'Operations' ? 'selected' : '' %>>Operations</option>
-        <option value="Service Client" <%= filters?.departement === 'Service Client' ? 'selected' : '' %>>Service Client</option>
-        <option value="Autre" <%= filters?.departement === 'Autre' ? 'selected' : '' %>>Autre</option>
-      </select>
-      <select name="grade" class="filter-select">
-        <option value="">Tous les grades</option>
-        <option value="Employé" <%= filters?.grade === 'Employé' ? 'selected' : '' %>>Employé</option>
-        <option value="Manager" <%= filters?.grade === 'Manager' ? 'selected' : '' %>>Manager</option>
-        <option value="Responsable Sécurité" <%= filters?.grade === 'Responsable Sécurité' ? 'selected' : '' %>>Responsable Sécurité</option>
-        <option value="Chef d'Équipe" <%= filters?.grade === "Chef d'Équipe" ? 'selected' : '' %>>Chef d'Équipe</option>
-        <option value="Directeur" <%= filters?.grade === 'Directeur' ? 'selected' : '' %>>Directeur</option>
-        <option value="Cadre Supérieur" <%= filters?.grade === 'Cadre Supérieur' ? 'selected' : '' %>>Cadre Supérieur</option>
-        <option value="Autre" <%= filters?.grade === 'Autre' ? 'selected' : '' %>>Autre</option>
-      </select>
+      <input type="text" name="search" class="page-search-input" placeholder="Rechercher par nom ou prénom..." value="<%= filters?.search || '' %>" />
       <button class="page-search-btn" type="submit">🔍</button>
-      <% if (filters?.search || filters?.departement || filters?.grade) { %>
+      <% if (filters?.search) { %>
         <a href="/employeurs" class="btn-reset">✖ Réinitialiser</a>
       <% } %>
     </form>
@@ -75,41 +53,6 @@
             <input name="nom" placeholder="Nom" required />
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input name="email" type="email" placeholder="email@exemple.com" />
-          </div>
-          <div class="form-group">
-            <label>Téléphone</label>
-            <input name="telephone" type="tel" placeholder="+33 6 12 34 56 78" />
-          </div>
-          <div class="form-group">
-            <label>Poste</label>
-            <input name="poste" placeholder="Ex: Développeur, Manager..." />
-          </div>
-          <div class="form-group">
-            <label>Département</label>
-            <select name="departement">
-              <option value="">-- Sélectionner --</option>
-              <option value="Direction">Direction</option>
-              <option value="Finances">Finances</option>
-              <option value="RH">RH</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Ventes">Ventes</option>
-              <option value="IT">IT</option>
-              <option value="Operations">Operations</option>
-              <option value="Service Client">Service Client</option>
-              <option value="Autre">Autre</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Salaire (€)</label>
-            <input name="salaire" type="number" step="0.01" placeholder="35000" />
-          </div>
-          <div class="form-group">
-            <label>Date d'entrée</label>
-            <input name="dateEntree" type="date" />
-          </div>
-          <div class="form-group">
             <label>Grade</label>
             <select name="grade">
               <option value="">-- Sélectionner --</option>
@@ -125,10 +68,6 @@
           <div class="form-group">
             <label>URL de la photo</label>
             <input name="photoUrl" placeholder="https://..." />
-          </div>
-          <div class="form-group full-width">
-            <label>Notes</label>
-            <textarea name="notes" placeholder="Notes additionnelles..." rows="3"></textarea>
           </div>
         </div>
         <button class="btn btn-add" type="submit">✅ Ajouter l'employeur</button>
@@ -205,45 +144,6 @@
             <input name="nom" id="edit_nom" required />
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input name="email" id="edit_email" type="email" />
-          </div>
-          <div class="form-group">
-            <label>Téléphone</label>
-            <input name="telephone" id="edit_telephone" type="tel" />
-          </div>
-          <div class="form-group">
-            <label>Poste</label>
-            <input name="poste" id="edit_poste" />
-          </div>
-          <div class="form-group">
-            <label>Département</label>
-            <select name="departement" id="edit_departement">
-              <option value="">-- Sélectionner --</option>
-              <option value="Direction">Direction</option>
-              <option value="Finances">Finances</option>
-              <option value="RH">RH</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Ventes">Ventes</option>
-              <option value="IT">IT</option>
-              <option value="Operations">Operations</option>
-              <option value="Service Client">Service Client</option>
-              <option value="Autre">Autre</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Salaire (€)</label>
-            <input name="salaire" id="edit_salaire" type="number" step="0.01" />
-          </div>
-          <div class="form-group">
-            <label>Date d'entrée</label>
-            <input name="dateEntree" id="edit_dateEntree" type="date" />
-          </div>
-          <div class="form-group">
-            <label>Date de départ</label>
-            <input name="dateDepart" id="edit_dateDepart" type="date" />
-          </div>
-          <div class="form-group">
             <label>Grade</label>
             <select name="grade" id="edit_grade">
               <option value="">-- Sélectionner --</option>
@@ -256,13 +156,9 @@
               <option value="Autre">Autre</option>
             </select>
           </div>
-          <div class="form-group full-width">
+          <div class="form-group">
             <label>URL de la photo</label>
             <input name="photoUrl" id="edit_photoUrl" />
-          </div>
-          <div class="form-group full-width">
-            <label>Notes</label>
-            <textarea name="notes" id="edit_notes" rows="3"></textarea>
           </div>
         </div>
         <div class="modal-actions">
@@ -284,16 +180,8 @@ async function openEditModal(id) {
     // Remplir le formulaire
     document.getElementById('edit_prenom').value = data.prenom || '';
     document.getElementById('edit_nom').value = data.nom || '';
-    document.getElementById('edit_email').value = data.email || '';
-    document.getElementById('edit_telephone').value = data.telephone || '';
-    document.getElementById('edit_poste').value = data.poste || '';
-    document.getElementById('edit_departement').value = data.departement || '';
     document.getElementById('edit_grade').value = data.grade || '';
-    document.getElementById('edit_salaire').value = data.salaire || '';
-    document.getElementById('edit_dateEntree').value = data.dateEntree ? new Date(data.dateEntree).toISOString().split('T')[0] : '';
-    document.getElementById('edit_dateDepart').value = data.dateDepart ? new Date(data.dateDepart).toISOString().split('T')[0] : '';
     document.getElementById('edit_photoUrl').value = data.photoUrl || '';
-    document.getElementById('edit_notes').value = data.notes || '';
     
     // Définir l'action du formulaire
     document.getElementById('editForm').action = `/employeurs/${id}/update`;

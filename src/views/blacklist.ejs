@@ -1,5 +1,6 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
+<%- include('partials/hero') %>
 
 <% const formatDate = (d) => d ? new Date(d).toISOString().slice(0, 10) : ""; %>
 <% const permanentCount = (items || []).filter(i => i.permanent).length; %>

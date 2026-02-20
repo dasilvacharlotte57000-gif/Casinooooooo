@@ -1,5 +1,6 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
+<%- include('partials/hero') %>
 
 <% const formatDescription = (text) => (text || "").replace(/\n/g, "<br>"); %>
 <% const getInitials = (name) => name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(); %>

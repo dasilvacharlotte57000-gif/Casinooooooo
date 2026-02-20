@@ -1,0 +1,64 @@
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-title">
+      <span class="logo-the">THE</span>
+      <span class="logo-diamond">Diamond</span>
+      <span class="logo-casino">CASINO & RESORT</span>
+    </div>
+  </div>
+</section>
+
+<style>
+.hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+  color: #3b82f6;
+  padding: 60px 20px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in;
+}
+
+.hero-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+}
+
+.logo-the {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 8px;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.logo-diamond {
+  font-size: 72px;
+  font-family: 'Brush Script MT', 'Lucida Handwriting', cursive;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  font-style: italic;
+  letter-spacing: 2px;
+}
+
+.logo-casino {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 6px;
+  color: #ffffff;
+  opacity: 0.95;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

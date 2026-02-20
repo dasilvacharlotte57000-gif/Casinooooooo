@@ -1,20 +1,171 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
-<div class="container admin-console">
-  <section class="admin-console__hero">
-    <div>
-      <span class="admin-console__badge">Journal des actions</span>
-      <h1>Console Administrateur</h1>
-      <p>Surveillance des créations, modifications et suppressions en temps réel.</p>
+<%
+  var totalLogs = items && items.length ? items.length : 0;
+  var createCount = 0;
+  var updateCount = 0;
+  var deleteCount = 0;
+  var entityStats = {};
+  var i;
+
+  for (i = 0; i < totalLogs; i++) {
+    if (items[i].action === 'create') createCount++;
+    if (items[i].action === 'update') updateCount++;
+    if (items[i].action === 'delete') deleteCount++;
+    if (items[i].entity) {
+      entityStats[items[i].entity] = (entityStats[items[i].entity] || 0) + 1;
+    }
+  }
+
+  var now = new Date();
+  var last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  var recentActivity = 0;
+  for (i = 0; i < totalLogs; i++) {
+    if (items[i].createdAt) {
+      var d = new Date(items[i].createdAt);
+      if (d.getTime() >= last24h.getTime()) recentActivity++;
+    }
+  }
+
+  var actorsMap = {};
+  var uniqueActorsCount = 0;
+  for (i = 0; i < totalLogs; i++) {
+    var actorValue = items[i].actorEmail || items[i].actorId || '';
+    if (actorValue && !actorsMap[actorValue]) {
+      actorsMap[actorValue] = true;
+      uniqueActorsCount++;
+    }
+  }
+
+  var totalForPercent = totalLogs > 0 ? totalLogs : 1;
+  var createPct = Math.round((createCount / totalForPercent) * 100);
+  var updatePct = Math.round((updateCount / totalForPercent) * 100);
+  var deletePct = Math.round((deleteCount / totalForPercent) * 100);
+
+  var activityTrend = 'trend-flat';
+  if (recentActivity >= 10) activityTrend = 'trend-up';
+
+  var entityKeys = Object.keys(entityStats);
+  entityKeys.sort(function(a, b) { return entityStats[b] - entityStats[a]; });
+  var topEntities = [];
+  for (i = 0; i < entityKeys.length && i < 5; i++) {
+    topEntities.push({ name: entityKeys[i], count: entityStats[entityKeys[i]] });
+  }
+  var maxEntityCount = 1;
+  for (i = 0; i < topEntities.length; i++) {
+    if (topEntities[i].count > maxEntityCount) maxEntityCount = topEntities[i].count;
+  }
+%>
+
+<div class="admin-wrap">
+  <section class="hero">
+    <div class="hero__left">
+      <span class="chip">Console Admin</span>
+      <h1>Journal d'audit editorial</h1>
+      <p>Suivi precision des creations, modifications et suppressions en temps reel.</p>
+      <div class="hero__meta">
+        <div>
+          <span class="meta-label">Connecte</span>
+          <strong><%= user && user.email ? user.email : 'Admin' %></strong>
+        </div>
+        <div>
+          <span class="meta-label">Entrees chargees</span>
+          <strong><%= totalLogs %></strong>
+        </div>
+      </div>
     </div>
-    <div class="admin-console__meta">
-      <div>Connecté : <strong><%= user && user.email ? user.email : 'Admin' %></strong></div>
-      <div><%= items.length %> lignes chargées</div>
+    <div class="hero__right">
+      <div class="hero-card">
+        <div class="hero-card__title">Cadre de controle</div>
+        <div class="hero-card__value"><%= totalLogs %></div>
+        <div class="hero-card__sub">Evenements enregistres</div>
+        <div class="hero-card__foot">Dernieres 24h: <strong><%= recentActivity %></strong></div>
+      </div>
     </div>
   </section>
 
-  <section class="admin-console__filters">
+  <section class="kpi-grid">
+    <article class="kpi kpi--accent">
+      <div class="kpi__label">Total actions</div>
+      <div class="kpi__value animate-count" data-target="<%= totalLogs %>">0</div>
+      <div class="kpi__track"><span data-width="100"></span></div>
+    </article>
+    <article class="kpi kpi--emerald">
+      <div class="kpi__label">Creations</div>
+      <div class="kpi__value animate-count" data-target="<%= createCount %>">0</div>
+      <div class="kpi__track"><span data-width="<%= createPct %>"></span></div>
+    </article>
+    <article class="kpi kpi--blue">
+      <div class="kpi__label">Modifications</div>
+      <div class="kpi__value animate-count" data-target="<%= updateCount %>">0</div>
+      <div class="kpi__track"><span data-width="<%= updatePct %>"></span></div>
+    </article>
+    <article class="kpi kpi--rose">
+      <div class="kpi__label">Suppressions</div>
+      <div class="kpi__value animate-count" data-target="<%= deleteCount %>">0</div>
+      <div class="kpi__track"><span data-width="<%= deletePct %>"></span></div>
+    </article>
+    <article class="kpi kpi--amber">
+      <div class="kpi__label">Activite 24h</div>
+      <div class="kpi__value animate-count" data-target="<%= recentActivity %>">0</div>
+      <div class="kpi__trend <%= activityTrend %>">Flux recent</div>
+    </article>
+    <article class="kpi kpi--ink">
+      <div class="kpi__label">Acteurs uniques</div>
+      <div class="kpi__value animate-count" data-target="<%= uniqueActorsCount %>">0</div>
+      <div class="kpi__foot">Identites actives</div>
+    </article>
+  </section>
+
+  <section class="insights">
+    <div class="card">
+      <div class="card__head">
+        <h3>Distribution des actions</h3>
+        <p>Repartition du trafic par type</p>
+      </div>
+      <div class="donut" id="donutChart" data-create="<%= createCount %>" data-update="<%= updateCount %>" data-delete="<%= deleteCount %>">
+        <svg viewBox="0 0 200 200">
+          <circle class="donut-track" cx="100" cy="100" r="64"></circle>
+          <circle class="donut-seg donut-create" cx="100" cy="100" r="64"></circle>
+          <circle class="donut-seg donut-update" cx="100" cy="100" r="64"></circle>
+          <circle class="donut-seg donut-delete" cx="100" cy="100" r="64"></circle>
+          <text x="100" y="98" text-anchor="middle" class="donut-label">Total</text>
+          <text x="100" y="122" text-anchor="middle" class="donut-value"><%= totalLogs %></text>
+        </svg>
+        <div class="donut-legend">
+          <span class="legend legend-create">Create</span>
+          <span class="legend legend-update">Update</span>
+          <span class="legend legend-delete">Delete</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__head">
+        <h3>Activite par entite</h3>
+        <p>Top 5 des zones surveillees</p>
+      </div>
+      <div class="bars">
+        <% if (topEntities.length === 0) { %>
+          <div class="empty">Aucune activite disponible.</div>
+        <% } %>
+        <% for (i = 0; i < topEntities.length; i++) { %>
+          <% var barWidth = Math.round((topEntities[i].count / maxEntityCount) * 100); %>
+          <div class="bar-row">
+            <div class="bar-label"><%= topEntities[i].name %></div>
+            <div class="bar-track"><span data-width="<%= barWidth %>"><%= topEntities[i].count %></span></div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <section class="filters-panel">
+    <div class="filters-head">
+      <h3>Filtres avances</h3>
+      <p>Precisez votre recherche et affinez le journal.</p>
+    </div>
     <form method="get" action="/admin" class="filters">
       <div>
         <label>Action</label>
@@ -28,7 +179,7 @@
         </select>
       </div>
       <div>
-        <label>Entité</label>
+        <label>Entite</label>
         <select name="entity">
           <option value="">Toutes</option>
           <% if (typeof entities !== 'undefined') { %>
@@ -39,11 +190,11 @@
         </select>
       </div>
       <div>
-        <label>Acteur (email)</label>
+        <label>Acteur</label>
         <input type="text" name="actor" value="<%= filters.actor %>" placeholder="email" />
       </div>
       <div>
-        <label>Recherche libre</label>
+        <label>Recherche</label>
         <input type="text" name="q" value="<%= filters.q %>" placeholder="id, ip, details" />
       </div>
       <div>
@@ -65,110 +216,370 @@
     </form>
   </section>
 
-  <section class="admin-console__table">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Action</th>
-          <th>Entité</th>
-          <th>ID</th>
-          <th>Acteur</th>
-          <th>IP</th>
-          <th>Détails</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (!items || items.length === 0) { %>
+  <section class="table-card">
+    <div class="table-card__head">
+      <h3>Journal d'audit</h3>
+      <p>Controle complet des operations enregistrees.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
           <tr>
-            <td colspan="7" class="empty">Aucune action enregistrée.</td>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Entite</th>
+            <th>ID</th>
+            <th>Acteur</th>
+            <th>IP</th>
+            <th>Details</th>
           </tr>
-        <% } %>
-
-        <% if (items && items.length > 0) { %>
-          <% items.forEach(function(item) { %>
+        </thead>
+        <tbody>
+          <% if (!items || items.length === 0) { %>
             <tr>
-              <td><%= item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '-' %></td>
-              <td><span class="tag tag--<%= item.action %>"><%= item.action %></span></td>
-              <td><%= item.entity %></td>
-              <td><%= item.entityId || '-' %></td>
-              <td><%= item.actorEmail || item.actorId || '-' %></td>
-              <td><%= item.ip || '-' %></td>
-              <td>
-                <details>
-                  <summary>Voir</summary>
-                  <pre class="json"><code><%= JSON.stringify(item.changes || {}, null, 2) %></code></pre>
-                </details>
-              </td>
+              <td colspan="7" class="empty">Aucune action enregistree.</td>
             </tr>
-          <% }); %>
-        <% } %>
-      </tbody>
-    </table>
+          <% } %>
+          <% if (items && items.length > 0) { %>
+            <% items.forEach(function(item) { %>
+              <tr>
+                <td><%= item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '-' %></td>
+                <td><span class="tag tag--<%= item.action %>"><%= item.action %></span></td>
+                <td><%= item.entity %></td>
+                <td><%= item.entityId || '-' %></td>
+                <td><%= item.actorEmail || item.actorId || '-' %></td>
+                <td><%= item.ip || '-' %></td>
+                <td>
+                  <details>
+                    <summary>Voir</summary>
+                    <pre class="json"><code><%= JSON.stringify(item.changes || {}, null, 2) %></code></pre>
+                  </details>
+                </td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
   </section>
 </div>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@400;500;600&display=swap");
 
-.admin-console {
-  font-family: "Space Grotesk", system-ui, sans-serif;
-  margin-top: 32px;
+:root {
+  --ink: #0b0b0f;
+  --surface: #12131b;
+  --surface-2: #171a24;
+  --text: #f5f6f9;
+  --muted: rgba(245, 246, 249, 0.62);
+  --accent: #c9a227;
+  --accent-strong: #f0c04a;
+  --emerald: #3fb984;
+  --blue: #4f7cff;
+  --rose: #ef6c88;
+  --amber: #f2b14a;
+  --inkline: rgba(255, 255, 255, 0.08);
+}
+
+.admin-wrap {
+  max-width: 1200px;
+  margin: 32px auto 80px;
+  padding: 0 20px;
+  color: var(--text);
   display: grid;
-  gap: 22px;
-  color: #e9eef3;
+  gap: 28px;
+  font-family: "Space Grotesk", system-ui, sans-serif;
 }
 
-.admin-console__hero {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-between;
-  padding: 24px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(15, 23, 42, 0.5));
-  border: 1px solid rgba(59, 130, 246, 0.2);
+.hero {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 24px;
+  background: radial-gradient(circle at top left, rgba(201, 162, 39, 0.18), transparent 45%),
+    linear-gradient(145deg, #141724, #0f111a);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 24px;
+  padding: 28px;
 }
 
-.admin-console__badge {
+.hero h1 {
+  font-family: "Fraunces", serif;
+  font-size: 38px;
+  margin: 12px 0 10px;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.chip {
   display: inline-flex;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
-  font-size: 12px;
-  letter-spacing: 0.1em;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  color: var(--accent-strong);
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 600;
 }
 
-.admin-console__hero h1 {
-  margin: 10px 0 6px;
-  font-size: 28px;
-  color: #3b82f6;
-}
-
-.admin-console__hero p {
-  margin: 0;
-  color: rgba(229, 231, 235, 0.7);
-  font-size: 14px;
-}
-
-.admin-console__meta {
-  display: grid;
-  gap: 6px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+.hero__meta {
+  margin-top: 18px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
   font-size: 13px;
 }
 
-.admin-console__filters {
+.meta-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: rgba(245, 246, 249, 0.5);
+  letter-spacing: 0.1em;
+}
+
+.hero-card {
+  background: rgba(12, 13, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
   padding: 20px;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  text-align: right;
+}
+
+.hero-card__title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.hero-card__value {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  margin: 8px 0;
+}
+
+.hero-card__sub {
+  color: rgba(245, 246, 249, 0.6);
+  font-size: 13px;
+}
+
+.hero-card__foot {
+  margin-top: 14px;
+  font-size: 13px;
+  color: rgba(245, 246, 249, 0.7);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.kpi {
+  border-radius: 18px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--inkline);
+  display: grid;
+  gap: 10px;
+}
+
+.kpi__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 246, 249, 0.6);
+}
+
+.kpi__value {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.kpi__track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.kpi__track span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), currentColor);
+  border-radius: 999px;
+}
+
+.kpi__trend {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 246, 249, 0.55);
+}
+
+.kpi__trend.trend-up {
+  color: var(--emerald);
+}
+
+.kpi--accent { color: var(--accent-strong); }
+.kpi--emerald { color: var(--emerald); }
+.kpi--blue { color: var(--blue); }
+.kpi--rose { color: var(--rose); }
+.kpi--amber { color: var(--amber); }
+.kpi--ink { color: #d1d5db; }
+
+.kpi__foot {
+  font-size: 12px;
+  color: rgba(245, 246, 249, 0.6);
+}
+
+.insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: var(--surface-2);
+  border: 1px solid var(--inkline);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.card__head h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.card__head p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.donut {
+  display: grid;
+  gap: 14px;
+  align-items: center;
+  justify-items: center;
+}
+
+.donut svg {
+  width: 200px;
+  height: 200px;
+}
+
+.donut-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 18;
+}
+
+.donut-seg {
+  fill: none;
+  stroke-width: 18;
+  stroke-linecap: round;
+  transform-origin: 100px 100px;
+  transform: rotate(-90deg);
+}
+
+.donut-create { stroke: var(--emerald); }
+.donut-update { stroke: var(--blue); }
+.donut-delete { stroke: var(--rose); }
+
+.donut-label {
+  fill: rgba(245, 246, 249, 0.6);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.donut-value {
+  fill: var(--accent-strong);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.donut-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(245, 246, 249, 0.7);
+}
+
+.legend::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.legend-create { color: var(--emerald); }
+.legend-update { color: var(--blue); }
+.legend-delete { color: var(--rose); }
+
+.bars {
+  display: grid;
+  gap: 12px;
+}
+
+.bar-row {
+  display: grid;
+  gap: 6px;
+}
+
+.bar-label {
+  font-size: 12px;
+  text-transform: capitalize;
+  color: rgba(245, 246, 249, 0.75);
+}
+
+.bar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-track span {
+  display: block;
+  padding: 6px 10px;
+  width: 0;
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.2), rgba(201, 162, 39, 0.8));
+  color: #111;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.filters-panel {
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--inkline);
+  padding: 20px;
+}
+
+.filters-head h3 {
+  margin: 0 0 4px;
+}
+
+.filters-head p {
+  margin: 0 0 16px;
+  color: var(--muted);
 }
 
 .filters {
@@ -180,177 +591,185 @@
 .filters label {
   display: block;
   margin-bottom: 6px;
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(229, 231, 235, 0.6);
-  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(245, 246, 249, 0.6);
 }
 
 .filters input,
 .filters select {
   width: 100%;
-  padding: 8px 10px;
+  padding: 9px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  background: rgba(15, 23, 42, 0.4);
-  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0f1118;
+  color: var(--text);
   font-family: inherit;
-}
-
-.filters input:focus,
-.filters select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .filters__actions {
   display: flex;
   gap: 10px;
   align-items: end;
-  grid-column: 1 / -1;
 }
 
 .btn {
-  padding: 10px 16px;
+  padding: 10px 14px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(90deg, #3b82f6, #60a5fa);
-  color: #fff;
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #111;
+  font-weight: 700;
   cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-  flex: 1;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .btn.ghost {
-  background: rgba(59, 130, 246, 0.1);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  flex: 0.3;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
 }
 
-.admin-console__table {
+.table-card {
+  border-radius: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--inkline);
+  padding: 20px;
+}
+
+.table-card__head h3 {
+  margin: 0 0 6px;
+}
+
+.table-card__head p {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.table-wrap {
   overflow-x: auto;
-  border-radius: 16px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  background: rgba(15, 23, 42, 0.5);
 }
 
-.admin-console table {
+table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 900px;
+  min-width: 860px;
 }
 
-.admin-console th,
-.admin-console td {
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+th,
+td {
+  padding: 12px 10px;
   text-align: left;
-  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 13px;
 }
 
-.admin-console th {
-  font-size: 12px;
+th {
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #93c5fd;
-  background: rgba(15, 23, 42, 0.8);
-  position: sticky;
-  top: 0;
-  font-weight: 600;
-}
-
-.admin-console td {
-  color: rgba(229, 231, 235, 0.85);
-}
-
-.admin-console .empty {
-  text-align: center;
-  color: rgba(229, 231, 235, 0.5);
-  padding: 40px 20px;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: rgba(245, 246, 249, 0.6);
 }
 
 .tag {
   display: inline-flex;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 999px;
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
-.tag--create {
-  background: rgba(34, 197, 94, 0.15);
-  color: #86efac;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.tag--update {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-.tag--delete {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
+.tag--create { background: rgba(63, 185, 132, 0.2); color: #7de2b3; }
+.tag--update { background: rgba(79, 124, 255, 0.2); color: #9db5ff; }
+.tag--delete { background: rgba(239, 108, 136, 0.2); color: #ffb0c0; }
 
 .json {
   white-space: pre-wrap;
   font-size: 12px;
-  color: rgba(226, 232, 240, 0.75);
-  font-family: monospace;
-  max-height: 300px;
-  overflow-y: auto;
+  color: rgba(245, 246, 249, 0.7);
 }
 
-details {
-  cursor: pointer;
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: rgba(245, 246, 249, 0.6);
 }
 
-summary {
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: rgba(59, 130, 246, 0.1);
-  color: #93c5fd;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-summary:hover {
-  background: rgba(59, 130, 246, 0.2);
-}
-
-@media (max-width: 720px) {
-  .admin-console__hero {
-    flex-direction: column;
-  }
-  
-  .admin-console__hero h1 {
-    font-size: 22px;
-  }
-  
-  .filters {
+@media (max-width: 980px) {
+  .hero {
     grid-template-columns: 1fr;
   }
-  
-  .filters__actions {
-    flex-direction: column;
+
+  .hero__right {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 28px;
   }
 }
 </style>
+
+<script>
+function animateCounters() {
+  var nodes = document.querySelectorAll('.animate-count');
+  for (var i = 0; i < nodes.length; i++) {
+    (function(node) {
+      var target = parseInt(node.getAttribute('data-target'), 10) || 0;
+      var current = 0;
+      var step = Math.max(1, Math.round(target / 40));
+      var timer = setInterval(function() {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        node.textContent = current;
+      }, 25);
+    })(nodes[i]);
+  }
+}
+
+function applyWidths() {
+  var nodes = document.querySelectorAll('[data-width]');
+  for (var i = 0; i < nodes.length; i++) {
+    var widthValue = nodes[i].getAttribute('data-width');
+    nodes[i].style.width = widthValue + '%';
+  }
+}
+
+function drawDonut() {
+  var donut = document.getElementById('donutChart');
+  if (!donut) return;
+  var createValue = parseFloat(donut.getAttribute('data-create')) || 0;
+  var updateValue = parseFloat(donut.getAttribute('data-update')) || 0;
+  var deleteValue = parseFloat(donut.getAttribute('data-delete')) || 0;
+  var total = createValue + updateValue + deleteValue;
+  if (total <= 0) total = 1;
+
+  var radius = 64;
+  var circumference = 2 * Math.PI * radius;
+  var segments = [createValue, updateValue, deleteValue];
+  var circles = donut.querySelectorAll('.donut-seg');
+  var offset = 0;
+
+  for (var i = 0; i < circles.length; i++) {
+    var value = segments[i];
+    var dash = (value / total) * circumference;
+    circles[i].style.strokeDasharray = dash + ' ' + (circumference - dash);
+    circles[i].style.strokeDashoffset = -offset;
+    offset += dash;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  animateCounters();
+  applyWidths();
+  drawDonut();
+});
+</script>
 
 <%- include('partials/footer') %>

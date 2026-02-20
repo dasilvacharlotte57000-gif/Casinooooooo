@@ -1,5 +1,6 @@
 const Employer = require("../models/employer");
 const initCloudinary = require("../config/cloudinary");
+const { logAudit } = require("../utils/auditLogger");
 
 exports.list = async (req, res) => {
   try {
@@ -33,10 +34,17 @@ exports.create = async (req, res) => {
   }
 
   try {
-    await Employer.create({
+    const created = await Employer.create({
       entrepriseName,
       description: description || "",
       photoUrl
+    });
+    await logAudit({
+      req,
+      action: "create",
+      entity: "employer",
+      entityId: created?._id?.toString(),
+      after: created
     });
   } catch (err) {
     console.warn("Erreur création employé (DB):", err.message);
@@ -49,7 +57,15 @@ exports.create = async (req, res) => {
 exports.remove = async (req, res) => {
   const token = req.body?.token || req.query?.token || "";
   try {
-    await Employer.findByIdAndDelete(req.params.id);
+    const removedDoc = await Employer.findByIdAndDelete(req.params.id);
+    const removed = removedDoc ? removedDoc.toObject() : null;
+    await logAudit({
+      req,
+      action: "delete",
+      entity: "employer",
+      entityId: req.params.id,
+      before: removed
+    });
   } catch (err) {
     console.warn("Erreur suppression employé (DB):", err.message);
   }

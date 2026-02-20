@@ -10,6 +10,7 @@ const connectDB = require("./config/database");
 const protectRoutes = require("./middlewares/protectRoutes");
 
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const blacklistRoutes = require("./routes/blacklistRoutes");
 const partenariatEmployerRoutes = require("./routes/partenariatEmployerRoutes");
 const partenariatEntrepriseRoutes = require("./routes/partenariatEntrepriseRoutes");
@@ -45,7 +46,13 @@ app.use(express.urlencoded({ extended: true }));
       const token = req.query.token || req.body?.token || bearer || null;
       const payload = token ? verifyToken(token) : null;
 
-      req.user = payload ? { id: payload.sub, email: payload.email } : null;
+      req.user = payload
+        ? {
+            id: payload.sub,
+            email: payload.email,
+            admin: payload.admin === true
+          }
+        : null;
       res.locals.currentPath = req.path;
       res.locals.user = req.user;
       res.locals.authToken = payload ? token : null;
@@ -57,6 +64,9 @@ app.use(express.urlencoded({ extended: true }));
 
     // AUTH public
     app.use("/", authRoutes);
+
+    // ADMIN console (login public, console protegee)
+    app.use("/admin", adminRoutes);
 
     // ✅ Pages publiques en lecture (AVANT la protection globale)
     app.use("/blacklist", blacklistRoutes);

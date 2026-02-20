@@ -1,4 +1,5 @@
 const Avertissement = require("../models/avertissement");
+const { logAudit } = require("../utils/auditLogger");
 
 exports.list = async (req, res) => {
   try {
@@ -30,13 +31,20 @@ exports.create = async (req, res) => {
   }
 
   try {
-    await Avertissement.create({
+    const created = await Avertissement.create({
       prenom,
       nom,
       motif: motif || "",
       grade: grade || "stagiaire",
       type,
       expireAt: finalExpireAt
+    });
+    await logAudit({
+      req,
+      action: "create",
+      entity: "avertissement",
+      entityId: created?._id?.toString(),
+      after: created
     });
   } catch (err) {
     console.warn("Erreur creation avertissement (DB):", err.message);
@@ -49,7 +57,15 @@ exports.create = async (req, res) => {
 exports.remove = async (req, res) => {
   const token = req.body?.token || req.query?.token || "";
   try {
-    await Avertissement.findByIdAndDelete(req.params.id);
+    const removedDoc = await Avertissement.findByIdAndDelete(req.params.id);
+    const removed = removedDoc ? removedDoc.toObject() : null;
+    await logAudit({
+      req,
+      action: "delete",
+      entity: "avertissement",
+      entityId: req.params.id,
+      before: removed
+    });
   } catch (err) {
     console.warn("Erreur suppression avertissement (DB):", err.message);
   }

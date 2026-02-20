@@ -1,5 +1,6 @@
 const Blacklist = require("../models/blacklist");
 const initCloudinary = require("../config/cloudinary");
+const { logAudit } = require("../utils/auditLogger");
 
 exports.list = async (req, res) => {
   try {
@@ -36,13 +37,20 @@ exports.create = async (req, res) => {
     }
   }
   try {
-    await Blacklist.create({
+    const created = await Blacklist.create({
       prenom,
       nom,
       raison: raison || "",
       expireAt: !isPermanent && expireAt ? new Date(expireAt) : null,
       permanent: isPermanent,
       photoUrl: finalPhotoUrl
+    });
+    await logAudit({
+      req,
+      action: "create",
+      entity: "blacklist",
+      entityId: created?._id?.toString(),
+      after: created
     });
   } catch (err) {
     console.warn("Erreur création blacklist (DB):", err.message);
@@ -85,7 +93,17 @@ exports.update = async (req, res) => {
   }
 
   try {
-    await Blacklist.findByIdAndUpdate(req.params.id, update);
+    const before = await Blacklist.findById(req.params.id).lean();
+    const updatedDoc = await Blacklist.findByIdAndUpdate(req.params.id, update, { new: true });
+    const updated = updatedDoc ? updatedDoc.toObject() : null;
+    await logAudit({
+      req,
+      action: "update",
+      entity: "blacklist",
+      entityId: req.params.id,
+      before,
+      after: updated
+    });
   } catch (err) {
     console.warn("Erreur modification blacklist (DB):", err.message);
   }
@@ -97,7 +115,15 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
   const token = req.body?.token || req.query?.token || "";
   try {
-    await Blacklist.findByIdAndDelete(req.params.id);
+    const removedDoc = await Blacklist.findByIdAndDelete(req.params.id);
+    const removed = removedDoc ? removedDoc.toObject() : null;
+    await logAudit({
+      req,
+      action: "delete",
+      entity: "blacklist",
+      entityId: req.params.id,
+      before: removed
+    });
   } catch (err) {
     console.warn("Erreur suppression blacklist (DB):", err.message);
   }

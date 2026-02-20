@@ -1,0 +1,93 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container admin-login">
+  <section class="admin-login__panel">
+    <div class="admin-login__badge">Console privee</div>
+    <h1>Acces administrateur</h1>
+    <p>Saisis le mot de passe console pour afficher le journal des actions.</p>
+
+    <% if (error) { %>
+      <div class="admin-login__error"><%= error %></div>
+    <% } %>
+
+    <form method="post" action="/admin/login" class="admin-login__form">
+      <label for="password">Mot de passe</label>
+      <input id="password" name="password" type="password" required />
+      <button class="btn" type="submit">Ouvrir la console</button>
+    </form>
+  </section>
+</div>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&family=Playfair+Display:wght@600&display=swap");
+
+.admin-login {
+  max-width: 640px;
+  margin: 60px auto 0;
+  font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+}
+
+.admin-login__panel {
+  padding: 32px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(15, 23, 42, 0.6));
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+}
+
+.admin-login__badge {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.18);
+  color: #fca5a5;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.admin-login h1 {
+  margin: 16px 0 8px;
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-size: 30px;
+}
+
+.admin-login p {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.admin-login__error {
+  margin: 12px 0 18px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(248, 113, 113, 0.2);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #fecaca;
+}
+
+.admin-login__form {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-login__form input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.5);
+  color: #e2e8f0;
+}
+
+.admin-login__form label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.admin-login__form .btn {
+  justify-self: start;
+}
+</style>

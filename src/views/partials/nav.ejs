@@ -20,5 +20,7 @@
     <% } else { %>
       <a class="<%= currentPath.startsWith('/login') ? 'active':'' %>" href="/login">Connexion</a>
     <% } %>
+
+    <a class="<%= currentPath.startsWith('/admin') ? 'active':'' %>" href="/admin">Console admin</a>
   </div>
 </nav>

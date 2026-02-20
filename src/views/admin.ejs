@@ -1,0 +1,271 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<div class="container admin-console">
+  <section class="admin-console__hero">
+    <div>
+      <span class="admin-console__badge">Journal des actions</span>
+      <h1>Console securisee</h1>
+      <p>Surveille les creations, modifications et suppressions en temps reel.</p>
+    </div>
+    <div class="admin-console__meta">
+      <div>Connecte : <strong><%= user.email %></strong></div>
+      <div><%= items.length %> lignes chargees</div>
+    </div>
+  </section>
+
+  <section class="admin-console__filters">
+    <form method="get" action="/admin" class="filters">
+      <div>
+        <label>Action</label>
+        <select name="action">
+          <option value="">Toutes</option>
+          <% actions.forEach(function (a) { %>
+            <option value="<%= a %>" <%= filters.action === a ? 'selected' : '' %>><%= a %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label>Entite</label>
+        <select name="entity">
+          <option value="">Toutes</option>
+          <% entities.forEach(function (e) { %>
+            <option value="<%= e %>" <%= filters.entity === e ? 'selected' : '' %>><%= e %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label>Acteur (email)</label>
+        <input type="text" name="actor" value="<%= filters.actor %>" placeholder="email" />
+      </div>
+      <div>
+        <label>Recherche libre</label>
+        <input type="text" name="q" value="<%= filters.q %>" placeholder="id, ip, details" />
+      </div>
+      <div>
+        <label>Du</label>
+        <input type="date" name="from" value="<%= filters.from %>" />
+      </div>
+      <div>
+        <label>Au</label>
+        <input type="date" name="to" value="<%= filters.to %>" />
+      </div>
+      <div>
+        <label>Limite</label>
+        <input type="number" name="limit" min="50" max="1000" value="<%= filters.limit %>" />
+      </div>
+      <div class="filters__actions">
+        <button class="btn" type="submit">Filtrer</button>
+        <a class="btn ghost" href="/admin">Reset</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="admin-console__table">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Action</th>
+          <th>Entite</th>
+          <th>ID</th>
+          <th>Acteur</th>
+          <th>IP</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!items.length) { %>
+          <tr>
+            <td colspan="7" class="empty">Aucune action enregistree.</td>
+          </tr>
+        <% } %>
+
+        <% items.forEach(function (item) { %>
+          <tr>
+            <td><%= item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '' %></td>
+            <td><span class="tag tag--<%= item.action %>"><%= item.action %></span></td>
+            <td><%= item.entity %></td>
+            <td><%= item.entityId || '-' %></td>
+            <td><%= item.actorEmail || item.actorId || '-' %></td>
+            <td><%= item.ip || '-' %></td>
+            <td>
+              <details>
+                <summary>Voir</summary>
+                <pre class="json"><%= JSON.stringify(item.changes || {}, null, 2) %></pre>
+              </details>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@600&display=swap");
+
+.admin-console {
+  font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  margin-top: 32px;
+  display: grid;
+  gap: 22px;
+}
+
+.admin-console__hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 24px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.18), transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(15, 23, 42, 0.5));
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.admin-console__badge {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.18);
+  color: #fca5a5;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.admin-console__hero h1 {
+  margin: 10px 0 6px;
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-size: 34px;
+}
+
+.admin-console__hero p {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.admin-console__meta {
+  display: grid;
+  gap: 6px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.admin-console__filters {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.filters label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(226, 232, 240, 0.68);
+}
+
+.filters input,
+.filters select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.4);
+  color: #e2e8f0;
+}
+
+.filters__actions {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.admin-console__table {
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.admin-console table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.admin-console th,
+.admin-console td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-console th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(226, 232, 240, 0.7);
+  background: rgba(15, 23, 42, 0.8);
+  position: sticky;
+  top: 0;
+}
+
+.admin-console .empty {
+  text-align: center;
+  color: rgba(226, 232, 240, 0.6);
+}
+
+.tag {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.tag--create {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+.tag--update {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+.tag--delete {
+  background: rgba(248, 113, 113, 0.2);
+  color: #fecaca;
+}
+
+.json {
+  white-space: pre-wrap;
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.75);
+}
+
+@media (max-width: 720px) {
+  .admin-console__hero h1 {
+    font-size: 26px;
+  }
+
+  .filters__actions {
+    justify-content: flex-start;
+  }
+}
+</style>

@@ -1,4 +1,5 @@
 const Employeur = require("../models/employeur");
+const { logAudit } = require("../utils/auditLogger");
 
 // Liste avec filtres et recherche
 exports.list = async (req, res) => {
@@ -59,7 +60,7 @@ exports.create = async (req, res) => {
       salaire, dateEntree, photoUrl, notes, token 
     } = req.body;
 
-    await Employeur.create({
+    const created = await Employeur.create({
       prenom,
       nom,
       email: email || undefined,
@@ -71,6 +72,13 @@ exports.create = async (req, res) => {
       dateEntree: dateEntree ? new Date(dateEntree) : null,
       photoUrl: photoUrl || "",
       notes: notes || ""
+    });
+    await logAudit({
+      req,
+      action: "create",
+      entity: "employeur",
+      entityId: created?._id?.toString(),
+      after: created
     });
 
     const redirectUrl = token ? `/employeurs?token=${encodeURIComponent(token)}` : "/employeurs";
@@ -121,7 +129,17 @@ exports.update = async (req, res) => {
       notes: notes || ""
     };
 
-    await Employeur.findByIdAndUpdate(req.params.id, updateData);
+    const before = await Employeur.findById(req.params.id).lean();
+    const updatedDoc = await Employeur.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const updated = updatedDoc ? updatedDoc.toObject() : null;
+    await logAudit({
+      req,
+      action: "update",
+      entity: "employeur",
+      entityId: req.params.id,
+      before,
+      after: updated
+    });
     const redirectUrl = token ? `/employeurs?token=${encodeURIComponent(token)}` : "/employeurs";
     res.redirect(redirectUrl);
   } catch (error) {
@@ -137,7 +155,15 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     const { token } = req.body;
-    await Employeur.findByIdAndDelete(req.params.id);
+    const removedDoc = await Employeur.findByIdAndDelete(req.params.id);
+    const removed = removedDoc ? removedDoc.toObject() : null;
+    await logAudit({
+      req,
+      action: "delete",
+      entity: "employeur",
+      entityId: req.params.id,
+      before: removed
+    });
     const redirectUrl = token ? `/employeurs?token=${encodeURIComponent(token)}` : "/employeurs";
     res.redirect(redirectUrl);
   } catch (error) {

@@ -1,32 +1,11 @@
 <%- include('partials/header') %>
 <%- include('partials/nav') %>
 
-<!-- Particules de fond animées -->
-<div class="particles-container">
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-</div>
-
-<!-- Rayons de lumière d'ambiance -->
-<div class="light-rays">
-  <div class="light-ray"></div>
-  <div class="light-ray"></div>
-  <div class="light-ray"></div>
-</div>
-
 <div class="container page-shell executive-suite">
   <!-- Barre de recherche premium -->
   <div class="page-toolbar">
     <form method="get" action="/employeurs" class="search-filter-form">
-      <input type="text" name="search" class="page-search-input" placeholder="🔍 Rechercher un membre de la direction..." value="<%= filters?.search || '' %>" />
+      <input type="text" name="search" class="page-search-input" placeholder="🔍 Rechercher un employé..." value="<%= filters?.search || '' %>" />
       <button class="page-search-btn" type="submit">
         <span class="search-icon">⚡</span>
         <span class="search-text">Rechercher</span>
@@ -42,16 +21,16 @@
     <div class="header-glow"></div>
     <h1 class="executive-title">
       <span class="title-icon">👑</span>
-      <span class="title-text">DIRECTION EXÉCUTIVE</span>
+      <span class="title-text">Employés</span>
       <span class="title-icon">👑</span>
     </h1>
-    <p class="executive-subtitle">L'Excellence de notre Leadership</p>
+    <p class="executive-subtitle">L'Excellence de notre Casino</p>
     <% if (stats) { %>
       <div class="stats-bar">
         <div class="stat-item stat-primary">
           <div class="stat-icon">💎</div>
           <div class="stat-value"><%= stats.total %></div>
-          <div class="stat-label">Membres</div>
+          <div class="stat-label">Employés</div>
           <div class="stat-shine"></div>
         </div>
         <% if (stats.parGrade) { %>
@@ -73,7 +52,7 @@
     <div class="card wide add-form executive-form">
       <div class="form-header">
         <div class="form-icon-premium">✨</div>
-        <h3>Ajouter un Membre de la Direction</h3>
+        <h3>Ajouter un Employés</h3>
         <div class="form-decoration-line"></div>
       </div>
       <form method="post" action="/employeurs">
@@ -126,7 +105,7 @@
           <span class="btn-glow"></span>
           <span class="btn-content">
             <span class="btn-icon">✅</span>
-            <span class="btn-text">Ajouter à la Direction</span>
+            <span class="btn-text">Ajouter au Employés</span>
           </span>
         </button>
       </form>
@@ -156,14 +135,9 @@
         <% items.forEach((item, index) => { %>
           <div class="executive-card-wrapper" style="animation-delay: <%= index * 0.1 %>s;">
             <div class="executive-card" data-id="<%= item._id %>">
-              <div class="card-hologram"></div>
-              <div class="card-border-glow"></div>
-              <div class="card-light-sweep"></div>
               
               <!-- Photo avec effets premium -->
               <div class="executive-photo-container">
-                <div class="photo-frame"></div>
-                <div class="photo-glow"></div>
                 <% if (item.photoUrl) { %>
                   <img src="<%= item.photoUrl %>" alt="<%= item.prenom %> <%= item.nom %>" class="executive-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                   <div class="executive-placeholder" style="display: none;">
@@ -175,12 +149,6 @@
                   </div>
                 <% } %>
                 <div class="photo-overlay"></div>
-                <div class="photo-particles">
-                  <span class="photo-particle"></span>
-                  <span class="photo-particle"></span>
-                  <span class="photo-particle"></span>
-                  <span class="photo-particle"></span>
-                </div>
               </div>
 
               <!-- Informations principales -->
@@ -379,16 +347,960 @@ document.addEventListener('DOMContentLoaded', () => {
    🎨 VARIABLES ET CONFIGURATION
    ======================================== */
 :root {
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gold-gradient: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
-  --neon-blue: #00f3ff;
-  --neon-purple: #bf00ff;
-  --neon-gold: #ffd700;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --shadow-xl: 0 30px 60px rgba(0, 0, 0, 0.5);
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --secondary: #8b5cf6;
+  --accent: #60a5fa;
+  --gold: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --dark-bg: rgba(15, 23, 42, 0.95);
+  --card-bg: rgba(30, 41, 59, 0.8);
+  --glass-bg: rgba(51, 65, 85, 0.5);
 }
+
+/* ========================================
+   ✨ ANIMATIONS SIMPLES
+   ======================================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   📱 CONTENEUR PRINCIPAL
+   ======================================== */
+.executive-suite {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========================================
+   🔍 BARRE DE RECHERCHE
+   ======================================== */
+.page-toolbar {
+  margin-bottom: 30px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.search-filter-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.page-search-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 14px 20px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.5);
+  color: #ffffff;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.page-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.page-search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(15, 23, 42, 0.7);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.page-search-btn {
+  padding: 14px 28px;
+  background: var(--primary);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-search-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+}
+
+.search-icon {
+  font-size: 18px;
+}
+
+.btn-reset {
+  padding: 14px 20px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 10px;
+  color: #ef4444;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-reset:hover {
+  background: rgba(239, 68, 68, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   👑 EN-TÊTE
+   ======================================== */
+.page-header {
+  margin-bottom: 40px;
+  text-align: center;
+  padding: 50px 30px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.header-glow {
+  display: none;
+}
+
+.executive-title {
+  margin: 0 0 15px 0;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.title-icon {
+  font-size: 40px;
+}
+
+.executive-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 30px 0;
+}
+
+/* ========================================
+   📊 STATISTIQUES
+   ======================================== */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 15px;
+  padding: 20px 30px;
+  min-width: 120px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-primary {
+  border-color: var(--gold);
+}
+
+.stat-gradient {
+  border-color: var(--accent);
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.stat-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.stat-shine {
+  display: none;
+}
+
+/* ========================================
+   📝 FORMULAIRE
+   ======================================== */
+.executive-form {
+  background: var(--card-bg);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  margin-bottom: 40px;
+  border-radius: 20px;
+  padding: 35px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-icon-premium {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.form-header h3 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0 0 12px 0;
+}
+
+.form-decoration-line {
+  width: 80px;
+  height: 3px;
+  background: var(--primary);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.form-grid-premium {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.form-group-premium {
+  position: relative;
+}
+
+.form-group-premium label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.label-icon {
+  font-size: 16px;
+}
+
+.form-group-premium input,
+.form-group-premium select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.5);
+  color: #ffffff;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.form-group-premium input:focus,
+.form-group-premium select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(15, 23, 42, 0.7);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.input-underline {
+  display: none;
+}
+
+.btn-add-premium {
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--primary);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add-premium:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+}
+
+.btn-glow {
+  display: none;
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-icon {
+  font-size: 20px;
+}
+
+/* ========================================
+   🎴 CARTES EXECUTIVES
+   ======================================== */
+.list-section {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.list-header-premium {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 35px;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.header-decoration-left,
+.header-decoration-right {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.list-header-premium h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.list-icon {
+  font-size: 28px;
+}
+
+.badge-premium {
+  background: var(--primary);
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.executive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.executive-card-wrapper {
+  animation: scaleIn 0.5s ease-out both;
+}
+
+/* Carte principale */
+.executive-card {
+  position: relative;
+  height: 520px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.executive-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border-color: var(--primary);
+}
+
+/* Photo */
+.executive-photo-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(139, 92, 246, 0.2));
+}
+
+.executive-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.executive-card:hover .executive-photo {
+  transform: scale(1.1);
+}
+
+.executive-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(139, 92, 246, 0.3));
+}
+
+.placeholder-icon {
+  font-size: 100px;
+  opacity: 0.5;
+}
+
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  pointer-events: none;
+}
+
+/* Contenu */
+.card-content-premium {
+  flex: 1;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.executive-rank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: var(--gold);
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+.rank-icon {
+  font-size: 16px;
+}
+
+.rank-text {
+  color: #000;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-shine {
+  display: none;
+}
+
+.executive-name {
+  margin: 0 0 15px 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name-first {
+  font-weight: 500;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.name-last {
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Indicateur de statut */
+.card-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.status-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Panneau d'actions */
+.action-panel-slide {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--dark-bg);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(79, 70, 229, 0.5);
+  padding: 20px;
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+  z-index: 10;
+}
+
+.executive-card:hover .action-panel-slide {
+  transform: translateY(0);
+}
+
+.action-panel-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.action-icon-main {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.action-panel-header h5 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-buttons-slide {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-action-slide {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-edit-slide {
+  background: rgba(79, 70, 229, 0.2);
+  border-color: var(--primary);
+  color: var(--accent);
+}
+
+.btn-edit-slide:hover {
+  background: rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-delete-slide {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger);
+  color: #ef4444;
+}
+
+.btn-delete-slide:hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-slide-icon {
+  font-size: 16px;
+}
+
+.btn-slide-glow {
+  display: none;
+}
+
+/* Coins décoratifs */
+.card-corner-decor {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--gold);
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+
+.executive-card:hover .card-corner-decor {
+  opacity: 0.8;
+}
+
+.card-corner-decor.top-left {
+  top: 10px;
+  left: 10px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+}
+
+.card-corner-decor.top-right {
+  top: 10px;
+  right: 10px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 8px;
+}
+
+.card-corner-decor.bottom-left {
+  bottom: 10px;
+  left: 10px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+}
+
+.card-corner-decor.bottom-right {
+  bottom: 10px;
+  right: 10px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+
+/* ========================================
+   🎭 MODAL
+   ======================================== */
+.modal-premium {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.modal-premium.modal-show {
+  opacity: 1;
+}
+
+.modal-backdrop-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+.modal-content-premium {
+  position: relative;
+  background: var(--card-bg);
+  padding: 40px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 800px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  animation: scaleIn 0.4s ease-out;
+}
+
+.modal-glow-effect {
+  display: none;
+}
+
+.modal-close-premium {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-close-premium:hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: scale(1.1);
+}
+
+.modal-header-premium {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.modal-icon-premium {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.modal-header-premium h2 {
+  margin: 0 0 15px 0;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.modal-decoration {
+  width: 80px;
+  height: 3px;
+  background: var(--primary);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.modal-actions-premium {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.btn-cancel-premium {
+  padding: 14px 28px;
+  background: rgba(100, 116, 139, 0.2);
+  border: 1px solid rgba(100, 116, 139, 0.4);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-cancel-premium:hover {
+  background: rgba(100, 116, 139, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-save-premium {
+  padding: 14px 32px;
+  background: var(--primary);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-save-premium:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+}
+
+/* ========================================
+   🚫 ÉTAT VIDE
+   ======================================== */
+.empty-state-premium {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 30px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  border: 2px dashed rgba(100, 116, 139, 0.3);
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.empty-state-premium p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  margin: 0;
+}
+
+.empty-decoration {
+  width: 60px;
+  height: 2px;
+  background: var(--primary);
+  margin: 15px auto 0;
+  border-radius: 2px;
+}
+
+/* ========================================
+   📱 RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .executive-title {
+    font-size: 32px;
+    flex-direction: column;
+  }
+  
+  .search-filter-form {
+    flex-direction: column;
+  }
+  
+  .page-search-input {
+    width: 100%;
+    min-width: 0;
+  }
+  
+  .stats-bar {
+    gap: 12px;
+  }
+  
+  .stat-item {
+    padding: 15px 20px;
+    min-width: 100px;
+  }
+  
+  .stat-value {
+    font-size: 28px;
+  }
+  
+  .executive-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .executive-card {
+    height: 480px;
+  }
+  
+  .form-grid-premium {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content-premium {
+    padding: 25px;
+  }
+  
+  .modal-actions-premium {
+    flex-direction: column;
+  }
+  
+  .btn-cancel-premium,
+  .btn-save-premium {
+    width: 100%;
+  }
+}
+</style>
+
+<%- include('partials/footer') %>
 
 /* ========================================
    ✨ ANIMATIONS KEYFRAMES

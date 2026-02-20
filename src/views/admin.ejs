@@ -56,6 +56,48 @@
   for (i = 0; i < topEntities.length; i++) {
     if (topEntities[i].count > maxEntityCount) maxEntityCount = topEntities[i].count;
   }
+
+  function pickName(obj, keys) {
+    var j;
+    if (!obj) return '';
+    for (j = 0; j < keys.length; j++) {
+      if (obj[keys[j]]) return obj[keys[j]];
+    }
+    return '';
+  }
+
+  function pickFullName(obj) {
+    if (!obj) return '';
+    var prenom = obj.prenom || obj.firstName || '';
+    var nom = obj.nom || obj.lastName || '';
+    var full = (prenom + ' ' + nom).trim();
+    return full || pickName(obj, ["name", "title", "email"]);
+  }
+
+  function resolveTargetLabel(item) {
+    if (!item) return '-';
+    var changes = item.changes || {};
+    var after = changes.after || {};
+    var before = changes.before || {};
+    var entity = item.entity || '';
+
+    var label = '';
+    if (entity === 'blacklist') {
+      label = pickFullName(after) || pickFullName(before);
+    } else if (entity === 'partenariatEntreprise') {
+      label = pickName(after, ["raisonSociale", "nomEntreprise", "entreprise", "name"]) ||
+        pickName(before, ["raisonSociale", "nomEntreprise", "entreprise", "name"]);
+    } else if (entity === 'partenariatEmployer' || entity === 'employer') {
+      label = pickName(after, ["nomPartenaire", "partenaire", "nom", "name"]) ||
+        pickName(before, ["nomPartenaire", "partenaire", "nom", "name"]);
+    } else if (entity === 'employeur') {
+      label = pickFullName(after) || pickFullName(before);
+    }
+
+    if (!label) label = pickFullName(after) || pickFullName(before);
+    if (!label && item.entityId) label = item.entityId;
+    return label || '-';
+  }
 %>
 
 <div class="admin-wrap">
@@ -72,6 +114,9 @@
         <div>
           <span class="meta-label">Entrees chargees</span>
           <strong><%= totalLogs %></strong>
+        </div>
+        <div class="hero-actions">
+          <a class="btn ghost" href="/admin/logout">Deconnexion admin</a>
         </div>
       </div>
     </div>
@@ -228,16 +273,15 @@
             <th>Date</th>
             <th>Action</th>
             <th>Entite</th>
-            <th>ID</th>
+            <th>Cible</th>
             <th>Acteur</th>
-            <th>IP</th>
             <th>Details</th>
           </tr>
         </thead>
         <tbody>
           <% if (!items || items.length === 0) { %>
             <tr>
-              <td colspan="7" class="empty">Aucune action enregistree.</td>
+              <td colspan="6" class="empty">Aucune action enregistree.</td>
             </tr>
           <% } %>
           <% if (items && items.length > 0) { %>
@@ -246,9 +290,8 @@
                 <td><%= item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '-' %></td>
                 <td><span class="tag tag--<%= item.action %>"><%= item.action %></span></td>
                 <td><%= item.entity %></td>
-                <td><%= item.entityId || '-' %></td>
+                <td><%= resolveTargetLabel(item) %></td>
                 <td><%= item.actorEmail || item.actorId || '-' %></td>
-                <td><%= item.ip || '-' %></td>
                 <td>
                   <details>
                     <summary>Voir</summary>
@@ -331,6 +374,11 @@
   gap: 24px;
   flex-wrap: wrap;
   font-size: 13px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: flex-end;
 }
 
 .meta-label {

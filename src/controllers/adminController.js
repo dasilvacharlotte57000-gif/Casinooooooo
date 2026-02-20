@@ -38,6 +38,15 @@ exports.postLogin = (req, res) => {
   return res.redirect("/admin");
 };
 
+exports.logout = (req, res) => {
+  res.clearCookie("admin_token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production"
+  });
+  return res.redirect("/admin/login");
+};
+
 exports.listAudit = async (req, res) => {
   try {
     console.log("🔍 DEBUG listAudit - req.user:", req.user);

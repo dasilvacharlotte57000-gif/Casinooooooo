@@ -164,30 +164,6 @@
               <% if (item.grade) { %>
                 <p class="info-item grade-badge">⭐ <%= item.grade %></p>
               <% } %>
-              
-              <% if (item.poste) { %>
-                <p class="info-item">💼 <%= item.poste %></p>
-              <% } %>
-              
-              <% if (item.departement) { %>
-                <p class="info-item">🏢 <%= item.departement %></p>
-              <% } %>
-              
-              <% if (item.email) { %>
-                <p class="info-item">📧 <a href="mailto:<%= item.email %>"><%= item.email %></a></p>
-              <% } %>
-              
-              <% if (item.telephone) { %>
-                <p class="info-item">📱 <%= item.telephone %></p>
-              <% } %>
-              
-              <% if (item.dateEntree) { %>
-                <p class="info-item">📅 Depuis le <%= new Date(item.dateEntree).toLocaleDateString('fr-FR') %></p>
-              <% } %>
-              
-              <% if (item.salaire) { %>
-                <p class="info-item">💰 <%= item.salaire.toLocaleString('fr-FR') %> €</p>
-              <% } %>
 
               <!-- Actions (visible au survol) -->
               <% if (user) { %>

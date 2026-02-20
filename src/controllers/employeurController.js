@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
   try {
     const { 
       prenom, nom, email, telephone, poste, grade, departement, 
-      salaire, dateEntree, photoUrl, notes 
+      salaire, dateEntree, photoUrl, notes, token 
     } = req.body;
 
     await Employeur.create({
@@ -73,7 +73,8 @@ exports.create = async (req, res) => {
       notes: notes || ""
     });
 
-    res.redirect("/employeurs");
+    const redirectUrl = token ? `/employeurs?token=${encodeURIComponent(token)}` : "/employeurs";
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error("Erreur lors de la création:", error);
     if (error.code === 11000) {
@@ -102,7 +103,7 @@ exports.update = async (req, res) => {
   try {
     const { 
       prenom, nom, email, telephone, poste, grade, departement, 
-      salaire, dateEntree, dateDepart, photoUrl, notes 
+      salaire, dateEntree, dateDepart, photoUrl, notes, token 
     } = req.body;
 
     const updateData = {
@@ -121,7 +122,8 @@ exports.update = async (req, res) => {
     };
 
     await Employeur.findByIdAndUpdate(req.params.id, updateData);
-    res.redirect("/employeurs");
+    const redirectUrl = token ? `/employeurs?token=${encodeURIComponent(token)}` : "/employeurs";
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error("Erreur lors de la mise à jour:", error);
     if (error.code === 11000) {
@@ -134,8 +136,10 @@ exports.update = async (req, res) => {
 // Supprimer un employeur
 exports.remove = async (req, res) => {
   try {
+    const { token } = req.body;
     await Employeur.findByIdAndDelete(req.params.id);
-    res.redirect("/employeurs");
+    const redirectUrl = token ? `/employeurs?token=${encodeURIComponent(token)}` : "/employeurs";
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error("Erreur lors de la suppression:", error);
     res.status(500).send("Erreur lors de la suppression");

@@ -220,8 +220,7 @@
       <div class="chart-bars">
         <% 
         const maxCount = Object.values(entityStats).length > 0 ? Math.max(...Object.values(entityStats)) : 1;
-        Object.entries(entityStats).sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(function([entity, count]) { 
-          const barWidth = (count / maxCount) * 100;
+        Object.entries(entityStats).sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(function([entity, count]) { const barWidth = (count / maxCount) * 100;
         %>
           <div class="bar-item">
             <div class="bar-label"><%= entity %></div>
@@ -391,9 +390,7 @@
             </tr>
           <% } %>
 
-          <% items.forEach(function (item, index) { 
-            const animDelay = Math.min(index * 0.02, 1);
-          %>
+          <% items.forEach(function (item, index) { const animDelay = Math.min(index * 0.02, 1); %>
             <tr class="table-row animate-row" data-delay="<%= animDelay %>">
               <td class="cell-date">
                 <div class="date-wrapper">

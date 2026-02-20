@@ -223,7 +223,8 @@
       </div>
       <div class="chart-bars">
         <% 
-        const maxCount = Object.values(entityStats).length > 0 ? Math.max(...Object.values(entityStats)) : 1;
+        const hasStats = Object.values(entityStats).length >= 1;
+        const maxCount = hasStats ? Math.max(...Object.values(entityStats)) : 1;
         Object.entries(entityStats).sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(function([entity, count]) { const barWidth = (count / maxCount) * 100;
         %>
           <div class="bar-item">

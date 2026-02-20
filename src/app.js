@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const { verifyToken } = require("./utils/authToken");
 
 // Charge le .env à la racine du workspace (utile quand npm est lancé depuis /src)
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 (async () => {
   try {
@@ -43,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
     app.use((req, res, next) => {
       const auth = req.headers.authorization || "";
       const bearer = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-      const token = req.query.token || req.body?.token || bearer || null;
+      const token = req.query.token || req.body?.token || req.cookies?.admin_token || bearer || null;
       const payload = token ? verifyToken(token) : null;
 
       req.user = payload

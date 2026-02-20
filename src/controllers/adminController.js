@@ -29,7 +29,13 @@ exports.postLogin = (req, res) => {
 
   const adminEmail = process.env.ADMIN_CONSOLE_EMAIL || "admin@console.local";
   const token = createToken({ sub: "console-admin", email: adminEmail, admin: true });
-  return res.redirect(`/admin?token=${encodeURIComponent(token)}`);
+  res.cookie("admin_token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  });
+  return res.redirect("/admin");
 };
 
 exports.listAudit = async (req, res) => {

@@ -210,10 +210,10 @@
                 <span class="person-status">
                   <% if (item.permanent) { %>
                     <span class="status-dot permanent"></span>
-                    Interdiction permanente
+                    <span class="perm-text">permanente</span>
                   <% } else { %>
                     <span class="status-dot temporary"></span>
-                    Interdiction temporaire
+                    <span class="temp-text">temporaire</span>
                   <% } %>
                 </span>
               </div>
@@ -391,22 +391,22 @@
     align-items: center;
     gap: 12px;
     padding: 10px 24px;
-    background: linear-gradient(135deg, rgba(255,59,82,0.1), rgba(255,59,82,0.03));
-    border: 1px solid rgba(255,59,82,0.3);
+    background: linear-gradient(135deg, rgba(0,153,255,0.1), rgba(0,153,255,0.03));
+    border: 1px solid rgba(0,153,255,0.3);
     border-radius: 50px;
     margin-bottom: 30px;
     backdrop-filter: blur(10px);
     animation: fadeInDown 0.8s ease-out;
-    box-shadow: 0 0 10px rgba(255,59,82,0.1);
+    box-shadow: 0 0 10px rgba(0,153,255,0.1);
   }
 
   .badge-icon {
-    color: #ff3b52;
+    color: #0099ff;
     font-size: 12px;
   }
 
   .badge-text {
-    color: #ff3b52;
+    color: #0099ff;
     font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
@@ -432,7 +432,7 @@
   }
 
   .title-accent {
-    background: linear-gradient(135deg, #ff3b52 0%, #ff6b7a 50%, #ff3b52 100%);
+    background: linear-gradient(135deg, #0099ff 0%, #00b8ff 50%, #0099ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -484,7 +484,7 @@
     gap: 15px;
     padding: 20px 25px;
     background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,59,82,0.2);
+    border: 1px solid rgba(0,153,255,0.2);
     border-radius: 16px;
     transition: all 0.3s ease;
     box-shadow: none;
@@ -492,8 +492,8 @@
 
   .stat-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(255,59,82,0.4);
-    box-shadow: 0 5px 15px rgba(255,59,82,0.1);
+    border-color: rgba(0,153,255,0.4);
+    box-shadow: 0 5px 15px rgba(0,153,255,0.1);
   }
 
   .stat-icon {
@@ -518,7 +518,7 @@
   .stat-value {
     font-size: 28px;
     font-weight: 800;
-    color: #ff3b52;
+    color: #0099ff;
   }
 
   /* ===== CONTAINER ===== */
@@ -544,7 +544,7 @@
     left: 20px;
     top: 50%;
     transform: translateY(-50%);
-    color: #ff3b52;
+    color: #0099ff;
     pointer-events: none;
   }
 
@@ -562,7 +562,7 @@
   }
 
   .search-input:focus {
-    border-color: #ff3b52;
+    border-color: #0099ff;
     box-shadow: 0 0 0 2px rgba(255,59,82,0.1);
     background: rgba(255,59,82,0.03);
   }
@@ -600,7 +600,7 @@
     background: linear-gradient(135deg, rgba(255,59,82,0.2), rgba(255,59,82,0.05));
     border: 2px solid rgba(255,59,82,0.3);
     border-radius: 16px;
-    color: #ff3b52;
+    color: #0099ff;
     flex-shrink: 0;
     box-shadow: none;
   }
@@ -641,14 +641,14 @@
     gap: 8px;
     font-size: 13px;
     font-weight: 600;
-    color: #ff3b52;
+    color: #0099ff;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
   }
 
   .form-label svg {
-    color: #ff3b52;
+    color: #0099ff;
   }
 
   .form-input,
@@ -666,7 +666,7 @@
 
   .form-input:focus,
   .form-textarea:focus {
-    border-color: #ff3b52;
+    border-color: #0099ff;
     box-shadow: 0 0 0 2px rgba(255,59,82,0.1);
     background: rgba(255,59,82,0.03);
   }
@@ -712,7 +712,7 @@
     justify-content: center;
     gap: 10px;
     padding: 16px 32px;
-    background: linear-gradient(135deg, #ff3b52, #ff6b7a);
+    background: linear-gradient(135deg, #0099ff, #00b8ff);
     border: none;
     border-radius: 12px;
     color: #fff;
@@ -749,7 +749,7 @@
     justify-content: space-between;
     margin-bottom: 30px;
     padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255,59,82,0.2);
+    border-bottom: 1px solid rgba(0,153,255,0.2);
   }
 
   .section-title {
@@ -761,10 +761,10 @@
 
   .blacklist-count {
     padding: 6px 16px;
-    background: rgba(255,59,82,0.1);
-    border: 1px solid rgba(255,59,82,0.3);
+    background: rgba(0,153,255,0.1);
+    border: 1px solid rgba(0,153,255,0.3);
     border-radius: 20px;
-    color: #ff3b52;
+    color: #0099ff;
     font-size: 14px;
     font-weight: 600;
     box-shadow: none;
@@ -779,8 +779,8 @@
 
   .person-card {
     position: relative;
-    background: linear-gradient(145deg, rgba(255,59,82,0.03), rgba(255,59,82,0.01));
-    border: 1px solid rgba(255,59,82,0.2);
+    background: linear-gradient(145deg, rgba(0,153,255,0.03), rgba(0,153,255,0.01));
+    border: 1px solid rgba(0,153,255,0.2);
     border-radius: 20px;
     padding: 25px;
     overflow: hidden;
@@ -795,8 +795,8 @@
 
   .person-card:hover {
     transform: translateY(-8px);
-    border-color: rgba(255,59,82,0.4);
-    box-shadow: 0 10px 25px rgba(255,59,82,0.1);
+    border-color: rgba(0,153,255,0.4);
+    box-shadow: 0 10px 25px rgba(0,153,255,0.1);
   }
 
   .card-shine {
@@ -805,7 +805,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent 40%, rgba(255,59,82,0.03) 50%, transparent 60%);
+    background: linear-gradient(45deg, transparent 40%, rgba(0,153,255,0.03) 50%, transparent 60%);
     transform: rotate(45deg);
     animation: shine 8s ease-in-out infinite;
   }
@@ -829,8 +829,8 @@
     position: relative;
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, rgba(255,59,82,0.2), rgba(255,59,82,0.05));
-    border: 2px solid rgba(255,59,82,0.3);
+    background: linear-gradient(135deg, rgba(0,153,255,0.2), rgba(0,153,255,0.05));
+    border: 2px solid rgba(0,153,255,0.3);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -850,7 +850,7 @@
   .avatar-text {
     font-size: 20px;
     font-weight: 700;
-    color: #ff3b52;
+    color: #0099ff;
     z-index: 2;
     position: relative;
   }
@@ -858,7 +858,7 @@
   .avatar-glow {
     position: absolute;
     inset: -5px;
-    background: radial-gradient(circle, rgba(255,59,82,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0,153,255,0.1) 0%, transparent 70%);
     border-radius: 14px;
     animation: pulse-glow 3s ease-in-out infinite;
   }
@@ -889,6 +889,16 @@
     text-shadow: 0 0 15px rgba(0, 168, 255, 0.7);
   }
 
+  .perm-text {
+    color: #ff2e2e;
+    font-weight: 600;
+  }
+
+  .temp-text {
+    color: #00cc00;
+    font-weight: 600;
+  }
+
   .person-status {
     display: flex;
     align-items: center;
@@ -907,11 +917,11 @@
   }
 
   .status-dot.permanent {
-    background: linear-gradient(135deg, #ff3b52, #ff6b7a);
+    background: linear-gradient(135deg, #ff2e2e, #ff6666);
   }
 
   .status-dot.temporary {
-    background: linear-gradient(135deg, #ffa500, #ffb732);
+    background: linear-gradient(135deg, #00cc00, #00ff66);
   }
 
   @keyframes pulse-dot {
@@ -929,8 +939,8 @@
   .person-reason {
     padding: 15px;
     background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,59,82,0.15);
-    border-left: 3px solid #ff3b52;
+    border: 1px solid rgba(0,153,255,0.15);
+    border-left: 3px solid #0099ff;
     border-radius: 10px;
     margin-bottom: 15px;
   }
@@ -939,7 +949,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #ff3b52;
+    color: #0099ff;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
@@ -990,7 +1000,7 @@
     display: flex;
     gap: 10px;
     padding-top: 15px;
-    border-top: 1px solid rgba(255,59,82,0.15);
+    border-top: 1px solid rgba(0,153,255,0.15);
     position: relative;
     z-index: 1;
   }
@@ -1029,7 +1039,7 @@
   .delete-btn {
     background: rgba(255,59,82,0.1);
     border: 1px solid rgba(255,59,82,0.3);
-    color: #ff3b52;
+    color: #0099ff;
   }
 
   .delete-btn:hover {
@@ -1101,7 +1111,7 @@
   .empty-cta {
     display: inline-block;
     padding: 12px 28px;
-    background: linear-gradient(135deg, #ff3b52, #ff6b7a);
+    background: linear-gradient(135deg, #0099ff, #00b8ff);
     color: #fff;
     font-weight: 700;
     border-radius: 10px;

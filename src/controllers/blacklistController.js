@@ -1,14 +1,35 @@
 const Blacklist = require("../models/blacklist");
+const BlacklistHistory = require("../models/blacklistHistory");
 const initCloudinary = require("../config/cloudinary");
 const { logAudit } = require("../utils/auditLogger");
 
 exports.list = async (req, res) => {
   try {
-    // Auto-clean expired entries before listing
-    await Blacklist.deleteMany({
+    // Auto-clean expired entries, but archive them to history first
+    const expired = await Blacklist.find({
       permanent: { $ne: true },
       expireAt: { $ne: null, $lte: new Date() }
-    });
+    }).lean();
+
+    if (expired.length > 0) {
+      const historyDocs = expired.map((e) => ({
+        prenom:      e.prenom,
+        nom:         e.nom,
+        raison:      e.raison || "",
+        addedAt:     e.createdAt,
+        expireAt:    e.expireAt,
+        permanent:   e.permanent,
+        photoUrl:    e.photoUrl || "",
+        removedAt:   new Date(),
+        removalType: "expired"
+      }));
+      await BlacklistHistory.insertMany(historyDocs);
+      await Blacklist.deleteMany({
+        permanent: { $ne: true },
+        expireAt: { $ne: null, $lte: new Date() }
+      });
+    }
+
     const items = await Blacklist.find().sort({ createdAt: -1 }).lean();
     return res.render("blacklist", { items });
   } catch (err) {
@@ -117,6 +138,22 @@ exports.remove = async (req, res) => {
   try {
     const removedDoc = await Blacklist.findByIdAndDelete(req.params.id);
     const removed = removedDoc ? removedDoc.toObject() : null;
+
+    // Archive in history
+    if (removed) {
+      await BlacklistHistory.create({
+        prenom:      removed.prenom,
+        nom:         removed.nom,
+        raison:      removed.raison || "",
+        addedAt:     removed.createdAt,
+        expireAt:    removed.expireAt || null,
+        permanent:   removed.permanent,
+        photoUrl:    removed.photoUrl || "",
+        removedAt:   new Date(),
+        removalType: "manual"
+      });
+    }
+
     await logAudit({
       req,
       action: "delete",
@@ -129,4 +166,44 @@ exports.remove = async (req, res) => {
   }
   const redirectUrl = token ? `/blacklist?token=${encodeURIComponent(token)}` : "/blacklist";
   res.redirect(redirectUrl);
+};
+
+// ───────────────────────────────────────────────
+// Historique complet des anciens blacklistés
+// ───────────────────────────────────────────────
+exports.listHistory = async (req, res) => {
+  try {
+    const items = await BlacklistHistory.find().sort({ removedAt: -1 }).lean();
+    return res.render("blacklistHistory", { items });
+  } catch (err) {
+    console.warn("DB non disponible — historique vide", err.message);
+    return res.render("blacklistHistory", { items: [] });
+  }
+};
+
+// ───────────────────────────────────────────────
+// API : vérifie si une personne a déjà été blacklistée (par nom + prenom)
+// GET /blacklist/check-history?nom=...&prenom=...
+// ───────────────────────────────────────────────
+exports.checkHistory = async (req, res) => {
+  try {
+    const nom    = (req.query.nom    || "").trim();
+    const prenom = (req.query.prenom || "").trim();
+
+    if (!nom || !prenom) {
+      return res.json({ found: false, entries: [] });
+    }
+
+    const entries = await BlacklistHistory.find({
+      nom:    { $regex: new RegExp(`^${nom}$`,    "i") },
+      prenom: { $regex: new RegExp(`^${prenom}$`, "i") }
+    })
+      .sort({ removedAt: -1 })
+      .lean();
+
+    return res.json({ found: entries.length > 0, entries });
+  } catch (err) {
+    console.warn("Erreur check history blacklist:", err.message);
+    return res.json({ found: false, entries: [] });
+  }
 };

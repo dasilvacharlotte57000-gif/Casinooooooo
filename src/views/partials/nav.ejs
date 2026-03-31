@@ -3,7 +3,8 @@
 
   <div class="links">
     <a class="<%= currentPath === '/' ? 'active':'' %>" href="/">Accueil</a>
-    <a class="<%= currentPath.startsWith('/blacklist') ? 'active':'' %>" href="/blacklist">BlackList</a>
+    <a class="<%= currentPath.startsWith('/blacklist') && !currentPath.startsWith('/blacklist/history') ? 'active':'' %>" href="/blacklist">BlackList</a>
+    <a class="<%= currentPath.startsWith('/blacklist/history') ? 'active':'' %>" href="/blacklist/history">Historique BL</a>
     <a class="<%= currentPath.startsWith('/employes') ? 'active':'' %>" href="/employes">Partenariat Employes</a>
     <a class="<%= currentPath.startsWith('/employeurs') ? 'active':'' %>" href="/employeurs">Employeurs</a>
     <a class="<%= currentPath.startsWith('/entreprises') ? 'active':'' %>" href="/entreprises">Partenariat Entreprise</a>

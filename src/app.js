@@ -20,6 +20,52 @@ const menuRoutes = require("./routes/menuRoutes");
 const reglementRoutes = require("./routes/reglementRoutes");
 const avertissementRoutes = require("./routes/avertissementRoutes");
 
+// ── Migration : importe les anciennes suppressions blacklist depuis l'audit log ──
+async function migrateBlacklistHistory() {
+  try {
+    const AuditLog         = require("./models/auditLog");
+    const BlacklistHistory = require("./models/blacklistHistory");
+
+    const deleteLogs = await AuditLog.find({ entity: "blacklist", action: "delete" })
+      .sort({ createdAt: 1 })
+      .lean();
+
+    if (deleteLogs.length === 0) return;
+
+    let imported = 0;
+    for (const log of deleteLogs) {
+      const before = log.changes?.before;
+      if (!before?.prenom || !before?.nom) continue;
+
+      const ts = new Date(log.createdAt);
+      const already = await BlacklistHistory.findOne({
+        prenom:    { $regex: new RegExp(`^${before.prenom}$`, "i") },
+        nom:       { $regex: new RegExp(`^${before.nom}$`, "i") },
+        removedAt: { $gte: new Date(ts - 60000), $lte: new Date(ts.getTime() + 60000) }
+      });
+      if (already) continue;
+
+      await BlacklistHistory.create({
+        prenom:      before.prenom,
+        nom:         before.nom,
+        raison:      before.raison      || "",
+        addedAt:     before.createdAt   ? new Date(before.createdAt) : ts,
+        expireAt:    before.expireAt    ? new Date(before.expireAt)  : null,
+        permanent:   before.permanent   || false,
+        photoUrl:    before.photoUrl    || "",
+        removedAt:   ts,
+        removalType: "manual"
+      });
+      imported++;
+    }
+    if (imported > 0) {
+      console.log(`✅ Migration blacklist history : ${imported} ancienne(s) entrée(s) importée(s)`);
+    }
+  } catch (err) {
+    console.warn("⚠️  Migration blacklist history ignorée :", err.message);
+  }
+}
+
 const app = express();
 
 // Render/Proxy HTTPS : nécessaire pour que les cookies secure soient acceptés
@@ -40,6 +86,9 @@ app.use(cookieParser());
   try {
     // DB
     await connectDB();
+
+    // Migration one-shot : récupère les anciennes suppressions depuis l'audit log
+    await migrateBlacklistHistory();
 
     // User from token (no cookies)
     app.use((req, res, next) => {

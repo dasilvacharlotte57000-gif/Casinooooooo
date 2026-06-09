@@ -5,6 +5,9 @@
 <%
   const getInitials = (prenom, nom) => `${(prenom||'')[0]||''}${(nom||'')[0]||''}`.toUpperCase();
   const fmt = (d) => d ? new Date(d).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' }) : '—';
+  const manualCount = (items || []).filter(i => i.removalType === 'manual').length;
+  const expiredCount = (items || []).filter(i => i.removalType === 'expired').length;
+  const archivedPermanentCount = (items || []).filter(i => i.permanent === true).length;
 
   // Durée lisible entre deux dates
   const duration = (start, end) => {
@@ -33,7 +36,7 @@
       </div>
       <h1 class="hero-title">
         <span class="title-line">Historique des </span>
-        <span class="title-line title-accent-gold">Anciennes Blacklists</span>
+        <span class="title-line title-accent-gold">Anciens Blacklists</span>
       </h1>
       <p class="hero-description">
         Retrouvez toutes les personnes ayant déjà été blacklistées au Diamond Casino.
@@ -51,14 +54,21 @@
           <div class="stat-icon">🗑️</div>
           <div class="stat-content">
             <span class="stat-label">Supprimées manuellement</span>
-            <span class="stat-value"><%= items.filter(i => i.removalType === 'manual').length %></span>
+            <span class="stat-value"><%= manualCount %></span>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">⏰</div>
           <div class="stat-content">
             <span class="stat-label">Expirées</span>
-            <span class="stat-value"><%= items.filter(i => i.removalType === 'expired').length %></span>
+            <span class="stat-value"><%= expiredCount %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">♾️</div>
+          <div class="stat-content">
+            <span class="stat-label">Permanentes archivées</span>
+            <span class="stat-value"><%= archivedPermanentCount %></span>
           </div>
         </div>
       </div>
@@ -83,6 +93,11 @@
         </svg>
         <input type="text" id="searchInput" class="search-input" placeholder="Rechercher par nom ou prénom..." />
       </div>
+      <div class="filter-row">
+        <button type="button" class="filter-btn is-active" data-filter="all">Tout</button>
+        <button type="button" class="filter-btn" data-filter="expired">Expirées</button>
+        <button type="button" class="filter-btn" data-filter="manual">Supprimées</button>
+      </div>
     </div>
 
     <% if (items.length === 0) { %>
@@ -102,7 +117,7 @@
           <%
             const dur = duration(item.addedAt, item.removedAt);
           %>
-          <article class="history-card" data-nom="<%= (item.nom||'').toLowerCase() %>" data-prenom="<%= (item.prenom||'').toLowerCase() %>">
+          <article class="history-card" data-nom="<%= (item.nom||'').toLowerCase() %>" data-prenom="<%= (item.prenom||'').toLowerCase() %>" data-removal="<%= item.removalType || '' %>">
             <div class="hcard-left">
               <div class="h-avatar">
                 <% if (item.photoUrl) { %>
@@ -185,27 +200,48 @@
   const input = document.getElementById('searchInput');
   const cards = document.querySelectorAll('.history-card');
   const countEl = document.getElementById('count');
-  const total = cards.length;
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const q = (input?.value || '').toLowerCase().trim();
+    let visible = 0;
+
+    cards.forEach(card => {
+      const textMatch = (card.dataset.nom || '').includes(q) || (card.dataset.prenom || '').includes(q);
+      const removal = card.dataset.removal || '';
+      const typeMatch = activeFilter === 'all' ? true : removal === activeFilter;
+      const show = textMatch && typeMatch;
+
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (countEl) countEl.textContent = `${visible} entrée${visible > 1 ? 's' : ''}`;
+  }
 
   if (input) {
-    input.addEventListener('input', () => {
-      const q = input.value.toLowerCase().trim();
-      let visible = 0;
-      cards.forEach(card => {
-        const match = (card.dataset.nom || '').includes(q) || (card.dataset.prenom || '').includes(q);
-        card.style.display = match ? '' : 'none';
-        if (match) visible++;
-      });
-      if (countEl) countEl.textContent = `${visible} entrée${visible > 1 ? 's' : ''}`;
-    });
+    input.addEventListener('input', applyFilters);
   }
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      activeFilter = btn.dataset.filter || 'all';
+      applyFilters();
+    });
+  });
 </script>
 
 <style>
   .history-page {
     min-height: 100vh;
     padding-bottom: 80px;
-    background: #000;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(212,175,55,0.07), transparent 60%),
+      radial-gradient(700px 400px at 85% 5%, rgba(59,130,246,0.08), transparent 55%),
+      #000;
   }
 
   /* ===== HERO ===== */
@@ -261,7 +297,7 @@
 
   /* ===== CONTAINER ===== */
   .history-container {
-    max-width: 900px;
+    max-width: 980px;
     margin: 0 auto;
     padding: 0 20px;
   }
@@ -293,6 +329,36 @@
   .search-input:focus { border-color: rgba(212,175,55,0.5); }
   .search-input::placeholder { color: rgba(255,255,255,0.3); }
 
+  .filter-row {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    border: 1px solid rgba(212,175,55,0.25);
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.72);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: rgba(212,175,55,0.45);
+    color: #fff;
+  }
+
+  .filter-btn.is-active {
+    background: rgba(212,175,55,0.18);
+    border-color: rgba(212,175,55,0.55);
+    color: #f5d778;
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.08) inset;
+  }
+
   /* ===== SECTION HEADER ===== */
   .section-header {
     display: flex;
@@ -319,17 +385,31 @@
 
   /* ===== CARD ===== */
   .history-card {
+    position: relative;
     display: flex;
     gap: 20px;
     padding: 20px 24px;
-    background: rgba(255,255,255,0.04);
+    background: linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
     border: 1px solid rgba(212,175,55,0.15);
     border-radius: 16px;
-    transition: border-color 0.2s, background 0.2s;
+    transition: border-color 0.2s, background 0.2s, transform .2s;
   }
+
+  .history-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 3px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, rgba(212,175,55,0.75), rgba(212,175,55,0.25));
+  }
+
   .history-card:hover {
     background: rgba(255,255,255,0.07);
     border-color: rgba(212,175,55,0.35);
+    transform: translateY(-2px);
   }
 
   /* Avatar */

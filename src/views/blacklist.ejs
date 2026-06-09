@@ -197,6 +197,7 @@
     <% } else { %>
       <div class="blacklist-grid" id="blacklistContainer">
         <% items.forEach((item, index) => { %>
+          <% const isEmsEntry = item.permanent && /^therapie\s*ems/i.test((item.raison || '').trim()); %>
           <article class="person-card <%= item.permanent ? 'permanent-entry' : 'temporary-entry' %>" data-nom="<%= (item.nom || '').toLowerCase() %>" data-prenom="<%= (item.prenom || '').toLowerCase() %>">
             <div class="card-shine"></div>
             
@@ -220,6 +221,11 @@
                     <span class="temp-text">temporaire</span>
                   <% } %>
                 </span>
+                <% if (isEmsEntry) { %>
+                  <div class="status-extra">
+                    <span class="ems-chip">🩺 Thérapie EMS</span>
+                  </div>
+                <% } %>
               </div>
             </div>
 
@@ -911,6 +917,24 @@
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 1px;
+  }
+
+  .status-extra {
+    margin-top: 7px;
+  }
+
+  .ems-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #78d4ff;
+    background: rgba(0, 153, 255, 0.12);
+    border: 1px solid rgba(0, 153, 255, 0.35);
   }
 
   .status-dot {

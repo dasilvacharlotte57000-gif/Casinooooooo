@@ -19,6 +19,7 @@ const employeurRoutes = require("./routes/employeurRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 const reglementRoutes = require("./routes/reglementRoutes");
 const avertissementRoutes = require("./routes/avertissementRoutes");
+const therapieEmsRoutes = require("./routes/therapieEmsRoutes");
 
 // ── Migration : importe les anciennes suppressions blacklist depuis l'audit log ──
 async function migrateBlacklistHistory() {
@@ -126,6 +127,7 @@ app.use(cookieParser());
     app.use("/employeurs", employeurRoutes);
     app.use("/menu", menuRoutes);
     app.use("/reglement", reglementRoutes);
+    app.use("/therapie-ems", therapieEmsRoutes);
 
     // 🔒 MIDDLEWARE DE PROTECTION GLOBAL (pour tout ce qui suit)
     app.use(protectRoutes);
